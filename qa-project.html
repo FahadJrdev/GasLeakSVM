@@ -84,6 +84,26 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
 
       <article class="qa" id="p03">
         <div class="qa-head"><span class="qa-id">P03</span>
+          <h3 class="qa-q">Why is your project titled "Real-Time Gas Leak Detection in Logistics and Manufacturing Environments Using Support Vector Machine on IoT Gas Sensor Data"?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Because every part of the title names one piece of the work: what it does (detects gas leaks), how fast (in real time), where it is meant for (logistics and manufacturing sites), which method (a Support Vector Machine), and what data it reads (low-cost IoT gas sensors).</p>
+      <div class="tw"><table><tbody>
+      <tr><th>Real-Time</th><td>Each reading is classified in about 1.1 ms, while a new reading arrives every 2 s — so the answer is always ready before the next reading. I measured this, not just claimed it.</td></tr>
+      <tr><th>Gas Leak Detection</th><td>The goal: notice gas in the air and say which kind it is (no gas, perfume, smoke or a mixture), not just ring when one sensor passes a fixed level.</td></tr>
+      <tr><th>in Logistics and Manufacturing Environments</th><td>The places the system is designed for: factories, warehouses, cold stores and container depots, where LPG, ammonia and other gases are stored and moved — and where real accidents happened, such as the BM Container Depot fire in Sitakunda.</td></tr>
+      <tr><th>Using Support Vector Machine</th><td>The single model I chose and derived: a maximum-margin classifier with an RBF kernel. It is mathematically transparent, fast and works well with a few thousand readings.</td></tr>
+      <tr><th>on IoT Gas Sensor Data</th><td>The input: readings from seven cheap MQ metal-oxide sensors digitised by a 10-bit ADC — the same kind of sensor used in IoT gas monitors built on Arduino or ESP32.</td></tr>
+      </tbody></table></div>
+      <p><strong>Where it came from:</strong> my supervisor gave the topic "Real-time gas leak detection using logistics &amp; manufacturing and machine learning". I made it precise by naming the setting (logistics and manufacturing environments), the exact machine-learning method (SVM) and the data source (IoT gas sensors), so the title says exactly what the report delivers.</p>
+      <div class="say"><p class="say-label">Say this</p><p>"The title has five parts and each matches a part of the work. Gas leak detection is the goal. Real-time means it decides in about one millisecond, far inside the two-second sampling interval. Logistics and manufacturing environments are where it is meant to be used — factories, warehouses, cold stores. Support Vector Machine is the method I derived and tuned. And IoT gas sensor data means it runs on readings from cheap MQ sensors like those in IoT devices."</p></div>
+      <p>If they then ask "but your data are from a lab" — see the next question.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">topic</span><span class="tag">title</span></div>
+      </article>
+
+      <article class="qa" id="p04">
+        <div class="qa-head"><span class="qa-id">P04</span>
           <h3 class="qa-q">Your title says "logistics and manufacturing". Where is that in your data?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -93,8 +113,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">topic</span></div>
       </article>
 
-      <article class="qa" id="p04">
-        <div class="qa-head"><span class="qa-id">P04</span>
+      <article class="qa" id="p05">
+        <div class="qa-head"><span class="qa-id">P05</span>
           <h3 class="qa-q">What is new in your work?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -106,8 +126,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
 
       <h2 data-qa-sec>Data</h2>
 
-      <article class="qa" id="p05">
-        <div class="qa-head"><span class="qa-id">P05</span>
+      <article class="qa" id="p06">
+        <div class="qa-head"><span class="qa-id">P06</span>
           <h3 class="qa-q">Describe your dataset.</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -117,8 +137,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">data</span></div>
       </article>
 
-      <article class="qa" id="p06">
-        <div class="qa-head"><span class="qa-id">P06</span>
+      <article class="qa" id="p07">
+        <div class="qa-head"><span class="qa-id">P07</span>
           <h3 class="qa-q">Why seven sensors and not one?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -128,8 +148,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">data</span><span class="tag">sensors</span></div>
       </article>
 
-      <article class="qa" id="p07">
-        <div class="qa-head"><span class="qa-id">P07</span>
+      <article class="qa" id="p08">
+        <div class="qa-head"><span class="qa-id">P08</span>
           <h3 class="qa-q">How did you split the data?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -139,8 +159,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">data</span><span class="tag">split</span></div>
       </article>
 
-      <article class="qa" id="p08">
-        <div class="qa-head"><span class="qa-id">P08</span>
+      <article class="qa" id="p09">
+        <div class="qa-head"><span class="qa-id">P09</span>
           <h3 class="qa-q">What did you learn before training any model?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -152,8 +172,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
 
       <h2 data-qa-sec>Method</h2>
 
-      <article class="qa" id="p09">
-        <div class="qa-head"><span class="qa-id">P09</span>
+      <article class="qa" id="p10">
+        <div class="qa-head"><span class="qa-id">P10</span>
           <h3 class="qa-q">Why did you choose SVM?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -163,8 +183,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">method</span><span class="tag">svm</span></div>
       </article>
 
-      <article class="qa" id="p10">
-        <div class="qa-head"><span class="qa-id">P10</span>
+      <article class="qa" id="p11">
+        <div class="qa-head"><span class="qa-id">P11</span>
           <h3 class="qa-q">Why start with a linear SVM on raw data?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -174,8 +194,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">method</span><span class="tag">baseline</span></div>
       </article>
 
-      <article class="qa" id="p11">
-        <div class="qa-head"><span class="qa-id">P11</span>
+      <article class="qa" id="p12">
+        <div class="qa-head"><span class="qa-id">P12</span>
           <h3 class="qa-q">Why standardise the features?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -185,8 +205,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">method</span><span class="tag">scaling</span></div>
       </article>
 
-      <article class="qa" id="p12">
-        <div class="qa-head"><span class="qa-id">P12</span>
+      <article class="qa" id="p13">
+        <div class="qa-head"><span class="qa-id">P13</span>
           <h3 class="qa-q">How did you choose C and γ?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -196,8 +216,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">method</span><span class="tag">tuning</span></div>
       </article>
 
-      <article class="qa" id="p13">
-        <div class="qa-head"><span class="qa-id">P13</span>
+      <article class="qa" id="p14">
+        <div class="qa-head"><span class="qa-id">P14</span>
           <h3 class="qa-q">The SVM is a two-class method. How do you get four classes?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -209,8 +229,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
 
       <h2 data-qa-sec>Results</h2>
 
-      <article class="qa" id="p14">
-        <div class="qa-head"><span class="qa-id">P14</span>
+      <article class="qa" id="p15">
+        <div class="qa-head"><span class="qa-id">P15</span>
           <h3 class="qa-q">What are your main results?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -220,8 +240,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">results</span></div>
       </article>
 
-      <article class="qa" id="p15">
-        <div class="qa-head"><span class="qa-id">P15</span>
+      <article class="qa" id="p16">
+        <div class="qa-head"><span class="qa-id">P16</span>
           <h3 class="qa-q">Where does the model make mistakes, and why?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -231,8 +251,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">results</span><span class="tag">errors</span></div>
       </article>
 
-      <article class="qa" id="p16">
-        <div class="qa-head"><span class="qa-id">P16</span>
+      <article class="qa" id="p17">
+        <div class="qa-head"><span class="qa-id">P17</span>
           <h3 class="qa-q">How do you know it is real-time?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -242,8 +262,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">results</span><span class="tag">realtime</span></div>
       </article>
 
-      <article class="qa" id="p17">
-        <div class="qa-head"><span class="qa-id">P17</span>
+      <article class="qa" id="p18">
+        <div class="qa-head"><span class="qa-id">P18</span>
           <h3 class="qa-q">How does it compare with earlier work?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -253,8 +273,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">results</span><span class="tag">comparison</span></div>
       </article>
 
-      <article class="qa" id="p18">
-        <div class="qa-head"><span class="qa-id">P18</span>
+      <article class="qa" id="p19">
+        <div class="qa-head"><span class="qa-id">P19</span>
           <h3 class="qa-q">What happened in the time-ordered test?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -266,8 +286,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
 
       <h2 data-qa-sec>Closing</h2>
 
-      <article class="qa" id="p19">
-        <div class="qa-head"><span class="qa-id">P19</span>
+      <article class="qa" id="p20">
+        <div class="qa-head"><span class="qa-id">P20</span>
           <h3 class="qa-q">What are the limitations?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -277,8 +297,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">limitations</span></div>
       </article>
 
-      <article class="qa" id="p20">
-        <div class="qa-head"><span class="qa-id">P20</span>
+      <article class="qa" id="p21">
+        <div class="qa-head"><span class="qa-id">P21</span>
           <h3 class="qa-q">What would you do next?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
@@ -288,8 +308,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="qa-tags"><span class="tag">future</span></div>
       </article>
 
-      <article class="qa" id="p21">
-        <div class="qa-head"><span class="qa-id">P21</span>
+      <article class="qa" id="p22">
+        <div class="qa-head"><span class="qa-id">P22</span>
           <h3 class="qa-q">What did you learn from this project?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
