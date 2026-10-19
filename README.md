@@ -2,8 +2,8 @@
 
 Defence preparation for the M.S. project
 *Real-Time Gas Leak Detection in Logistics and Manufacturing Environments Using Support Vector
-Machine on IoT Gas Sensor Data* (Department of Mathematics, University of Chittagong, AMAT-527,
-supervisor Dr. Mohammad Jalal Ahammad).
+Machine on IoT Gas Sensor Data* by **Md. Ashfaqur Rahman** (ID 18203096, Session MS 2023-2024), Department of Mathematics,
+University of Chittagong, AMAT-527, supervisor Dr. Mohammad Jalal Ahammad.
 
 **Live site:** https://fahadjrdev.github.io/GasLeakSVM/
 
