@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python lab — train the SVM here — Gas Leak SVM project defence</title>
+<meta name="description" content="Real Python and scikit-learn in the browser: load the gas sensor data, train the SVM, reproduce 98.23%, and look inside the model.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="lab">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Python lab — train the SVM here</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col col-wide">
+
+      <p class="eyebrow">13 · Programming</p>
+      <h1>Python lab — train the SVM here</h1>
+      <p class="lede">
+        Real Python and real scikit-learn, running inside this page. No install, no account.
+        Every cell is editable: change a number, press <strong>Run</strong>, and see what
+        happens. The cells reproduce the report's numbers from the same data.
+      </p>
+
+      <div class="note info">
+        <p class="note-title">How it works · <span class="chip" data-py-status>Python not started</span></p>
+        <p>
+          The first Run downloads Pyodide (Python compiled for the browser) plus scikit-learn,
+          about 20–30 seconds. After that it is quick. <strong>All cells share one Python, and
+          Cells 1 and 2 load and split the data — run them first.</strong>
+          <kbd>Ctrl</kbd>+<kbd>Enter</kbd> runs the cell you are typing in. Training is slower
+          in a browser than on a laptop, so allow a few seconds per model.
+        </p>
+      </div>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          The report says "98.23%". This page lets you <strong>show</strong> it. In a viva,
+          running the model live in front of the panel is far more convincing than reading a
+          number from a table.
+        </p>
+        <p>
+          It also links the code to the mathematics. Cell 7 takes the trained SVM apart: it
+          pulls out the support vectors and the \(\alpha_iy_i\) weights, computes the decision
+          function \(f(\mathbf{x})=\sum\alpha_iy_iK(\mathbf{x}_i,\mathbf{x})+b\) by hand, and
+          shows it equals scikit-learn's answer. That is Eq. (3.23) of your report, working.
+        </p>
+      </section>
+
+      <nav class="jump">
+        <a href="#c1">1 · Load the data</a>
+        <a href="#c2">2 · Split &amp; scale</a>
+        <a href="#c3">3 · Baseline</a>
+        <a href="#c4">4 · Tuned RBF-SVM</a>
+        <a href="#c5">5 · Mini grid search</a>
+        <a href="#c6">6 · Leak view &amp; speed</a>
+        <a href="#c7">7 · Inside the model</a>
+        <a href="#c8">8 · Drift test</a>
+        <a href="#c9">9 · Playground</a>
+      </nav>
+
+      <h2 id="h1">1 · Load the data</h2>
+      <p>Reads the same CSV the report uses, straight from this website.</p>
+<div class="runner" id="c1">
+        <div class="runner-head">
+          <span class="runner-title">Cell 1 — load the sensor data</span>
+          <button class="btn" type="button" data-reset>Reset</button>
+          <button class="btn btn-run" type="button">▶ Run</button>
+        </div>
+        <textarea class="editor" spellcheck="false" aria-label="Python code, Cell 1 — load the sensor data">import numpy as np
+import pandas as pd
+from pyodide.http import open_url
+
+SENSORS = ["MQ2", "MQ3", "MQ5", "MQ6", "MQ7", "MQ8", "MQ135"]
+CLASSES = ["NoGas", "Perfume", "Smoke", "Mixture"]
+
+df = pd.read_csv(open_url("data/Gas_Sensors_Measurements.csv"))
+X = df[SENSORS].values.astype(float)                       # 6400 x 7 feature matrix
+y = df["Gas"].map({c: i for i, c in enumerate(CLASSES)}).values   # labels 0..3
+
+print("shape:", df.shape)
+print(df["Gas"].value_counts().to_string())
+print("\nClass means (ADC counts):")
+print(df.groupby("Gas")[SENSORS].mean().round(1).loc[CLASSES].to_string())</textarea>
+        <pre class="out"></pre>
+        <div class="figs"></div>
+      </div>
+
+      <h2 id="h2">2 · Split and standardise</h2>
+      <p>The 70/15/15 stratified split with seed 42, then Eq. (3.3), \(z=(x-\mu)/\sigma\), by hand and by scikit-learn.</p>
+<div class="runner" id="c2">
+        <div class="runner-head">
+          <span class="runner-title">Cell 2 — split and scale</span>
+          <button class="btn" type="button" data-reset>Reset</button>
+          <button class="btn btn-run" type="button">▶ Run</button>
+        </div>
+        <textarea class="editor" spellcheck="false" aria-label="Python code, Cell 2 — split and scale">from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+X_train, X_tmp, y_train, y_tmp = train_test_split(X, y, test_size=0.30, stratify=y, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_tmp, y_tmp, test_size=0.50, stratify=y_tmp, random_state=42)
+print("train / validation / test:", len(y_train), len(y_val), len(y_test))
+
+scaler = StandardScaler().fit(X_train)      # mu and sigma from the TRAINING set only
+mu, sigma = scaler.mean_, scaler.scale_
+for s, m, sd in zip(SENSORS, mu, sigma):
+    print(f"{s:6s} mu = {m:7.2f}   sigma = {sd:6.2f}")
+
+x0 = X_test[0]
+print("\nz by hand:      ", np.round((x0 - mu) / sigma, 3))
+print("z by sklearn:   ", np.round(scaler.transform(x0.reshape(1, -1))[0], 3))</textarea>
+        <pre class="out"></pre>
+        <div class="figs"></div>
+      </div>
+
+      <h2 id="h3">3 · The baseline: linear SVM on raw readings</h2>
+      <p>Expect 80.31%, with every error between NoGas (row 0) and Perfume (row 1). This one is slow in the browser (about 10–30 s).</p>
+<div class="runner" id="c3">
+        <div class="runner-head">
+          <span class="runner-title">Cell 3 — baseline linear SVM</span>
+          <button class="btn" type="button" data-reset>Reset</button>
+          <button class="btn btn-run" type="button">▶ Run</button>
+        </div>
+        <textarea class="editor" spellcheck="false" aria-label="Python code, Cell 3 — baseline linear SVM">import time
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+t0 = time.time()
+baseline = SVC(kernel="linear", C=1.0, max_iter=200000).fit(X_train, y_train)   # no scaling
+print(f"trained in {time.time() - t0:.1f} s")
+
+pred = baseline.predict(X_test)
+print("test accuracy:", round(accuracy_score(y_test, pred) * 100, 2), "%")
+print("confusion matrix (rows = true, columns = predicted):")
+print(confusion_matrix(y_test, pred))</textarea>
+        <pre class="out"></pre>
+        <div class="figs"></div>
+      </div>
+
+      <h2 id="h4">4 · The tuned RBF-SVM</h2>
+      <p>Scaling inside a pipeline, RBF kernel, \(C=100\), \(\gamma=10\). Expect 98.23% and 1,304 support vectors.</p>
+<div class="runner" id="c4">
+        <div class="runner-head">
+          <span class="runner-title">Cell 4 — tuned RBF-SVM</span>
+          <button class="btn" type="button" data-reset>Reset</button>
+          <button class="btn btn-run" type="button">▶ Run</button>
+        </div>
+        <textarea class="editor" spellcheck="false" aria-label="Python code, Cell 4 — tuned RBF-SVM">from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+import time
+
+model = Pipeline([("scaler", StandardScaler()),
+                  ("svm", SVC(kernel="rbf", C=100, gamma=10))])
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+print("test accuracy:", round(accuracy_score(y_test, y_pred) * 100, 2), "%")
+print("support vectors per class:", model.named_steps["svm"].n_support_,
+      "total:", model.named_steps["svm"].n_support_.sum())
+print(classification_report(y_test, y_pred, target_names=CLASSES, digits=4))
+
+cm = confusion_matrix(y_test, y_pred)
+fig, ax = plt.subplots(figsize=(5.4, 4.6))
+ax.imshow(cm, cmap="Blues"); ax.grid(False)
+for i in range(4):
+    for j in range(4):
+        ax.text(j, i, cm[i, j], ha="center", va="center",
+                color="white" if cm[i, j] &gt; 120 else "black", fontsize=12)
+ax.set_xticks(range(4), CLASSES); ax.set_yticks(range(4), CLASSES)
+ax.set_xlabel("Predicted"); ax.set_ylabel("True"); ax.set_title("RBF-SVM on the test set")</textarea>
+        <pre class="out"></pre>
+        <div class="figs"></div>
+      </div>
+
+      <h2 id="h5">5 · A mini grid search</h2>
+      <p>
+        A smaller version of the report's search (8 pairs and 3 folds instead of 42 pairs and 5
+        folds) so it finishes in the browser in about a minute. It should still pick a large
+        \(\gamma\) around 10.
+      </p>
+<div class="runner" id="c5">
+        <div class="runner-head">
+          <span class="runner-title">Cell 5 — mini grid search</span>
+          <button class="btn" type="button" data-reset>Reset</button>
+          <button class="btn btn-run" type="button">▶ Run</button>
+        </div>
+        <textarea class="editor" spellcheck="false" aria-label="Python code, Cell 5 — mini grid search">from sklearn.model_selection import GridSearchCV, StratifiedKFold
+
+grid = GridSearchCV(
+    Pipeline([("scaler", StandardScaler()), ("svm", SVC(kernel="rbf"))]),
+    {"svm__C": [10, 100], "svm__gamma": [0.1, 1, 10, 30]},
+    cv=StratifiedKFold(n_splits=3, shuffle=True, random_state=42), scoring="accuracy")
+t0 = time.time()
+grid.fit(X_train, y_train)
+print(f"{len(grid.cv_results_['params'])} pairs x 3 folds in {time.time() - t0:.0f} s")
+print("best:", grid.best_params_, " CV accuracy:", round(grid.best_score_ * 100, 2), "%")
+
+scores = grid.cv_results_["mean_test_score"].reshape(2, 4)
+fig, ax = plt.subplots(figsize=(6, 2.8))
+im = ax.imshow(scores, cmap="viridis"); ax.grid(False)
+for i in range(2):
+    for j in range(4):
+        ax.text(j, i, f"{scores[i, j]:.3f}", ha="center", va="center", color="white")
+ax.set_xticks(range(4), [0.1, 1, 10, 30]); ax.set_yticks(range(2), [10, 100])
+ax.set_xlabel("gamma"); ax.set_ylabel("C"); ax.set_title("3-fold CV accuracy")</textarea>
+        <pre class="out"></pre>
+        <div class="figs"></div>
+      </div>
+
+      <h2 id="h6">6 · As a leak detector, and how fast it is</h2>
+      <p>
+        Collapse to "no leak" vs "gas present" (Eq. 3.34), then time 200 single-reading
+        predictions. Browser timings are a few times slower than the laptop's 1.1 ms, but still
+        far below the 2,000 ms deadline.
+      </p>
+<div class="runner" id="c6">
+        <div class="runner-head">
+          <span class="runner-title">Cell 6 — leak view and latency</span>
+          <button class="btn" type="button" data-reset>Reset</button>
+          <button class="btn btn-run" type="button">▶ Run</button>
+        </div>
+        <textarea class="editor" spellcheck="false" aria-label="Python code, Cell 6 — leak view and latency">gas_true, gas_pred = (y_test != 0), (y_pred != 0)       # NoGas = 0 means "no leak"
+TP = np.sum(gas_true &amp; gas_pred);   TN = np.sum(~gas_true &amp; ~gas_pred)
+FP = np.sum(~gas_true &amp; gas_pred);  FN = np.sum(gas_true &amp; ~gas_pred)
+print(f"TP={TP} TN={TN} FP={FP} FN={FN}")
+print(f"sensitivity = {TP / (TP + FN) * 100:.2f} %   specificity = {TN / (TN + FP) * 100:.2f} %")
+print(f"false alarm rate = {FP / (FP + TN) * 100:.2f} %")
+
+model.predict(X_test[:1])                          # warm-up
+lat = []
+for row in X_test[:200]:
+    t0 = time.perf_counter()
+    model.predict(row.reshape(1, -1))              # ONE reading, like a live sensor
+    lat.append((time.perf_counter() - t0) * 1000)
+lat = np.array(lat)
+print(f"\nlatency: mean {lat.mean():.2f} ms, max {lat.max():.2f} ms, deadline 2000 ms")
+
+fig, ax = plt.subplots(figsize=(6.4, 3.4))
+ax.hist(lat, bins=30); ax.axvline(lat.mean(), ls="--", color="gray")
+ax.set_xlabel("ms per reading (in this browser)"); ax.set_ylabel("count")</textarea>
+        <pre class="out"></pre>
+        <div class="figs"></div>
+      </div>
+
+      <h2 id="h7">7 · Inside the model: Eq. (3.23) by hand</h2>
+      <p>
+        Train one binary SVM (NoGas vs Perfume) and compute its decision function directly from
+        the support vectors: \(f(\mathbf{x})=\sum_{i\in SV}\alpha_iy_i\,e^{-\gamma\|\mathbf{x}_i-\mathbf{x}\|^2}+b\).
+        It must equal <code>decision_function</code>. It also checks Eq. (3.14),
+        \(\sum\alpha_iy_i=0\), and the box \(0\le\alpha_i\le C\).
+      </p>
+<div class="runner" id="c7">
+        <div class="runner-head">
+          <span class="runner-title">Cell 7 — the decision function by hand</span>
+          <button class="btn" type="button" data-reset>Reset</button>
+          <button class="btn btn-run" type="button">▶ Run</button>
+        </div>
+        <textarea class="editor" spellcheck="false" aria-label="Python code, Cell 7 — the decision function by hand">pair = (y_train == 0) | (y_train == 1)              # NoGas vs Perfume only
+Xb = scaler.transform(X_train[pair]); yb = y_train[pair]
+C, gamma = 100, 10
+svm2 = SVC(kernel="rbf", C=C, gamma=gamma).fit(Xb, yb)
+
+sv   = svm2.support_vectors_        # the x_i with alpha_i &gt; 0
+coef = svm2.dual_coef_[0]           # alpha_i * y_i
+b    = svm2.intercept_[0]
+
+x = scaler.transform(X_test[:1])                          # one new reading
+K = np.exp(-gamma * np.sum((sv - x) ** 2, axis=1))         # RBF kernel, Eq. (3.22)
+f_hand = coef @ K + b                                      # Eq. (3.23)
+
+print("support vectors:", len(sv), "of", len(yb), "training readings")
+print(f"f(x) by hand    = {f_hand:.10f}")
+print(f"f(x) by sklearn = {svm2.decision_function(x)[0]:.10f}")
+print(f"sum alpha_i*y_i = {coef.sum():.2e}   (Eq. 3.14: should be 0)")
+alpha = np.abs(coef)
+print(f"alpha range     = [{alpha.min():.3g}, {alpha.max():.3g}]   (box: 0 &lt;= alpha &lt;= C = {C})")
+print("bounded SVs (alpha = C):", int(np.sum(np.isclose(alpha, C))),
+      "  free SVs (0 &lt; alpha &lt; C):", int(np.sum(~np.isclose(alpha, C))))</textarea>
+        <pre class="out"></pre>
+        <div class="figs"></div>
+      </div>
+
+      <h2 id="h8">8 · The drift test</h2>
+      <p>
+        Train on the first 70% of each recording, test on the last 30%. Expect about 54%, with
+        later Smoke readings pulled into Mixture. The plot shows why: MQ3 creeps upward during
+        the Smoke session.
+      </p>
+<div class="runner" id="c8">
+        <div class="runner-head">
+          <span class="runner-title">Cell 8 — time-ordered split</span>
+          <button class="btn" type="button" data-reset>Reset</button>
+          <button class="btn btn-run" type="button">▶ Run</button>
+        </div>
+        <textarea class="editor" spellcheck="false" aria-label="Python code, Cell 8 — time-ordered split">tr, te = [], []
+for c in range(4):
+    idx = np.where(y == c)[0]                  # rows are already in time order
+    cut = int(0.7 * len(idx))
+    tr += list(idx[:cut]); te += list(idx[cut:])
+
+chron = Pipeline([("scaler", StandardScaler()), ("svm", SVC(kernel="rbf", C=100, gamma=10))])
+chron.fit(X[tr], y[tr])
+pc = chron.predict(X[te])
+print("time-ordered test accuracy:", round(accuracy_score(y[te], pc) * 100, 2), "%")
+print(confusion_matrix(y[te], pc))
+
+smoke = df[df["Gas"] == "Smoke"]
+fig, ax = plt.subplots(figsize=(7, 3.4))
+ax.plot(smoke["Serial Number"], smoke["MQ3"], lw=1)
+ax.axvline(1120, ls="--", color="gray"); ax.text(1130, smoke["MQ3"].max() - 8, "test part")
+ax.set_xlabel("reading number (2 s apart)"); ax.set_ylabel("MQ3 (ADC)"); ax.set_title("Smoke session: MQ3 drifts upward")</textarea>
+        <pre class="out"></pre>
+        <div class="figs"></div>
+      </div>
+
+      <h2 id="h9">9 · Playground</h2>
+      <p>Type in your own seven sensor values, or change \(C\) and \(\gamma\), and see what the model says.</p>
+<div class="runner" id="c9">
+        <div class="runner-head">
+          <span class="runner-title">Cell 9 — try your own reading</span>
+          <button class="btn" type="button" data-reset>Reset</button>
+          <button class="btn btn-run" type="button">▶ Run</button>
+        </div>
+        <textarea class="editor" spellcheck="false" aria-label="Python code, Cell 9 — try your own reading">reading = [748, 529, 431, 425, 606, 637, 474]      # MQ2, MQ3, MQ5, MQ6, MQ7, MQ8, MQ135
+# try a smoke-like one:  [623, 372, 340, 368, 580, 584, 308]
+
+r = np.array(reading, dtype=float).reshape(1, -1)
+print("prediction:", CLASSES[model.predict(r)[0]])
+print("score per class (built from the 6 pairwise votes):", np.round(model.decision_function(r)[0], 3))
+
+# change these and re-run to feel what C and gamma do
+C_try, gamma_try = 1, 0.1
+m = Pipeline([("scaler", StandardScaler()), ("svm", SVC(kernel="rbf", C=C_try, gamma=gamma_try))])
+m.fit(X_train, y_train)
+print(f"\nC={C_try}, gamma={gamma_try}: train {m.score(X_train, y_train)*100:.2f} %, "
+      f"test {m.score(X_test, y_test)*100:.2f} %, support vectors {m.named_steps['svm'].n_support_.sum()}")</textarea>
+        <pre class="out"></pre>
+        <div class="figs"></div>
+      </div>
+
+      <div class="note good">
+        <p class="note-title">What to show in a viva</p>
+        <p>
+          Run Cells 1, 2 and 4: "98.23%, from the public data, live." Then Cell 7: "and here is
+          the decision function computed by hand from the support vectors — it matches." Those
+          two moments take under a minute and answer "did you really do this?" completely.
+        </p>
+      </div>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

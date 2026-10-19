@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Key terms, defined — Gas Leak SVM project defence</title>
+<meta name="description" content="Short, plain definitions of every key term in the gas leak SVM project.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="glossary">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Key terms, defined</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col">
+
+      <p class="eyebrow">02 · Orientation</p>
+      <h1>Key terms, defined</h1>
+      <p class="lede">
+        Every important word in the project, in one or two plain sentences. Learn these first.
+        If you can define a term simply, you understand it.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          Examiners often start with "What is…?" questions. A short, exact definition shows you
+          are in control. A long, wandering one suggests you are not. Each definition below is
+          written so you can say it out loud in under fifteen seconds.
+        </p>
+      </section>
+
+      <nav class="jump">
+        <a href="#gas">Gas & sensors</a>
+        <a href="#ml">Machine learning</a>
+        <a href="#svm">SVM</a>
+        <a href="#opt">Optimisation</a>
+        <a href="#eval">Evaluation</a>
+        <a href="#rt">Real-time</a>
+      </nav>
+
+      <h2 id="gas">Gas and sensors</h2>
+      <dl class="terms">
+        <div class="term"><dt>Gas leak</dt><dd>Unwanted escape of gas from a pipe, tank, valve or cylinder into the air around it.</dd></div>
+        <div class="term"><dt>LEL (Lower Explosive Limit)</dt><dd>The smallest gas concentration in air that can catch fire. For methane it is about 5% by volume.</dd></div>
+        <div class="term"><dt>IDLH</dt><dd>"Immediately Dangerous to Life or Health": the concentration that can kill or cause lasting harm quickly. Ammonia: 300 ppm.</dd></div>
+        <div class="term"><dt>ppm</dt><dd>Parts per million. 100 ppm means 100 gas molecules in every million molecules of air.</dd></div>
+        <div class="term"><dt>MOS sensor (metal-oxide semiconductor)</dt><dd>A heated metal-oxide film (often SnO₂) whose electrical resistance falls when certain gases touch it. Cheap and fast, but not very selective.</dd></div>
+        <div class="term"><dt>MQ sensors</dt><dd>A family of low-cost MOS sensor modules. Each is tuned to a target gas: MQ2 LPG/smoke, MQ3 alcohol, MQ5 natural gas, MQ6 LPG, MQ7 CO, MQ8 hydrogen, MQ135 air quality.</dd></div>
+        <div class="term"><dt>Cross-sensitivity</dt><dd>A sensor reacting to gases other than its target. It is why one sensor cannot identify a gas, but an array can.</dd></div>
+        <div class="term"><dt>Sensor array / electronic nose</dt><dd>Several partly selective sensors read together. Their combined pattern acts as a fingerprint of the gas.</dd></div>
+        <div class="term"><dt>ADC (analog-to-digital converter)</dt><dd>Turns the sensor's voltage into a number. A 10-bit ADC gives integers from 0 to 1023, which is what the dataset contains.</dd></div>
+        <div class="term"><dt>Sensor drift</dt><dd>Slow change of a sensor's output over time for the same gas, caused by ageing, heat, humidity or contamination.</dd></div>
+        <div class="term"><dt>Threshold alarm</dt><dd>An alarm that rings when one sensor's reading passes a fixed value. Simple, but blind to which gas is present.</dd></div>
+      </dl>
+
+      <h2 id="ml">Machine learning basics</h2>
+      <dl class="terms">
+        <div class="term"><dt>Feature <span class="sym">x</span></dt><dd>One input number. Here each reading has 7 features, one per sensor, so a reading is a vector \(\mathbf{x}\in\mathbb{R}^7\).</dd></div>
+        <div class="term"><dt>Label / class <span class="sym">y</span></dt><dd>The correct answer for a reading: NoGas, Perfume, Smoke or Mixture.</dd></div>
+        <div class="term"><dt>Classification</dt><dd>Learning a rule that maps a feature vector to a class.</dd></div>
+        <div class="term"><dt>Supervised learning</dt><dd>Learning from examples whose correct labels are already known.</dd></div>
+        <div class="term"><dt>Training / validation / test set</dt><dd>Training data fits the model; validation data checks it during development; test data is used once, at the end, to measure honest performance. Here: 70% / 15% / 15%.</dd></div>
+        <div class="term"><dt>Stratified split</dt><dd>A split that keeps the class proportions the same in every part (here 1:1:1:1).</dd></div>
+        <div class="term"><dt>Standardisation (z-score)</dt><dd>Rescaling each feature to mean 0 and standard deviation 1: \(z=(x-\mu)/\sigma\). It stops large-valued sensors from dominating.</dd></div>
+        <div class="term"><dt>Overfitting / underfitting</dt><dd>Overfitting: the model memorises training data and fails on new data. Underfitting: the model is too simple to capture the pattern.</dd></div>
+        <div class="term"><dt>Hyper-parameter</dt><dd>A setting chosen before training rather than learned, such as \(C\) and \(\gamma\).</dd></div>
+        <div class="term"><dt>PCA (principal component analysis)</dt><dd>Finds the directions in which the data varies most (eigenvectors of the covariance matrix). Used here only to draw the 7-D data in 2-D.</dd></div>
+      </dl>
+
+      <h2 id="svm">Support Vector Machine</h2>
+      <dl class="terms">
+        <div class="term"><dt>Support Vector Machine (SVM)</dt><dd>A classifier that separates two classes with the boundary that leaves the widest possible empty gap between them.</dd></div>
+        <div class="term"><dt>Hyperplane <span class="sym">wᵀx + b = 0</span></dt><dd>A flat boundary: a line in 2-D, a plane in 3-D, and its 7-D equivalent here. \(\mathbf{w}\) sets its direction, \(b\) its position.</dd></div>
+        <div class="term"><dt>Margin <span class="sym">2/‖w‖</span></dt><dd>The width of the empty band around the boundary. The SVM makes it as wide as possible.</dd></div>
+        <div class="term"><dt>Support vectors</dt><dd>The training points on or inside the margin. They alone decide the boundary; all other points could be deleted without changing it.</dd></div>
+        <div class="term"><dt>Hard margin</dt><dd>An SVM that allows no point inside the margin. Only possible when the classes separate perfectly.</dd></div>
+        <div class="term"><dt>Soft margin / slack <span class="sym">ξᵢ</span></dt><dd>Allows some points inside the margin or on the wrong side. \(\xi_i\) measures how far point \(i\) breaks the rule.</dd></div>
+        <div class="term"><dt>Regularisation parameter <span class="sym">C</span></dt><dd>The price of breaking the margin. Large \(C\): few mistakes allowed, narrow margin. Small \(C\): wide margin, more mistakes tolerated.</dd></div>
+        <div class="term"><dt>Hinge loss</dt><dd>\(\max\{0,\,1-y f(\mathbf{x})\}\): zero for points safely on the right side, growing linearly for points that break the margin.</dd></div>
+        <div class="term"><dt>Kernel <span class="sym">K(x, z)</span></dt><dd>A function that measures similarity between two readings and acts like an inner product in a hidden, higher-dimensional space.</dd></div>
+        <div class="term"><dt>Kernel trick</dt><dd>Getting a curved boundary by using a kernel, without ever computing the high-dimensional coordinates.</dd></div>
+        <div class="term"><dt>RBF (Gaussian) kernel <span class="sym">exp(−γ‖x−z‖²)</span></dt><dd>Similarity that is 1 for identical readings and fades to 0 as they move apart.</dd></div>
+        <div class="term"><dt>Gamma <span class="sym">γ</span></dt><dd>How fast RBF similarity fades. Large \(\gamma\): each point influences only its close neighbours (wiggly boundary). Small \(\gamma\): smooth boundary.</dd></div>
+        <div class="term"><dt>One-vs-one (OvO)</dt><dd>Splits a 4-class problem into 6 two-class SVMs, one per pair. Each votes; the class with most votes wins.</dd></div>
+        <div class="term"><dt>Decision function <span class="sym">f(x)</span></dt><dd>\(f(\mathbf{x})=\sum \alpha_i y_i K(\mathbf{x}_i,\mathbf{x})+b\). Its sign gives the class; its size is a confidence score.</dd></div>
+        <div class="term"><dt>Platt scaling</dt><dd>Fits a sigmoid to SVM scores to turn them into probabilities.</dd></div>
+      </dl>
+
+      <h2 id="opt">Optimisation</h2>
+      <dl class="terms">
+        <div class="term"><dt>Convex problem</dt><dd>A problem with a bowl-shaped objective and constraints, so any local minimum is the global minimum. Training an SVM is convex.</dd></div>
+        <div class="term"><dt>Quadratic programme (QP)</dt><dd>Minimising a quadratic function under linear constraints. Both SVM forms (primal and dual) are QPs.</dd></div>
+        <div class="term"><dt>Primal problem</dt><dd>The original SVM problem written in terms of \(\mathbf{w}\), \(b\) and \(\xi\).</dd></div>
+        <div class="term"><dt>Lagrange multiplier <span class="sym">αᵢ</span></dt><dd>A weight attached to each constraint. In the SVM, \(\alpha_i>0\) exactly for support vectors.</dd></div>
+        <div class="term"><dt>Lagrangian <span class="sym">𝓛</span></dt><dd>The objective plus each constraint multiplied by its multiplier. Setting its derivatives to zero links primal and dual.</dd></div>
+        <div class="term"><dt>Dual problem</dt><dd>An equivalent problem written in terms of the multipliers \(\alpha_i\) only. Data appear only through kernel values, which allows the kernel trick.</dd></div>
+        <div class="term"><dt>KKT conditions</dt><dd>Karush–Kuhn–Tucker conditions: the checklist an optimal solution must satisfy. For convex problems they are both necessary and sufficient.</dd></div>
+        <div class="term"><dt>Complementary slackness</dt><dd>For each constraint, either its multiplier is zero or the constraint is exactly tight. This is why only boundary points become support vectors.</dd></div>
+        <div class="term"><dt>Mercer's theorem</dt><dd>A function is a valid kernel exactly when it is symmetric and positive semi-definite. This keeps the dual convex.</dd></div>
+        <div class="term"><dt>SMO (sequential minimal optimisation)</dt><dd>The algorithm LIBSVM uses: it repeatedly solves the dual for just two multipliers at a time, which can be done exactly.</dd></div>
+      </dl>
+
+      <h2 id="eval">Evaluation</h2>
+      <dl class="terms">
+        <div class="term"><dt>Accuracy</dt><dd>Fraction of predictions that are correct.</dd></div>
+        <div class="term"><dt>Confusion matrix</dt><dd>A table of true class (rows) against predicted class (columns). The diagonal is correct; everything else is an error.</dd></div>
+        <div class="term"><dt>Precision</dt><dd>Of the readings the model called class \(p\), how many really were \(p\). "Can I trust this alarm?"</dd></div>
+        <div class="term"><dt>Recall / sensitivity</dt><dd>Of the readings that really were class \(p\), how many the model found. "Did we miss any leaks?"</dd></div>
+        <div class="term"><dt>Specificity</dt><dd>Of the clean-air readings, how many were correctly passed as clean.</dd></div>
+        <div class="term"><dt>F1-score</dt><dd>The harmonic mean of precision and recall. High only when both are high.</dd></div>
+        <div class="term"><dt>Macro average</dt><dd>The plain average of a metric over the classes, so every class counts equally.</dd></div>
+        <div class="term"><dt>ROC curve and AUC</dt><dd>The ROC curve plots true positive rate against false positive rate for every threshold. AUC is the area under it: 1 is perfect, 0.5 is guessing.</dd></div>
+        <div class="term"><dt>False alarm rate</dt><dd>Fraction of clean-air readings wrongly flagged as gas: \(FP/(FP+TN)\).</dd></div>
+        <div class="term"><dt>k-fold cross-validation</dt><dd>Split training data into \(k\) parts; train on \(k-1\), test on the remaining one, rotate, and average. Gives a stable score for choosing settings.</dd></div>
+        <div class="term"><dt>Grid search</dt><dd>Trying every combination from a list of hyper-parameter values and keeping the best cross-validation score.</dd></div>
+        <div class="term"><dt>Learning curve</dt><dd>Accuracy plotted against training-set size. Shows whether more data would help.</dd></div>
+        <div class="term"><dt>Chronological (time-ordered) split</dt><dd>Train on earlier readings, test on later ones. A tougher, more realistic test than a random split.</dd></div>
+      </dl>
+
+      <h2 id="rt">Real-time and deployment</h2>
+      <dl class="terms">
+        <div class="term"><dt>Real-time system</dt><dd>A system that is only correct if it answers before a deadline. Here the deadline is the next reading, 2 seconds later.</dd></div>
+        <div class="term"><dt>Latency</dt><dd>The time from receiving one reading to giving its prediction. Measured here: about 1.1 ms.</dd></div>
+        <div class="term"><dt>Inference</dt><dd>Using a trained model to predict. Training is done once offline; inference happens for every reading.</dd></div>
+        <div class="term"><dt>IoT (Internet of Things)</dt><dd>Small connected devices (sensors, microcontrollers) that measure and report data over a network.</dd></div>
+        <div class="term"><dt>Edge / TinyML</dt><dd>Running the model on the small device itself rather than in the cloud. Faster and works without internet.</dd></div>
+        <div class="term"><dt>Microcontroller (e.g. ESP32)</dt><dd>A tiny, cheap computer on one chip that reads sensors and can run a small model.</dd></div>
+      </dl>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

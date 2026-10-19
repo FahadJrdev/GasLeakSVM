@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gas leaks and gas sensors — Gas Leak SVM project defence</title>
+<meta name="description" content="Why gas leaks in manufacturing and logistics matter, how metal-oxide sensors work, and why threshold alarms are not enough.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="problem">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Gas leaks and gas sensors</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col">
+
+      <p class="eyebrow">03 · The problem &amp; the data</p>
+      <h1>Gas leaks and gas sensors</h1>
+      <p class="lede">
+        The background from Chapter 1: what the danger is, how cheap gas sensors work, and why a
+        single sensor with a fixed alarm level is not good enough.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          Factories burn LPG and natural gas. Cold stores cool food with ammonia. Depots store and
+          move gas cylinders and chemicals. Any of these can leak, and most of these gases have no
+          colour and often no smell. People cannot detect them, so machines must.
+        </p>
+        <p>
+          A cheap gas sensor is a small heated chip whose electrical resistance changes when gas
+          touches it. The problem is that <strong>each chip reacts to many gases</strong>. So a
+          single chip can say "something is in the air" but not "it is ammonia". Put seven
+          different chips together, though, and the <em>pattern</em> of their readings is
+          different for each gas. Reading that pattern is a classification problem, and that is
+          where the SVM comes in.
+        </p>
+      </section>
+
+      <h2>Why it matters</h2>
+      <ul>
+        <li>About <strong>2.78 million</strong> people die from work-related causes each year, and over <strong>1 billion</strong> workers are exposed to hazardous substances (ILO, 2019, 2021).</li>
+        <li><strong>Bhopal, India (1984):</strong> methyl isocyanate leak; at least 3,800 dead within hours.</li>
+        <li><strong>Cold-chain logistics:</strong> ammonia leaks killed at least 15 at a Shanghai cold store (2013) and hospitalised 32 near an Alabama warehouse (2010).</li>
+        <li><strong>Bangladesh:</strong> BM Container Depot, Sitakunda (2022) — 51 dead; Seema Oxygen plant (2023) — 7 dead; Siddique Bazar, Dhaka (2023) — 26 dead, linked to leaking gas; Narayanganj mosque (2020) — 34 dead from a leaking pipeline.</li>
+      </ul>
+      <p>
+        In many of these cases the leak started long before the disaster. Either no detector
+        existed, or it failed to give a warning people trusted.
+      </p>
+
+      <h2>Common dangerous gases</h2>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Gas</th><th>Where it is found</th><th>Danger level</th><th>Burns between (% in air)</th></tr></thead>
+          <tbody>
+            <tr><td>LPG (propane/butane)</td><td>fuel, forklifts, cylinders</td><td>IDLH 2,000 ppm</td><td>≈ 2–9.5</td></tr>
+            <tr><td>Methane</td><td>natural-gas lines</td><td>suffocates</td><td>5–15</td></tr>
+            <tr><td>Carbon monoxide</td><td>furnaces, engines</td><td>IDLH 1,200 ppm</td><td>12.5–74</td></tr>
+            <tr><td>Ammonia</td><td>cold-store refrigeration</td><td>IDLH 300 ppm</td><td>15–28</td></tr>
+            <tr><td>Hydrogen sulfide</td><td>waste, chemical plants</td><td>IDLH 100 ppm</td><td>4–44</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">IDLH = immediately dangerous to life or health. Sources: NIOSH, OSHA and NOAA, as cited in Table 1 of the report.</p>
+      <p>
+        Notice that ammonia becomes deadly at 300 ppm, which is 0.03%, far below the 15% at which
+        it burns. A useful alarm must react to <strong>small</strong> amounts and must know
+        <strong>which</strong> gas it is seeing.
+      </p>
+
+      <h2>How a metal-oxide (MOS) sensor works</h2>
+      <ol class="steps">
+        <li><h4>Heat the film</h4><p>A tiny heater warms a layer of tin dioxide (SnO₂) to a few hundred degrees.</p></li>
+        <li><h4>Oxygen traps electrons</h4><p>Oxygen from the air sticks to the surface and captures free electrons. Fewer free electrons means <strong>high resistance</strong>.</p></li>
+        <li><h4>Gas releases them</h4><p>A reducing gas reacts with that oxygen and gives the electrons back. Resistance <strong>falls</strong>, current rises.</p></li>
+        <li><h4>Read a number</h4><p>The circuit turns this into a voltage, and a 10-bit ADC turns the voltage into an integer from 0 to 1023.</p></li>
+      </ol>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Sensor</th><th>Mainly detects</th></tr></thead>
+          <tbody>
+            <tr><td>MQ2</td><td>LPG, butane, methane, smoke</td></tr>
+            <tr><td>MQ3</td><td>alcohol, ethanol, smoke</td></tr>
+            <tr><td>MQ5</td><td>LPG, natural gas</td></tr>
+            <tr><td>MQ6</td><td>LPG, butane</td></tr>
+            <tr><td>MQ7</td><td>carbon monoxide</td></tr>
+            <tr><td>MQ8</td><td>hydrogen</td></tr>
+            <tr><td>MQ135</td><td>air quality: ammonia, benzene, smoke</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card"><h4>Strengths</h4><p>Cheap, small, fast, long-lived, simple circuit.</p></div>
+        <div class="card"><h4>Weaknesses</h4><p>React to many gases (cross-sensitivity), drift with age, temperature and humidity.</p></div>
+      </div>
+
+      <h2>Ways to detect leaks</h2>
+      <figure class="fig">
+  <img src="figures/fig_taxonomy.png" alt="Leak detection methods fall into four groups" loading="lazy">
+  <figcaption><span class="fig-n">Figure 1 of the report</span>Leak detection methods fall into four groups. Your work sits in the data-driven group: a sensor array read by an SVM.</figcaption>
+</figure>
+
+      <h2>Why a threshold alarm is not enough</h2>
+      <p>A threshold alarm rings when one sensor passes a fixed level. It has three problems:</p>
+      <ul>
+        <li><strong>It cannot name the gas.</strong> A cleaning spray and an LPG leak can push MQ2 to the same level.</li>
+        <li><strong>False alarms.</strong> Harmless smells trigger it, so workers learn to ignore it (Rahman et al., 2017).</li>
+        <li><strong>Drift.</strong> As the sensor's baseline creeps, a fixed level slowly becomes wrong.</li>
+      </ul>
+      <p>
+        Using all seven sensors together and letting a classifier read the pattern solves the
+        first two problems. The third, drift, remains a limitation of this project and is tested
+        directly in Chapter 4.
+      </p>
+
+      <h2>What "real-time" means here</h2>
+      <p>
+        A real-time system is correct only if it answers <strong>in time</strong> (Shin &amp;
+        Ramanathan, 1994). The sensors give a new reading every 2 seconds. So the model must
+        classify each reading in well under 2 seconds. Your SVM takes about 1.1 ms, which is
+        roughly 1,800 times faster than needed.
+      </p>
+
+      <div class="say">
+        <p class="say-label">Say this if asked "why this project?"</p>
+        <p>"Cheap gas alarms watch one sensor and ring at a fixed level, so they cannot tell a dangerous leak from a harmless smell, and people stop trusting them. I used seven cheap sensors together and an SVM to recognise the pattern, which names the gas and does it within about a millisecond."</p>
+      </div>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

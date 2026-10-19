@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hard questions & honest gaps — Gas Leak SVM project defence</title>
+<meta name="description" content="The weak points of the gas leak SVM project, why they exist, and calm, honest answers to each.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="qa-weakspots">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Hard questions & honest gaps</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col">
+
+      <p class="eyebrow">11 · The interview</p>
+      <h1>Hard questions &amp; honest gaps</h1>
+      <p class="lede">
+        Every project has weak points. A good examiner will find them. The best defence is to
+        know them first, admit them calmly, and show you understand their effect.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          The 98% result is real, but it was measured under friendly conditions: readings were
+          shuffled randomly, so the test set contains near-twins of training readings. When you
+          tested on <em>later</em> readings, the score fell to 54%. That is the biggest single
+          thing to understand about your project.
+        </p>
+        <p>
+          The other gaps are about <strong>realism</strong>: lab gases instead of industrial ones,
+          raw sensor counts instead of ppm, and speed measured on a laptop. None of these is a
+          mistake. They are limits, and you already name them in Chapter 5. Say so with
+          confidence.
+        </p>
+      </section>
+
+      <div class="qa-toolbar">
+        <input class="search" data-search type="search" placeholder="Filter questions…" aria-label="Filter questions">
+        <button class="btn" type="button" data-quiz>Quiz mode</button>
+        <button class="btn" type="button" data-reveal-all>Reveal all</button>
+        <span class="counter" data-counter></span>
+      </div>
+
+      <h2 data-qa-sec>The evaluation</h2>
+
+      <article class="qa" id="w01">
+        <div class="qa-head"><span class="qa-id">W01</span>
+          <h3 class="qa-q">Isn't 98% too good? Your readings are 2 seconds apart, so the test set has near-copies of training readings.</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Yes, a random split is optimistic for time-series data, which is exactly why I also ran a time-ordered test, and there accuracy was 54.37%.</p>
+      <p>The 98% measures how well the model recognises the gas patterns under the conditions it was trained on. The 54% measures how it copes with drift into the future. Both are reported in the thesis; earlier studies on this dataset reported only random splits.</p>
+      <div class="say"><p class="say-label">Say this</p><p>"You're right that neighbouring readings are almost identical, so the random split is the friendly case. That's why Section 4.9 trains on the first 70% of each recording and tests on the last 30%. Accuracy drops to 54%, mostly later readings being classed as Mixture, which is sensor drift. So my claim is: the SVM separates the gas patterns very well, and a deployed system needs recalibration or drift compensation."</p></div>
+        </div>
+        <div class="qa-tags"><span class="tag">leakage</span><span class="tag">critical</span></div>
+      </article>
+
+      <article class="qa" id="w02">
+        <div class="qa-head"><span class="qa-id">W02</span>
+          <h3 class="qa-q">So in practice your model would fail?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">A model trained once and never updated would degrade, as any MOS-sensor model does; the remedy is periodic recalibration or retraining, which for an SVM takes seconds.</p>
+      <p>Drift is a known, open problem for metal-oxide sensors (Vergara et al., 2012). Even dedicated drift methods stay under 90% on the standard drift benchmark (Rehman et al., 2021). Online SVM updating (Dong et al., 2021) is a concrete next step.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">drift</span></div>
+      </article>
+
+      <article class="qa" id="w03">
+        <div class="qa-head"><span class="qa-id">W03</span>
+          <h3 class="qa-q">Did the large γ = 10 just memorise neighbours?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Partly, yes — a local kernel benefits from near-duplicate neighbours in a random split, which is one reason the time-ordered score is lower.</p>
+      <p>Cross-validation picked γ = 10 under the same random-split conditions. A fairer tuning would use time-blocked folds; that is a good improvement for future work.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">gamma</span><span class="tag">leakage</span></div>
+      </article>
+
+      <article class="qa" id="w04">
+        <div class="qa-head"><span class="qa-id">W04</span>
+          <h3 class="qa-q">Why have a validation set if you tuned with cross-validation?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">The validation set was only a second, independent check of generalisation (98.12%); tuning used 5-fold cross-validation inside the training set, and the test set was used once.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">split</span></div>
+      </article>
+
+      <article class="qa" id="w05">
+        <div class="qa-head"><span class="qa-id">W05</span>
+          <h3 class="qa-q">Your results come from a single split and seed. How confident are you?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">The cross-validation (97.63%), validation (98.12%) and test (98.23%) scores agree closely, which suggests the estimate is stable; repeated splits with confidence intervals would be a stronger check.</p>
+      <p>With 960 test readings, a 95% interval for 98.23% is roughly ±0.8 points (\(\pm1.96\sqrt{p(1-p)/n}\)).</p>
+        </div>
+        <div class="qa-tags"><span class="tag">statistics</span></div>
+      </article>
+
+      <article class="qa" id="w06">
+        <div class="qa-head"><span class="qa-id">W06</span>
+          <h3 class="qa-q">Training accuracy is 99.98%. Isn't that overfitting?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">The gap to test accuracy is under two points and validation agrees with test, so it is not harmful overfitting on this data — but the drift test shows it does not transfer well over time.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">overfitting</span></div>
+      </article>
+
+      <h2 data-qa-sec>Realism</h2>
+
+      <article class="qa" id="w07">
+        <div class="qa-head"><span class="qa-id">W07</span>
+          <h3 class="qa-q">The gases are deodorant and incense. How is that "manufacturing and logistics"?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">It isn't directly — the dataset is a laboratory benchmark; I used it to develop and validate the method, and real industrial gases are clearly stated as future work.</p>
+      <p>The method transfers: MQ2, MQ5, MQ6 target LPG and natural gas, MQ7 CO, MQ135 ammonia. Only retraining on real data is needed.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">data</span><span class="tag">realism</span></div>
+      </article>
+
+      <article class="qa" id="w08">
+        <div class="qa-head"><span class="qa-id">W08</span>
+          <h3 class="qa-q">Your inputs are ADC counts. Can the model say how much gas there is?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">No — the data are uncalibrated, so the model identifies the gas type but not its concentration in ppm; support vector regression on calibrated data would add that.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">units</span></div>
+      </article>
+
+      <article class="qa" id="w09">
+        <div class="qa-head"><span class="qa-id">W09</span>
+          <h3 class="qa-q">You claim real-time IoT, but you never built a device.</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Correct — I measured latency on a laptop CPU (about 1.1 ms) and argued from the prediction cost \(O(n_{SV}d)\) that a microcontroller would still be far under the 2 s deadline; deploying on an ESP32 is future work.</p>
+      <p>Storage check: 1,304 support vectors × 7 features, plus coefficients, is about 1,304 × 10 numbers ≈ 50 KB as 32-bit floats — small enough for an ESP32's memory.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">hardware</span></div>
+      </article>
+
+      <article class="qa" id="w10">
+        <div class="qa-head"><span class="qa-id">W10</span>
+          <h3 class="qa-q">Perfume is harmless. Why treat it as "gas present" in the leak view?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">In the leak view it stands for "a foreign vapour in the air"; the four-class output still separates it from Smoke and Mixture, so an operator can tell a harmless vapour from a hazardous one.</p>
+      <p>That is the main advantage over a threshold alarm.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">classes</span></div>
+      </article>
+
+      <h2 data-qa-sec>Data and method details</h2>
+
+      <article class="qa" id="w11">
+        <div class="qa-head"><span class="qa-id">W11</span>
+          <h3 class="qa-q">The dataset paper says 90 minutes at 2-second intervals — that is 2,700 readings, not 1,600. Why?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">The original authors do not explain it; I used the released file as it is (1,600 per class) and note the discrepancy rather than guessing.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">data</span></div>
+      </article>
+
+      <article class="qa" id="w12">
+        <div class="qa-head"><span class="qa-id">W12</span>
+          <h3 class="qa-q">There are 228 repeated rows. Why keep them?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">They are genuine consecutive readings of a slowly changing signal, not copying errors, so removing them would distort the data.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">data</span></div>
+      </article>
+
+      <article class="qa" id="w13">
+        <div class="qa-head"><span class="qa-id">W13</span>
+          <h3 class="qa-q">Is the comparison with other papers fair?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Only roughly — they used different splits (70/30 versus my 70/15/15) and single runs, so I treat differences of about a point as equal and claim only the clear gaps, such as 98.23% versus the earlier SVM's 88.36%.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">comparison</span></div>
+      </article>
+
+      <article class="qa" id="w14">
+        <div class="qa-head"><span class="qa-id">W14</span>
+          <h3 class="qa-q">You used <code>probability=True</code>, which is deprecated in scikit-learn 1.9. Does that matter?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">It only affects the probability outputs used for ROC curves and confidence; class predictions come from voting and are unaffected, and the version is stated so the work is reproducible.</p>
+      <p>Note: <code>predict_proba</code> can occasionally disagree with <code>predict</code>, because one comes from Platt scaling and the other from voting.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">software</span></div>
+      </article>
+
+      <article class="qa" id="w15">
+        <div class="qa-head"><span class="qa-id">W15</span>
+          <h3 class="qa-q">Why not a random forest, which got 98.67% in another paper?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">The goal was a mathematically transparent model I could derive fully; the tuned SVM reaches a comparable 98.23% and adds measured latency — a single-model study was the agreed scope.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">method</span></div>
+      </article>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

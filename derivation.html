@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The derivation, line by line — Gas Leak SVM project defence</title>
+<meta name="description" content="The soft-margin SVM derived from the primal problem through the Lagrangian, the dual, the KKT conditions, the kernel, voting, Platt scaling and prediction cost.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="derivation">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">The derivation, line by line</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col col-wide">
+
+      <p class="eyebrow">06 · The mathematics</p>
+      <h1>The derivation, line by line</h1>
+      <p class="lede">
+        Section 3.5 of the report, unpacked. If you can rebuild this on a whiteboard you can
+        defend the project. Equation numbers match the report.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>The derivation is a story in seven steps.</p>
+        <h3>1 · Write down what we want</h3>
+        <p>A wide margin, with a fine for every point that breaks it. That is the <em>primal</em> problem.</p>
+        <h3>2 · Move the rules into the objective</h3>
+        <p>Attach a weight (Lagrange multiplier) to every rule and add them in. That is the <em>Lagrangian</em>.</p>
+        <h3>3 · Take derivatives and set them to zero</h3>
+        <p>Three short results fall out. The most important: \(\mathbf{w}\) is a weighted sum of the training points.</p>
+        <h3>4 · Substitute back</h3>
+        <p>\(\mathbf{w}\), \(b\) and \(\xi\) disappear. What is left depends only on the multipliers and on dot products between readings. That is the <em>dual</em>.</p>
+        <h3>5 · Swap dot products for a kernel</h3>
+        <p>Because only dot products appear, we can replace them with the RBF kernel and get a curved boundary for free.</p>
+        <h3>6 · Read off who matters</h3>
+        <p>The KKT conditions say a multiplier can be non-zero only for points on or inside the margin. Those are the support vectors. Everything else drops out.</p>
+        <h3>7 · Predict</h3>
+        <p>A new reading is compared only with the support vectors. Six pairwise SVMs vote. Done in about a millisecond.</p>
+      </section>
+
+      <nav class="jump">
+        <a href="#s1">1. Primal</a>
+        <a href="#s2">2. Lagrangian</a>
+        <a href="#s3">3. Stationarity</a>
+        <a href="#s4">4. Dual</a>
+        <a href="#s5">5. KKT</a>
+        <a href="#s6">6. Kernel</a>
+        <a href="#s7">7. Decision &amp; voting</a>
+        <a href="#s8">8. Probabilities</a>
+        <a href="#s9">9. Solving &amp; cost</a>
+        <a href="#board">Whiteboard version</a>
+      </nav>
+
+      <h2 id="s1">1 · The soft-margin primal problem</h2>
+      <div class="math"><div>$$\min_{\mathbf{w},b,\boldsymbol{\xi}}\ \frac12\|\mathbf{w}\|^2+C\sum_{i=1}^{n}\xi_i$$</div><span class="num">(3.9)</span></div>
+      <div class="math"><div>$$\text{subject to}\quad y_i\big(\mathbf{w}^{\top}\phi(\mathbf{x}_i)+b\big)\ge1-\xi_i,\qquad \xi_i\ge0,\qquad i=1,\dots,n$$</div><span class="num">(3.10)</span></div>
+      <p>
+        First term: keep the margin \(2/\|\mathbf{w}\|\) wide. Second term: pay \(C\) for every
+        unit of margin violation. \(\phi\) maps a reading into feature space (for a linear SVM,
+        \(\phi(\mathbf{x})=\mathbf{x}\)). The objective is convex and the constraints are linear,
+        so this is a <strong>convex quadratic programme</strong>.
+      </p>
+
+      <h2 id="s2">2 · The Lagrangian</h2>
+      <p>
+        Give each margin constraint a multiplier \(\alpha_i\ge0\) and each \(\xi_i\ge0\)
+        constraint a multiplier \(\mu_i\ge0\). Subtract them from the objective:
+      </p>
+      <div class="math"><div>$$\mathcal{L}=\frac12\|\mathbf{w}\|^2+C\sum_{i}\xi_i-\sum_{i}\alpha_i\Big[y_i\big(\mathbf{w}^{\top}\phi(\mathbf{x}_i)+b\big)-1+\xi_i\Big]-\sum_{i}\mu_i\xi_i$$</div><span class="num">(3.12)</span></div>
+
+      <h2 id="s3">3 · Stationarity: set the derivatives to zero</h2>
+      <div class="math"><div>$$\frac{\partial\mathcal{L}}{\partial\mathbf{w}}=\mathbf{w}-\sum_i\alpha_iy_i\phi(\mathbf{x}_i)=\mathbf{0}\quad\Longrightarrow\quad\mathbf{w}=\sum_{i=1}^{n}\alpha_iy_i\phi(\mathbf{x}_i)$$</div><span class="num">(3.13)</span></div>
+      <div class="math"><div>$$\frac{\partial\mathcal{L}}{\partial b}=-\sum_i\alpha_iy_i=0\quad\Longrightarrow\quad\sum_{i=1}^{n}\alpha_iy_i=0$$</div><span class="num">(3.14)</span></div>
+      <div class="math"><div>$$\frac{\partial\mathcal{L}}{\partial\xi_i}=C-\alpha_i-\mu_i=0\quad\Longrightarrow\quad 0\le\alpha_i\le C$$</div><span class="num">(3.15)</span></div>
+      <div class="note good">
+        <p class="note-title">The one line to remember</p>
+        <p>
+          (3.13) says <strong>the boundary is built from the training points themselves</strong>,
+          each weighted by \(\alpha_iy_i\). Points with \(\alpha_i=0\) contribute nothing. And
+          (3.15) follows because \(\mu_i=C-\alpha_i\) must be \(\ge0\).
+        </p>
+      </div>
+
+      <h2 id="s4">4 · The dual problem</h2>
+      <p>
+        Put (3.13)–(3.15) back into \(\mathcal{L}\). The \(\xi_i\) terms cancel because
+        \(C-\alpha_i-\mu_i=0\); the \(b\) term cancels because \(\sum\alpha_iy_i=0\). Using
+        \(\|\mathbf{w}\|^2=\sum_i\sum_j\alpha_i\alpha_jy_iy_j\,\phi(\mathbf{x}_i)^\top\phi(\mathbf{x}_j)\)
+        and writing \(K(\mathbf{x}_i,\mathbf{x}_j)=\phi(\mathbf{x}_i)^\top\phi(\mathbf{x}_j)\):
+      </p>
+      <div class="math"><div>$$\max_{\boldsymbol{\alpha}}\ W(\boldsymbol{\alpha})=\sum_{i=1}^{n}\alpha_i-\frac12\sum_{i=1}^{n}\sum_{j=1}^{n}\alpha_i\alpha_jy_iy_jK(\mathbf{x}_i,\mathbf{x}_j)$$</div><span class="num">(3.16)</span></div>
+      <div class="math"><div>$$\text{subject to}\quad\sum_{i=1}^{n}\alpha_iy_i=0,\qquad 0\le\alpha_i\le C$$</div><span class="num">(3.17)</span></div>
+      <p>
+        In matrix form: minimise \(\tfrac12\boldsymbol\alpha^\top Q\boldsymbol\alpha-\mathbf{e}^\top\boldsymbol\alpha\)
+        with \(Q_{ij}=y_iy_jK(\mathbf{x}_i,\mathbf{x}_j)\). If \(K\) is positive semi-definite,
+        so is \(Q\), and the dual is convex. The primal constraints are linear and feasible, so
+        <strong>strong duality</strong> holds (Slater's condition): primal and dual give the
+        same optimum.
+      </p>
+      <div class="note info">
+        <p class="note-title">Why bother with the dual?</p>
+        <p>
+          Three reasons. It has simple box constraints \(0\le\alpha_i\le C\). Its size depends on
+          the number of samples \(n\), not on the dimension of \(\phi\) (which is infinite for RBF).
+          And <strong>the data appear only through \(K\)</strong>, which is what makes the kernel
+          trick possible.
+        </p>
+      </div>
+
+      <h2 id="s5">5 · KKT conditions and support vectors</h2>
+      <p>
+        For a convex problem the KKT conditions are necessary and sufficient for optimality.
+        Besides feasibility and (3.13)–(3.15), they include <strong>complementary
+        slackness</strong>:
+      </p>
+      <div class="math"><div>$$\alpha_i\big[y_if(\mathbf{x}_i)-1+\xi_i\big]=0,\qquad (C-\alpha_i)\,\xi_i=0$$</div><span class="num">(3.18)</span></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Case</th><th>Consequence</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>\(\alpha_i=0\)</td><td>\(y_if(\mathbf{x}_i)\ge1\)</td><td>safely outside the margin — not a support vector</td></tr>
+            <tr><td>\(0&lt;\alpha_i&lt;C\)</td><td>\(\xi_i=0,\ y_if(\mathbf{x}_i)=1\)</td><td>exactly on the margin — "free" support vector</td></tr>
+            <tr><td>\(\alpha_i=C\)</td><td>\(y_if(\mathbf{x}_i)\le1\)</td><td>inside the margin or misclassified — "bounded" support vector</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        The bias comes from any free support vector \(s\), where \(y_sf(\mathbf{x}_s)=1\).
+        LIBSVM averages over all free support vectors \(\mathcal{F}\) for stability:
+      </p>
+      <div class="math"><div>$$b=\frac{1}{|\mathcal{F}|}\sum_{s\in\mathcal{F}}\Big(y_s-\sum_{i\in\mathcal{S}}\alpha_iy_iK(\mathbf{x}_i,\mathbf{x}_s)\Big)$$</div><span class="num">(3.19)</span></div>
+      <p>
+        <strong>In your model:</strong> 1,304 of the 4,480 training readings (29.1%) are support
+        vectors — 331 NoGas, 312 Perfume, 241 Smoke, 420 Mixture.
+      </p>
+
+      <h2 id="s6">6 · Kernels and Mercer's condition</h2>
+      <div class="math"><div>$$\text{Linear: } K(\mathbf{x},\mathbf{z})=\mathbf{x}^{\top}\mathbf{z}$$</div><span class="num">(3.20)</span></div>
+      <div class="math"><div>$$\text{Polynomial: } K(\mathbf{x},\mathbf{z})=(\gamma\,\mathbf{x}^{\top}\mathbf{z}+r)^p$$</div><span class="num">(3.21)</span></div>
+      <div class="math"><div>$$\text{RBF: } K(\mathbf{x},\mathbf{z})=\exp\!\big(-\gamma\|\mathbf{x}-\mathbf{z}\|^2\big)$$</div><span class="num">(3.22)</span></div>
+      <p>
+        <strong>Mercer's theorem:</strong> a symmetric function is a valid kernel (an inner
+        product in some space) exactly when every Gram matrix \(G_{ij}=K(\mathbf{x}_i,\mathbf{x}_j)\)
+        is positive semi-definite: \(\mathbf{c}^\top G\mathbf{c}\ge0\) for all \(\mathbf{c}\).
+        This guarantees the dual stays convex. The RBF kernel passes, and its feature space is
+        infinite-dimensional.
+      </p>
+
+      <h2 id="s7">7 · The decision function and voting</h2>
+      <p>Substitute (3.13) into \(f(\mathbf{x})=\mathbf{w}^\top\phi(\mathbf{x})+b\):</p>
+      <div class="math"><div>$$f(\mathbf{x})=\sum_{i\in\mathcal{S}}\alpha_iy_iK(\mathbf{x}_i,\mathbf{x})+b,\qquad \hat y=\operatorname{sign}\big(f(\mathbf{x})\big)$$</div><span class="num">(3.23)</span></div>
+      <p>
+        Only support vectors appear. For four classes, the six pairwise SVMs \(f_{pq}\) vote:
+      </p>
+      <div class="math"><div>$$v_p(\mathbf{x})=\sum_{q\ne p}\mathbb{1}\big[f_{pq}(\mathbf{x})\text{ votes for }p\big],\qquad \hat c(\mathbf{x})=\arg\max_{p}\ v_p(\mathbf{x})$$</div><span class="num">(3.25)</span></div>
+      <p>
+        The <a href="lab.html#c7">Python lab, Cell 7</a> computes (3.23) by hand from the
+        trained model's support vectors and shows it matches scikit-learn to many decimal places.
+      </p>
+
+      <h2 id="s8">8 · Turning scores into probabilities (Platt scaling)</h2>
+      <div class="math"><div>$$P(y=1\mid\mathbf{x})\approx\frac{1}{1+\exp\big(Af(\mathbf{x})+B\big)}$$</div><span class="num">(3.26)</span></div>
+      <p>
+        \(A\) and \(B\) are fitted by minimising cross-entropy on held-out scores from internal
+        cross-validation. For four classes, the six pairwise probabilities are combined by
+        pairwise coupling (Wu et al., 2004). These probabilities draw the ROC curves and the
+        confidence column in Table 17.
+      </p>
+
+      <h2 id="s9">9 · Solving it, and how fast prediction is</h2>
+      <p>
+        <strong>Solving (SMO).</strong> Because of \(\sum\alpha_iy_i=0\), multipliers must change
+        at least two at a time. SMO picks a pair that breaks the KKT conditions, solves that
+        two-variable problem exactly, clips to \([0,C]\), and repeats until every KKT condition
+        holds within a tolerance.
+      </p>
+      <figure class="fig">
+  <img src="figures/fig_svm_algorithm.png" alt="Training and prediction, start to finish" loading="lazy">
+  <figcaption><span class="fig-n">Figure 13</span>Training and prediction, start to finish.</figcaption>
+</figure>
+      <p>
+        <strong>Prediction cost.</strong> One kernel value per support vector, each costing
+        \(O(d)\):
+      </p>
+      <div class="math"><div>$$T_{\text{predict}}=O(n_{SV}\,d)+O\big(n_{SV}(k-1)\big)+O(k^2)\approx O(n_{SV}\,d)$$</div><span class="num">(3.27)</span></div>
+      <p>
+        With \(n_{SV}=1{,}304\) and \(d=7\), that is roughly \(10^4\) operations per reading,
+        which is why the measured latency is about 1 ms. Training costs between \(O(dn^2)\) and
+        \(O(dn^3)\), but it is done once, offline.
+      </p>
+
+      <h2 id="board">The whiteboard version</h2>
+      <ol class="steps">
+        <li><h4>Primal</h4><p>\(\min\ \tfrac12\|\mathbf{w}\|^2+C\sum\xi_i\) s.t. \(y_i(\mathbf{w}^\top\phi_i+b)\ge1-\xi_i,\ \xi_i\ge0\).</p></li>
+        <li><h4>Lagrangian</h4><p>Subtract \(\alpha_i[\cdot]\) and \(\mu_i\xi_i\).</p></li>
+        <li><h4>Derivatives</h4><p>\(\mathbf{w}=\sum\alpha_iy_i\phi_i\), \(\ \sum\alpha_iy_i=0\), \(\ 0\le\alpha_i\le C\).</p></li>
+        <li><h4>Dual</h4><p>\(\max\ \sum\alpha_i-\tfrac12\sum\sum\alpha_i\alpha_jy_iy_jK_{ij}\).</p></li>
+        <li><h4>KKT</h4><p>\(\alpha_i&gt;0\) only on or inside the margin → support vectors; \(b\) from a free one.</p></li>
+        <li><h4>Predict</h4><p>\(f(\mathbf{x})=\sum_{SV}\alpha_iy_iK(\mathbf{x}_i,\mathbf{x})+b\); 6 pairwise votes.</p></li>
+      </ol>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

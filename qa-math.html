@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Q&A — the mathematics — Gas Leak SVM project defence</title>
+<meta name="description" content="Viva questions on SVM mathematics, optimisation, kernels and statistics, with short exact answers.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="qa-math">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Q&A — the mathematics</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col">
+
+      <p class="eyebrow">10 · The interview</p>
+      <h1>Q&amp;A — the mathematics</h1>
+      <p class="lede">
+        A mathematics panel will test the theory behind the SVM. These are the questions most
+        likely to come, with exact, short answers.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          Most maths questions on an SVM come down to five ideas: <strong>margin</strong>,
+          <strong>convexity</strong>, <strong>duality</strong>, <strong>KKT</strong> and
+          <strong>kernels</strong>. If you can explain each in two sentences and write its key
+          equation, you are well prepared. Derivations are on <a href="derivation.html">page 06</a>.
+        </p>
+      </section>
+
+      <div class="qa-toolbar">
+        <input class="search" data-search type="search" placeholder="Filter questions…" aria-label="Filter questions">
+        <button class="btn" type="button" data-quiz>Quiz mode</button>
+        <button class="btn" type="button" data-reveal-all>Reveal all</button>
+        <span class="counter" data-counter></span>
+      </div>
+
+      <h2 data-qa-sec>Geometry</h2>
+
+      <article class="qa" id="m01">
+        <div class="qa-head"><span class="qa-id">M01</span>
+          <h3 class="qa-q">Why is the margin equal to \(2/\|\mathbf{w}\|\)?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">The distance from a point to the plane \(\mathbf{w}^\top\mathbf{x}+b=0\) is \(|\mathbf{w}^\top\mathbf{x}+b|/\|\mathbf{w}\|\); the closest points have \(|\mathbf{w}^\top\mathbf{x}+b|=1\), so each side is \(1/\|\mathbf{w}\|\) and the total gap is \(2/\|\mathbf{w}\|\).</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">geometry</span></div>
+      </article>
+
+      <article class="qa" id="m02">
+        <div class="qa-head"><span class="qa-id">M02</span>
+          <h3 class="qa-q">Why minimise \(\tfrac12\|\mathbf{w}\|^2\) instead of maximising \(2/\|\mathbf{w}\|\)?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">They have the same solution, but \(\tfrac12\|\mathbf{w}\|^2\) is smooth and convex, which turns the problem into a quadratic programme with one global minimum.</p>
+      <p>The ½ just makes the derivative \(\mathbf{w}\) instead of \(2\mathbf{w}\).</p>
+        </div>
+        <div class="qa-tags"><span class="tag">geometry</span></div>
+      </article>
+
+      <article class="qa" id="m03">
+        <div class="qa-head"><span class="qa-id">M03</span>
+          <h3 class="qa-q">Why can we fix the scale so that the closest points give \(|\mathbf{w}^\top\mathbf{x}+b|=1\)?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Multiplying \(\mathbf{w}\) and \(b\) by any positive number describes the same plane, so we are free to choose the scale that makes the closest value exactly 1.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">geometry</span></div>
+      </article>
+
+      <h2 data-qa-sec>Optimisation</h2>
+
+      <article class="qa" id="m04">
+        <div class="qa-head"><span class="qa-id">M04</span>
+          <h3 class="qa-q">Is the SVM problem convex? Why does that matter?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Yes — a convex quadratic objective with linear constraints — so any local minimum is the global minimum and the answer does not depend on where the solver starts.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">optimisation</span></div>
+      </article>
+
+      <article class="qa" id="m05">
+        <div class="qa-head"><span class="qa-id">M05</span>
+          <h3 class="qa-q">What is the dual problem and why use it?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">It rewrites the SVM in terms of the Lagrange multipliers \(\alpha_i\) only; the data then appear only as inner products, which allows the kernel trick, and the constraints become a simple box \(0\le\alpha_i\le C\).</p>
+      <div class="math"><div>$$\max_{\boldsymbol\alpha}\ \sum_i\alpha_i-\tfrac12\sum_i\sum_j\alpha_i\alpha_jy_iy_jK(\mathbf{x}_i,\mathbf{x}_j),\quad \sum_i\alpha_iy_i=0,\ 0\le\alpha_i\le C$$</div></div>
+        </div>
+        <div class="qa-tags"><span class="tag">optimisation</span><span class="tag">dual</span></div>
+      </article>
+
+      <article class="qa" id="m06">
+        <div class="qa-head"><span class="qa-id">M06</span>
+          <h3 class="qa-q">Why do the primal and dual give the same answer?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Strong duality: the problem is convex and Slater's condition holds (the constraints are linear and a feasible point exists), so the duality gap is zero.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">optimisation</span><span class="tag">duality</span></div>
+      </article>
+
+      <article class="qa" id="m07">
+        <div class="qa-head"><span class="qa-id">M07</span>
+          <h3 class="qa-q">State the KKT conditions for the soft-margin SVM.</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Primal feasibility, dual feasibility (\(\alpha_i,\mu_i\ge0\)), stationarity (\(\mathbf{w}=\sum\alpha_iy_i\phi(\mathbf{x}_i)\), \(\sum\alpha_iy_i=0\), \(\alpha_i+\mu_i=C\)) and complementary slackness (\(\alpha_i[y_if(\mathbf{x}_i)-1+\xi_i]=0\), \((C-\alpha_i)\xi_i=0\)).</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">optimisation</span><span class="tag">kkt</span></div>
+      </article>
+
+      <article class="qa" id="m08">
+        <div class="qa-head"><span class="qa-id">M08</span>
+          <h3 class="qa-q">What exactly is a support vector, in terms of \(\alpha_i\)?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">A training point with \(\alpha_i>0\); complementary slackness forces that only for points on the margin (\(0<\alpha_i<C\)) or inside it (\(\alpha_i=C\)).</p>
+      <p>Your model has 1,304 support vectors out of 4,480 training readings.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">optimisation</span><span class="tag">sv</span></div>
+      </article>
+
+      <article class="qa" id="m09">
+        <div class="qa-head"><span class="qa-id">M09</span>
+          <h3 class="qa-q">How is the bias \(b\) computed?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">From any free support vector \(s\) (\(0<\alpha_s<C\)), which lies exactly on the margin: \(b=y_s-\sum_i\alpha_iy_iK(\mathbf{x}_i,\mathbf{x}_s)\); LIBSVM averages this over all free support vectors.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">optimisation</span><span class="tag">bias</span></div>
+      </article>
+
+      <article class="qa" id="m10">
+        <div class="qa-head"><span class="qa-id">M10</span>
+          <h3 class="qa-q">What does \(C\) do mathematically?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">It weights the total slack \(\sum\xi_i\) against \(\tfrac12\|\mathbf{w}\|^2\), and in the dual it is the upper bound on each \(\alpha_i\), limiting how much any single point can pull the boundary.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">optimisation</span><span class="tag">C</span></div>
+      </article>
+
+      <article class="qa" id="m11">
+        <div class="qa-head"><span class="qa-id">M11</span>
+          <h3 class="qa-q">What is the hinge loss and how does it relate to the SVM?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">\(\max\{0,1-yf(\mathbf{x})\}\); at the optimum each \(\xi_i\) equals the hinge loss of point \(i\), so the soft-margin SVM is hinge loss plus an \(L_2\) penalty on \(\mathbf{w}\).</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">optimisation</span><span class="tag">hinge</span></div>
+      </article>
+
+      <article class="qa" id="m12">
+        <div class="qa-head"><span class="qa-id">M12</span>
+          <h3 class="qa-q">How is the dual actually solved?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">By SMO: because \(\sum\alpha_iy_i=0\), at least two multipliers must change together, so SMO repeatedly optimises a pair analytically and clips it to \([0,C]\) until the KKT conditions hold.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">optimisation</span><span class="tag">smo</span></div>
+      </article>
+
+      <h2 data-qa-sec>Kernels</h2>
+
+      <article class="qa" id="m13">
+        <div class="qa-head"><span class="qa-id">M13</span>
+          <h3 class="qa-q">What is the kernel trick?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Replacing every inner product \(\phi(\mathbf{x})^\top\phi(\mathbf{z})\) with a kernel \(K(\mathbf{x},\mathbf{z})\), which gives a linear separator in a high-dimensional space — a curved one in the original space — without ever computing \(\phi\).</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">kernel</span></div>
+      </article>
+
+      <article class="qa" id="m14">
+        <div class="qa-head"><span class="qa-id">M14</span>
+          <h3 class="qa-q">What makes a function a valid kernel?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Mercer's condition: it must be symmetric and positive semi-definite, i.e. every Gram matrix satisfies \(\mathbf{c}^\top G\mathbf{c}\ge0\); this keeps the dual convex.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">kernel</span><span class="tag">mercer</span></div>
+      </article>
+
+      <article class="qa" id="m15">
+        <div class="qa-head"><span class="qa-id">M15</span>
+          <h3 class="qa-q">Explain the RBF kernel and the role of \(\gamma\).</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">\(K=\exp(-\gamma\|\mathbf{x}-\mathbf{z}\|^2)\) is 1 for identical points and decays with distance; \(\gamma\) sets the decay speed — small \(\gamma\) gives smooth, nearly linear boundaries, large \(\gamma\) gives tight, wiggly ones.</p>
+      <p>Its feature space is infinite-dimensional (expand the exponential as a power series).</p>
+        </div>
+        <div class="qa-tags"><span class="tag">kernel</span><span class="tag">rbf</span></div>
+      </article>
+
+      <article class="qa" id="m16">
+        <div class="qa-head"><span class="qa-id">M16</span>
+          <h3 class="qa-q">Your best \(\gamma\) is 10. Is that large?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Yes, on standardised data it is quite local: similarity halves at a distance of about \(\sqrt{\ln 2/10}\approx0.26\) standard deviations, so the boundary follows the data closely.</p>
+      <p>That suits the narrow NoGas/Perfume overlap, but it also profits from near-duplicate neighbouring readings in a random split — one reason the time-ordered test is lower. See <a href="qa-weakspots.html">page 11</a>.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">kernel</span><span class="tag">gamma</span></div>
+      </article>
+
+      <h2 data-qa-sec>Multi-class, probabilities, PCA</h2>
+
+      <article class="qa" id="m17">
+        <div class="qa-head"><span class="qa-id">M17</span>
+          <h3 class="qa-q">One-vs-one or one-vs-rest — which and why?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">One-vs-one (what LIBSVM uses): \(k(k-1)/2=6\) small, balanced two-class problems, which train faster and avoid the 1:3 imbalance that one-vs-rest creates.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">multiclass</span></div>
+      </article>
+
+      <article class="qa" id="m18">
+        <div class="qa-head"><span class="qa-id">M18</span>
+          <h3 class="qa-q">How does an SVM give probabilities?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Platt scaling fits a sigmoid \(1/(1+e^{Af+B})\) to the decision values by maximum likelihood on held-out scores; pairwise probabilities are then combined by pairwise coupling.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">probability</span></div>
+      </article>
+
+      <article class="qa" id="m19">
+        <div class="qa-head"><span class="qa-id">M19</span>
+          <h3 class="qa-q">What does PCA compute?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">The eigenvectors of the covariance matrix of the standardised data; each eigenvalue is the variance along its direction, and the first two components here keep 87.8% of the variance.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">pca</span></div>
+      </article>
+
+      <h2 data-qa-sec>Statistics and evaluation</h2>
+
+      <article class="qa" id="m20">
+        <div class="qa-head"><span class="qa-id">M20</span>
+          <h3 class="qa-q">Define precision, recall and F1.</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Precision \(=TP/(TP+FP)\), recall \(=TP/(TP+FN)\), and F1 is their harmonic mean \(2PR/(P+R)\).</p>
+      <p>Harmonic mean, because it is low whenever either one is low.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">metrics</span></div>
+      </article>
+
+      <article class="qa" id="m21">
+        <div class="qa-head"><span class="qa-id">M21</span>
+          <h3 class="qa-q">What does an AUC of 0.9986 mean?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Pick one reading of a class and one of another class at random: 99.86% of the time the model gives the true class the higher probability.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">metrics</span><span class="tag">auc</span></div>
+      </article>
+
+      <article class="qa" id="m22">
+        <div class="qa-head"><span class="qa-id">M22</span>
+          <h3 class="qa-q">Why cross-validation instead of one validation set for tuning?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Averaging over five different splits gives a more stable estimate, so the chosen \(C,\gamma\) depend less on one lucky or unlucky split.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">cv</span></div>
+      </article>
+
+      <article class="qa" id="m23">
+        <div class="qa-head"><span class="qa-id">M23</span>
+          <h3 class="qa-q">What is the cost of one prediction?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">\(O(n_{SV}\,d)\): one kernel evaluation per support vector, each \(O(d)\) — here about \(1{,}304\times7\), roughly \(10^4\) operations.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">complexity</span></div>
+      </article>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

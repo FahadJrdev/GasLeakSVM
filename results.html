@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The results, figure by figure — Gas Leak SVM project defence</title>
+<meta name="description" content="Every result of the gas leak SVM project: baseline, tuning, confusion matrix, ROC, kernels, leak detection, latency, drift and comparison.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="results">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">The results, figure by figure</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col col-wide">
+
+      <p class="eyebrow">08 · The mathematics</p>
+      <h1>The results, figure by figure</h1>
+      <p class="lede">
+        Chapter 4 of the report. For each figure: what it shows, the number to remember, and
+        what it means.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          A straight-line SVM on raw numbers got 4 out of 5 right. After scaling and tuning, the
+          curved SVM got about <strong>98 out of 100</strong> right on readings it had never seen.
+          Smoke and Mixture were <strong>never</strong> wrong. The only mistakes were clean air
+          versus perfume, which look almost identical to the sensors.
+        </p>
+        <p>
+          It is fast: about a thousandth of a second per reading. And it is honest: when tested
+          on <em>later</em> readings instead of random ones, accuracy fell to 54%, because the
+          sensors drift. That is the main thing future work must fix.
+        </p>
+      </section>
+
+      <nav class="jump">
+        <a href="#base">Baseline</a>
+        <a href="#grid">Tuning</a>
+        <a href="#final">Final model</a>
+        <a href="#roc">ROC</a>
+        <a href="#kern">Kernels</a>
+        <a href="#leak">Leak view</a>
+        <a href="#rt">Speed</a>
+        <a href="#drift">Drift</a>
+        <a href="#cmp">Comparison</a>
+      </nav>
+
+      <div class="grid grid-3">
+        <div class="card stat"><span class="k">Test accuracy</span><span class="v">98.23%</span></div>
+        <div class="card stat"><span class="k">Macro F1 · AUC</span><span class="v">0.9823 · 0.9986</span></div>
+        <div class="card stat"><span class="k">Per reading</span><span class="v">≈ 1.1 ms</span></div>
+      </div>
+
+      <h2 id="base">1 · Baseline: linear SVM on raw readings</h2>
+      <div class="fig-pair">
+        <figure class="fig">
+  <img src="figures/fig_confusion_baseline.png" alt="Linear SVM, C = 1, unscaled" loading="lazy">
+  <figcaption><span class="fig-n">Figure 16</span>Linear SVM, C = 1, unscaled. Test accuracy 80.31%, macro F1 0.8023.</figcaption>
+</figure>
+        <div>
+          <p>
+            Smoke and Mixture are already perfect (240/240). <strong>All 189 errors</strong> are
+            NoGas ↔ Perfume: 79 one way, 110 the other. Recall is only 67.1% for NoGas and 54.2%
+            for Perfume.
+          </p>
+          <p>
+            Training (77.81%) and validation (78.65%) accuracy are just as low, so this is
+            <strong>underfitting</strong>: a straight boundary is too simple.
+          </p>
+        </div>
+      </div>
+
+      <h2 id="grid">2 · The grid search</h2>
+      <figure class="fig">
+  <img src="figures/fig_grid_heatmap.png" alt="Cross-validation accuracy for all 42 pairs" loading="lazy">
+  <figcaption><span class="fig-n">Figure 17</span>Cross-validation accuracy for all 42 pairs. Best: C = 100, γ = 10 (0.976).</figcaption>
+</figure>
+      <ul>
+        <li><strong>Small γ (0.001):</strong> nearly linear, 80–93%. Underfits.</li>
+        <li><strong>γ around 1–10:</strong> flexible enough to separate NoGas from Perfume. Best region.</li>
+        <li><strong>γ = 100:</strong> drops to about 88%. Each point only "sees" its tiny neighbourhood. Overfits.</li>
+        <li><strong>C beyond 100:</strong> little extra gain.</li>
+      </ul>
+
+      <h2 id="final">3 · The tuned RBF-SVM</h2>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Metric</th><th>Baseline</th><th>Tuned RBF-SVM</th></tr></thead>
+          <tbody class="num-col">
+            <tr><td>Training accuracy</td><td>77.81%</td><td>99.98%</td></tr>
+            <tr><td>Validation accuracy</td><td>78.65%</td><td>98.12%</td></tr>
+            <tr><td><strong>Test accuracy</strong></td><td>80.31%</td><td><strong>98.23%</strong></td></tr>
+            <tr><td>Macro precision / recall / F1</td><td>0.804 / 0.803 / 0.802</td><td>0.982 / 0.982 / 0.982</td></tr>
+            <tr><td>Support vectors</td><td>1,047</td><td>1,304</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="fig-pair">
+        <figure class="fig">
+  <img src="figures/fig_confusion_improved.png" alt="Only 17 errors in 960 test readings: 10 NoGas → Perfume and 7 Perfume → NoGas" loading="lazy">
+  <figcaption><span class="fig-n">Figure 18</span>Only 17 errors in 960 test readings: 10 NoGas → Perfume and 7 Perfume → NoGas.</figcaption>
+</figure>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+            <tbody class="num-col">
+              <tr><td>NoGas</td><td>0.9705</td><td>0.9583</td><td>0.9644</td></tr>
+              <tr><td>Perfume</td><td>0.9588</td><td>0.9708</td><td>0.9648</td></tr>
+              <tr><td>Smoke</td><td>1.0000</td><td>1.0000</td><td>1.0000</td></tr>
+              <tr><td>Mixture</td><td>1.0000</td><td>1.0000</td><td>1.0000</td></tr>
+              <tr><td><strong>Macro</strong></td><td>0.9823</td><td>0.9823</td><td>0.9823</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p>
+        Validation (98.12%), test (98.23%) and cross-validation (97.63%) agree, so the result is
+        stable on new data from the same sessions. Training is 99.98%, but the gap to test is
+        under two points.
+      </p>
+
+      <h2 id="roc">4 · ROC curves and learning curve</h2>
+      <div class="fig-pair">
+        <figure class="fig">
+  <img src="figures/fig_roc.png" alt="AUC: Smoke 1" loading="lazy">
+  <figcaption><span class="fig-n">Figure 19</span>AUC: Smoke 1.0000, Mixture 1.0000, NoGas 0.9973, Perfume 0.9971. Macro 0.9986.</figcaption>
+</figure>
+        <figure class="fig">
+  <img src="figures/fig_learning_curve.png" alt="Cross-validation accuracy rises from 90" loading="lazy">
+  <figcaption><span class="fig-n">Figure 20</span>Cross-validation accuracy rises from 90.6% (358 samples) to 97.6% (3,584). Still rising, so more data would help a little.</figcaption>
+</figure>
+      </div>
+
+      <h2 id="kern">5 · Which kernel?</h2>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Kernel (all scaled, all tuned)</th><th>Best settings</th><th>CV accuracy</th><th>Test accuracy</th></tr></thead>
+          <tbody class="num-col">
+            <tr><td>Linear</td><td>C = 100</td><td>85.31%</td><td>84.79%</td></tr>
+            <tr><td>Polynomial</td><td>C = 100, degree 3</td><td>94.84%</td><td>95.52%</td></tr>
+            <tr><td><strong>RBF</strong></td><td>C = 100, γ = 10</td><td>97.63%</td><td><strong>98.23%</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Scaling and tuning alone lift the linear SVM from 80.31% to 84.79%. The rest of the gain
+        (to 98.23%) comes from the RBF kernel's ability to draw tight curved boundaries.
+      </p>
+      <figure class="fig">
+  <img src="figures/fig_decision_regions.png" alt="An RBF-SVM drawn in the 2-D PCA plane (illustration only; the real model uses all 7 features)" loading="lazy">
+  <figcaption><span class="fig-n">Figure 21</span>An RBF-SVM drawn in the 2-D PCA plane (illustration only; the real model uses all 7 features). Curved regions, Smoke isolated, NoGas and Perfume interlocked.</figcaption>
+</figure>
+
+      <h2 id="leak">6 · As a leak detector</h2>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Measure</th><th>Value</th></tr></thead>
+          <tbody class="num-col">
+            <tr><td>Gas readings caught (TP)</td><td>713 of 720</td></tr>
+            <tr><td>Clean air passed correctly (TN)</td><td>230 of 240</td></tr>
+            <tr><td><strong>Sensitivity</strong></td><td><strong>99.03%</strong></td></tr>
+            <tr><td>Specificity</td><td>95.83%</td></tr>
+            <tr><td>False alarm rate</td><td>4.17%</td></tr>
+            <tr><td>Missed-gas rate</td><td>0.97% (all 7 misses were Perfume)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        No Smoke or Mixture reading was missed. Because a real leak lasts many readings, a rule
+        such as "alarm after two gas readings in a row" would remove most single false alarms
+        while delaying a true alarm by only 2 seconds.
+      </p>
+
+      <h2 id="rt">7 · Real-time speed</h2>
+      <div class="fig-pair">
+        <figure class="fig">
+  <img src="figures/fig_latency.png" alt="Time to classify one reading, 500 readings, Intel Core i3 laptop" loading="lazy">
+  <figcaption><span class="fig-n">Figure 22</span>Time to classify one reading, 500 readings, Intel Core i3 laptop.</figcaption>
+</figure>
+        <div class="tw">
+          <table>
+            <tbody class="num-col">
+              <tr><th>Mean</th><td>1.10 ms</td></tr>
+              <tr><th>Median</th><td>0.99 ms</td></tr>
+              <tr><th>95th percentile</th><td>1.57 ms</td></tr>
+              <tr><th>Slowest</th><td>2.88 ms</td></tr>
+              <tr><th>Batch, per reading</th><td>0.21 ms</td></tr>
+              <tr><th>Time budget used</th><td>≈ 0.055% of 2 s</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p>
+        Compare: a thermal-image CNN on a microcontroller needed 1,414 ms per prediction on the
+        same dataset (El Barkani et al., 2024).
+      </p>
+
+      <h2 id="drift">8 · The honest test: later readings</h2>
+      <p>
+        Train on the first 70% of each class <em>in time order</em>, test on the last 30%:
+      </p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>True ↓ / Predicted →</th><th>NoGas</th><th>Perfume</th><th>Smoke</th><th>Mixture</th></tr></thead>
+          <tbody class="num-col">
+            <tr><th>NoGas</th><td>289</td><td>48</td><td>0</td><td>143</td></tr>
+            <tr><th>Perfume</th><td>0</td><td>225</td><td>0</td><td>255</td></tr>
+            <tr><th>Smoke</th><td>0</td><td>0</td><td>50</td><td>430</td></tr>
+            <tr><th>Mixture</th><td>0</td><td>0</td><td>0</td><td>480</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note risk">
+        <p class="note-title">Accuracy 54.37%, macro F1 0.5187</p>
+        <p>
+          Later readings drifted (for example MQ3 in the Smoke session climbed from about 350 to
+          430) into regions the model had learned as Mixture. This does not cancel the 98%
+          result; it limits it. The 98% says the model recognises the patterns it was trained on.
+          The 54% says a deployed system must be recalibrated or retrained over time. Previous
+          studies on this dataset never ran this test.
+        </p>
+      </div>
+
+      <h2 id="cmp">9 · Against earlier work on the same data</h2>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Study</th><th>Input</th><th>Model</th><th>Accuracy</th><th>Speed reported?</th></tr></thead>
+          <tbody>
+            <tr><td>Narkhede et al. (2021)</td><td>sensors</td><td>LSTM</td><td>82%</td><td>no</td></tr>
+            <tr><td>Lalithadevi &amp; Krishnaveni (2025)</td><td>sensors</td><td>SVM, untuned</td><td>88.36%</td><td>no</td></tr>
+            <tr><td>Attallah (2023)</td><td>sensors as images</td><td>3 CNNs + Bi-LSTM</td><td>93.27%</td><td>no</td></tr>
+            <tr><td>Sharma et al. (2024)</td><td>sensors</td><td>BiLSTM-Dense</td><td>93.39%</td><td>no</td></tr>
+            <tr><td>Arya et al. (2024)</td><td>sensors + image features</td><td>SVM</td><td>94.22%</td><td>no</td></tr>
+            <tr><td>Lalithadevi &amp; Krishnaveni (2025)</td><td>sensors</td><td>tuned random forest</td><td>98.67%</td><td>no</td></tr>
+            <tr><td><strong>This project</strong></td><td><strong>sensors</strong></td><td><strong>tuned RBF-SVM</strong></td><td><strong>98.23%</strong></td><td><strong>yes, ≈ 1.1 ms</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">Studies used different splits (70/30 vs 70/15/15) and single runs, so gaps of about one point should not be over-read.</p>
+
+      <div class="say">
+        <p class="say-label">Say this — the results in thirty seconds</p>
+        <p>"The linear baseline reached 80%. Scaling and a tuned RBF kernel raised it to 98.23% on unseen test data, with macro F1 0.982 and AUC 0.999. Smoke and mixture were never misclassified; the only errors were clean air versus perfume. As a leak detector it caught 99% of gas readings, and it classifies a reading in about one millisecond. A time-ordered test dropped accuracy to 54%, which shows drift is the main limitation."</p>
+      </div>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

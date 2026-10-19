@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scaling, tuning and metrics — Gas Leak SVM project defence</title>
+<meta name="description" content="Standardisation, grid search with stratified 5-fold cross-validation, and every evaluation metric used in the project.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="tuning">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Scaling, tuning and metrics</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col">
+
+      <p class="eyebrow">07 · The mathematics</p>
+      <h1>Scaling, tuning and metrics</h1>
+      <p class="lede">
+        Sections 3.4, 3.6 and 3.7: how the data are prepared, how \(C\) and \(\gamma\) are
+        chosen, and how performance is measured.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          <strong>Scaling.</strong> MQ8's numbers swing three times more than MQ6's. Without
+          rescaling, the RBF kernel would mostly listen to MQ8. So every sensor is shifted and
+          stretched to mean 0 and spread 1.
+        </p>
+        <p>
+          <strong>Tuning.</strong> The SVM has two dials, \(C\) and \(\gamma\). You tried 42
+          combinations. For each one, the training data were cut into five pieces; the model
+          learned on four and was tested on the fifth, five times over, and the scores were
+          averaged. The best pair was \(C=100\), \(\gamma=10\).
+        </p>
+        <p>
+          <strong>Measuring.</strong> Accuracy alone is not enough for safety. Recall asks "did we
+          catch every leak?" and precision asks "can we trust the alarm?" Both are reported for
+          every class.
+        </p>
+      </section>
+
+      <h2>1 · Standardisation (z-score)</h2>
+      <p>Using the <strong>training set only</strong>, for each sensor \(j\):</p>
+      <div class="math"><div>$$\mu_j=\frac1n\sum_{i=1}^{n}x_{ij},\qquad \sigma_j=\sqrt{\frac1n\sum_{i=1}^{n}(x_{ij}-\mu_j)^2}$$</div><span class="num">(3.2)</span></div>
+      <div class="math"><div>$$z_{ij}=\frac{x_{ij}-\mu_j}{\sigma_j}$$</div><span class="num">(3.3)</span></div>
+      <p>
+        The same \(\mu_j,\sigma_j\) are applied to validation, test and future live readings.
+        Using test data to compute them would leak information, so it is never done. Why it
+        matters for RBF: the kernel uses \(\|\mathbf{x}-\mathbf{z}\|^2=\sum_j(x_j-z_j)^2\), a sum
+        over sensors, so unequal scales would give unequal votes.
+      </p>
+
+      <h2>2 · Grid search with stratified 5-fold cross-validation</h2>
+      <p>
+        Split the training set into five folds \(\mathcal{D}_1,\dots,\mathcal{D}_5\) with equal
+        class proportions. For each candidate \(\theta=(C,\gamma)\):
+      </p>
+      <div class="math"><div>$$\mathrm{CV}(\theta)=\frac15\sum_{m=1}^{5}\mathrm{Acc}\big(\hat f_\theta^{(-m)};\ \mathcal{D}_m\big),\qquad \theta^*=\arg\max_{\theta}\ \mathrm{CV}(\theta)$$</div><span class="num">(3.28)</span></div>
+      <figure class="fig">
+  <img src="figures/fig_kfold.png" alt="Each fold takes one turn as the validation part" loading="lazy">
+  <figcaption><span class="fig-n">Figure 14</span>Each fold takes one turn as the validation part. The five scores are averaged.</figcaption>
+</figure>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Setting</th><th>Values tried</th></tr></thead>
+          <tbody>
+            <tr><td>\(C\)</td><td>0.1, 1, 10, 100, 1000, 10000</td></tr>
+            <tr><td>\(\gamma\)</td><td>0.001, 0.01, 0.1, 1, 10, 30, 100</td></tr>
+            <tr><td>Total</td><td>42 pairs × 5 folds = 210 fits, about 9 minutes on the laptop</td></tr>
+            <tr><td>Winner</td><td>\(C=100,\ \gamma=10\), cross-validation accuracy 97.63%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        The scaler sits <strong>inside</strong> a scikit-learn <code>Pipeline</code>, so it is
+        re-fitted on each training fold and the validation fold never influences it. The
+        winner is not on the edge of the grid, so the range was wide enough.
+      </p>
+
+      <h2>3 · Confusion matrix</h2>
+      <p>
+        \(M_{pq}\) counts readings of true class \(p\) predicted as class \(q\). For class \(p\)
+        treated as "positive":
+      </p>
+      <div class="math"><div>$$TP_p=M_{pp},\qquad FP_p=\sum_{q\ne p}M_{qp},\qquad FN_p=\sum_{q\ne p}M_{pq}$$</div><span class="num">(3.29)</span></div>
+
+      <h2>4 · The metrics</h2>
+      <div class="math"><div>$$\text{Accuracy}=\frac{\sum_{p}M_{pp}}{N}$$</div><span class="num">(3.30)</span></div>
+      <div class="math"><div>$$\text{Precision}_p=\frac{TP_p}{TP_p+FP_p},\qquad \text{Recall}_p=\frac{TP_p}{TP_p+FN_p}$$</div><span class="num">(3.31)</span></div>
+      <div class="math"><div>$$\mathrm{F1}_p=\frac{2\,\text{Precision}_p\,\text{Recall}_p}{\text{Precision}_p+\text{Recall}_p},\qquad \text{Macro F1}=\frac1k\sum_{p=1}^{k}\mathrm{F1}_p$$</div><span class="num">(3.32)</span></div>
+      <div class="grid grid-2">
+        <div class="card"><h4>Precision</h4><p>"When it says Smoke, how often is it really smoke?" Low precision means false alarms.</p></div>
+        <div class="card"><h4>Recall</h4><p>"Of all the real smoke, how much did it catch?" Low recall means missed leaks — the dangerous error.</p></div>
+      </div>
+
+      <h2>5 · ROC curve and AUC</h2>
+      <div class="math"><div>$$\mathrm{TPR}_p(\tau)=\frac{TP_p(\tau)}{TP_p(\tau)+FN_p(\tau)},\qquad \mathrm{FPR}_p(\tau)=\frac{FP_p(\tau)}{FP_p(\tau)+TN_p(\tau)}$$</div><span class="num">(3.33)</span></div>
+      <p>
+        Slide a threshold \(\tau\) on the predicted probability and plot TPR against FPR. The
+        area under the curve (AUC) is the chance that a random positive reading gets a higher
+        score than a random negative one. 1 is perfect; 0.5 is guessing.
+      </p>
+
+      <h2>6 · Viewing it as a leak detector</h2>
+      <p>Merge Perfume, Smoke and Mixture into "gas present" and keep NoGas as "no leak":</p>
+      <div class="math"><div>$$\text{Sensitivity}=\frac{TP}{TP+FN},\qquad \text{Specificity}=\frac{TN}{TN+FP},\qquad \text{False alarm rate}=\frac{FP}{FP+TN}$$</div><span class="num">(3.34)</span></div>
+
+      <h2>7 · Latency</h2>
+      <p>
+        Real-time speed is measured as wall-clock time to classify <strong>one</strong> reading,
+        including scaling, averaged over 500 test readings fed one at a time, as a live sensor
+        stream would.
+      </p>
+
+      <div class="say">
+        <p class="say-label">Say this if asked how you chose C and γ</p>
+        <p>"By grid search with stratified five-fold cross-validation on the training set only: six values of C and seven of gamma, 42 pairs, 210 fits. Scaling was inside the pipeline so no fold leaked into another. The best pair was C equals 100 and gamma equals 10 at 97.6% cross-validation accuracy, and it was not on the edge of the grid. The test set was used only once, at the end."</p>
+      </div>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

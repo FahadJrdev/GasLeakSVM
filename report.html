@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The report, chapter by chapter — Gas Leak SVM project defence</title>
+<meta name="description" content="A short guide to the five chapters of the gas leak SVM project report.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="report">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">The report, chapter by chapter</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col">
+
+      <p class="eyebrow">01 · Orientation</p>
+      <h1>The report, chapter by chapter</h1>
+      <p class="lede">
+        The report has front matter and five chapters. Here is what each part says, why it is
+        there, and the one point from it an examiner is most likely to test.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          The report tells one story in five steps. <strong>Why</strong> gas leaks matter
+          (Chapter 1). <strong>What others have tried</strong> and what is missing (Chapter 2).
+          <strong>How</strong> your method works, with all the mathematics (Chapter 3).
+          <strong>What happened</strong> when you ran it (Chapter 4). And <strong>what it
+          means</strong>, including its limits (Chapter 5).
+        </p>
+        <p>
+          If you can say one sentence for each chapter, you can survive the opening of any viva.
+          Those sentences are in the box at the bottom of this page.
+        </p>
+      </section>
+
+      <nav class="jump">
+        <a href="#front">Front matter</a>
+        <a href="#c1">Ch. 1</a>
+        <a href="#c2">Ch. 2</a>
+        <a href="#c3">Ch. 3</a>
+        <a href="#c4">Ch. 4</a>
+        <a href="#c5">Ch. 5</a>
+        <a href="#say">Say it in 90 seconds</a>
+      </nav>
+
+      <h2 id="front">Front matter</h2>
+      <p>
+        Title page, abstract, acknowledgements, certification, declaration, table of contents,
+        list of 19 tables, list of 22 figures and a list of abbreviations. The
+        <strong>abstract</strong> already contains every headline number: 80.31% → 98.23%,
+        F1 0.9823, AUC 0.9986, 99.03% sensitivity, about 1.1 ms per reading.
+      </p>
+
+      <h2 id="c1">Chapter 1 — Introduction</h2>
+      <dl class="kv">
+        <dt>1.1</dt><dd>Why it matters: ILO figures (2.78 million work deaths a year) and real accidents — Bhopal, LG Polymers, Shanghai and Alabama ammonia cold stores, and in Bangladesh the BM Container Depot (51 dead), Seema Oxygen plant, Siddique Bazar and Narayanganj.</dd>
+        <dt>1.2</dt><dd>Table 1: safety limits (OSHA, NIOSH, IDLH, LEL) for LPG, methane, CO, H₂S, ammonia, hydrogen and benzene.</dd>
+        <dt>1.3</dt><dd>Causes of leaks: equipment failure, corrosion, storage and temperature failure, cylinder handling, illegal connections, human error.</dd>
+        <dt>1.4</dt><dd>Sensor types; how a metal-oxide (MOS) sensor works; Table 2 lists the seven MQ sensors.</dd>
+        <dt>1.5–1.6</dt><dd>Figure 1 taxonomy of detection methods; why threshold alarms fail; what "real-time" means.</dd>
+        <dt>1.7</dt><dd>Four objectives: derive the SVM, build the model, evaluate it, test real-time speed and drift.</dd>
+      </dl>
+      <div class="note info"><p class="note-title">Most likely question</p><p>"Why not just use a threshold alarm?" — because one sensor cannot tell a dangerous gas from a harmless one. See <a href="problem.html">page 03</a>.</p></div>
+
+      <h2 id="c2">Chapter 2 — Literature review</h2>
+      <p>
+        About 45 studies in six themes: machine learning for sensor arrays, SVMs for gas, IoT and
+        TinyML detectors, deep learning on this exact dataset, industrial and cold-chain uses, and
+        sensor drift. Table 3 lists earlier results on MultimodalGasData. Section 2.7 states the
+        <strong>research gap</strong>: the only sensor-only SVM on this data scored 88.36% with no
+        tuning described, and nobody measured real-time speed.
+      </p>
+      <div class="note info"><p class="note-title">Most likely question</p><p>"What is new in your work?" — a full derivation, a properly tuned SVM that beats the earlier SVM by about 10 points, measured latency, and an honest drift test.</p></div>
+
+      <h2 id="c3">Chapter 3 — Methodology</h2>
+      <dl class="kv">
+        <dt>3.1</dt><dd>Figure 2: the research workflow.</dd>
+        <dt>3.2</dt><dd>The dataset: 6,400 rows, 7 sensors, 4 classes of 1,600, sample thermal images (not used for modelling).</dd>
+        <dt>3.3</dt><dd>Data exploration: statistics, box plots, time plots, correlation and PCA (Eq. 3.1).</dd>
+        <dt>3.4</dt><dd>70/15/15 stratified split and z-score scaling (Eqs. 3.2–3.3).</dd>
+        <dt>3.5</dt><dd>The heart of the report — the SVM derived step by step (Eqs. 3.4–3.27). See <a href="svm.html">page 05</a> and <a href="derivation.html">page 06</a>.</dd>
+        <dt>3.6–3.7</dt><dd>Grid search with 5-fold cross-validation, and every evaluation formula (Eqs. 3.28–3.34).</dd>
+        <dt>3.8–3.9</dt><dd>The real-time deployment idea (Figure 15) and the full Python code.</dd>
+      </dl>
+      <div class="note info"><p class="note-title">Most likely question</p><p>"Derive the dual problem." Practise it on <a href="derivation.html">page 06</a> until you can do it on a whiteboard.</p></div>
+
+      <h2 id="c4">Chapter 4 — Results and discussion</h2>
+      <p>
+        Baseline 80.31%; grid search picks \(C=100,\ \gamma=10\); tuned model 98.23%; confusion
+        matrix with only 17 errors, all between NoGas and Perfume; ROC curves; learning curve;
+        kernel comparison (linear 84.79%, polynomial 95.52%, RBF 98.23%); leak view (99.03%
+        sensitivity); latency about 1.1 ms; drift test (54.37%); comparison with earlier studies.
+      </p>
+      <div class="note info"><p class="note-title">Most likely question</p><p>"Why does accuracy drop to 54% in the time-ordered test?" — sensor drift. See <a href="qa-weakspots.html">page 11</a>.</p></div>
+
+      <h2 id="c5">Chapter 5 — Conclusion</h2>
+      <p>
+        Summary, five contributions, four limitations (lab gases, drift, no ppm calibration,
+        latency measured on a laptop) and five ideas for future work (real industrial gases, drift
+        compensation, support vector regression for concentration, ESP32 deployment, time-based
+        features).
+      </p>
+
+      <div class="say" id="say">
+        <p class="say-label">Say this — the ninety-second walkthrough</p>
+        <p>"Chapter 1 explains why gas leaks in factories and warehouses are dangerous, with real cases from Bangladesh, and why single-sensor threshold alarms give false alarms."</p>
+        <p>"Chapter 2 reviews about forty-five studies and finds the gap: on this dataset the only sensor-only SVM reached 88%, untuned, and nobody measured speed."</p>
+        <p>"Chapter 3 derives the SVM fully — margin, dual problem, KKT conditions, RBF kernel and one-vs-one voting — and explains scaling, tuning and the metrics."</p>
+        <p>"Chapter 4 shows the tuned model reaches 98.23%, decides in about a millisecond, and catches 99% of gas readings, and it honestly shows that sensor drift lowers accuracy on later readings."</p>
+        <p>"Chapter 5 concludes that a well-tuned, explainable SVM is a practical real-time detector, and lists the next steps: real industrial gases and drift compensation."</p>
+      </div>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

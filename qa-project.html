@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Q&A — your project — Gas Leak SVM project defence</title>
+<meta name="description" content="Viva questions about the gas leak SVM project, each with a one-sentence answer and a short follow-up.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="qa-project">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Q&A — your project</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col">
+
+      <p class="eyebrow">09 · The interview</p>
+      <h1>Q&amp;A — your project</h1>
+      <p class="lede">
+        Each answer opens with a <strong>bold one-sentence version</strong>. Say that first, then
+        stop. Use the rest only if they push. Turn on <strong>Quiz mode</strong> and answer out
+        loud before you reveal.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words — what is being tested</p>
+        <p>
+          Questions about your own project check one thing: <strong>do you understand it, or did
+          you only complete it?</strong> Someone who completed it lists steps. Someone who
+          understands it says <em>why</em> each step was needed.
+        </p>
+        <ul>
+          <li><strong>Short answer first, then pause.</strong> Let them ask the next question.</li>
+          <li><strong>Use numbers.</strong> "98.23% on 960 unseen readings" beats "very accurate".</li>
+          <li><strong>Mention limits yourself.</strong> Saying "the gases were deodorant and incense, not LPG" before they do makes everything else you say more believable.</li>
+        </ul>
+      </section>
+
+      <div class="qa-toolbar">
+        <input class="search" data-search type="search" placeholder="Filter questions…" aria-label="Filter questions">
+        <button class="btn" type="button" data-quiz>Quiz mode</button>
+        <button class="btn" type="button" data-reveal-all>Reveal all</button>
+        <span class="counter" data-counter></span>
+      </div>
+
+      <h2 data-qa-sec>Opening questions</h2>
+
+      <article class="qa" id="p01">
+        <div class="qa-head"><span class="qa-id">P01</span>
+          <h3 class="qa-q">Tell me about your project.</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">I built a real-time gas classifier: a Support Vector Machine reads seven cheap gas sensors and decides whether the air holds no gas, perfume, smoke or a mixture — 98.23% accurate in about a millisecond per reading.</p>
+      <p>Then stop. If they want more: I derived the SVM mathematically, tuned an RBF kernel by cross-validation, measured speed, and tested it on later readings, which showed sensor drift is the main limit.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">opening</span><span class="tag">summary</span></div>
+      </article>
+
+      <article class="qa" id="p02">
+        <div class="qa-head"><span class="qa-id">P02</span>
+          <h3 class="qa-q">Why is this problem important?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Gas leaks in factories, cold stores and depots kill people, and the cheap alarms most sites use cannot tell a dangerous gas from a harmless smell, so they give false alarms and get ignored.</p>
+      <p>Examples: Bhopal 1984; ammonia leaks at cold stores in Shanghai (2013) and Alabama (2010); in Bangladesh the BM Container Depot fire (2022, 51 dead) and the Siddique Bazar explosion (2023, 26 dead).</p>
+        </div>
+        <div class="qa-tags"><span class="tag">motivation</span></div>
+      </article>
+
+      <article class="qa" id="p03">
+        <div class="qa-head"><span class="qa-id">P03</span>
+          <h3 class="qa-q">Your title says "logistics and manufacturing". Where is that in your data?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">That is the application setting; the data are a public laboratory benchmark I used to develop and test the method.</p>
+      <p>The method — a sensor array plus an SVM — is exactly what such sites would deploy. The dataset uses deodorant and incense smoke, so I state clearly that real industrial gases are future work. See <a href="qa-weakspots.html">page 11</a>.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">topic</span></div>
+      </article>
+
+      <article class="qa" id="p04">
+        <div class="qa-head"><span class="qa-id">P04</span>
+          <h3 class="qa-q">What is new in your work?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">A complete derivation of the multi-class SVM for this problem, a properly tuned SVM that raises the best sensor-only SVM on this data from 88.36% to 98.23%, measured real-time latency, and an honest drift test.</p>
+      <p>No earlier study on this dataset reported prediction speed or tested on time-ordered data.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">novelty</span></div>
+      </article>
+
+      <h2 data-qa-sec>Data</h2>
+
+      <article class="qa" id="p05">
+        <div class="qa-head"><span class="qa-id">P05</span>
+          <h3 class="qa-q">Describe your dataset.</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">MultimodalGasData: 6,400 readings from seven MQ metal-oxide sensors, recorded every 2 seconds, in four balanced classes of 1,600 — NoGas, Perfume, Smoke and Mixture.</p>
+      <p>Values are raw 10-bit ADC counts (0–1023), not ppm. It is public on Mendeley Data under CC BY 4.0. I used only the sensor part, not the thermal images.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">data</span></div>
+      </article>
+
+      <article class="qa" id="p06">
+        <div class="qa-head"><span class="qa-id">P06</span>
+          <h3 class="qa-q">Why seven sensors and not one?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Each MOS sensor reacts to many gases, so one sensor cannot name a gas, but the pattern across seven different sensors works like a fingerprint.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">data</span><span class="tag">sensors</span></div>
+      </article>
+
+      <article class="qa" id="p07">
+        <div class="qa-head"><span class="qa-id">P07</span>
+          <h3 class="qa-q">How did you split the data?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Stratified random split, 70% training (4,480), 15% validation (960), 15% test (960), seed 42, keeping all four classes equal in every part.</p>
+      <p>I also ran a second, tougher split in time order (first 70% of each class to train, last 30% to test).</p>
+        </div>
+        <div class="qa-tags"><span class="tag">data</span><span class="tag">split</span></div>
+      </article>
+
+      <article class="qa" id="p08">
+        <div class="qa-head"><span class="qa-id">P08</span>
+          <h3 class="qa-q">What did you learn before training any model?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Smoke and Mixture are clearly different, NoGas and Perfume are almost identical, and readings drift slowly over time.</p>
+      <p>All three show up later: Smoke and Mixture are 100% correct, the only errors are NoGas↔Perfume, and the time-ordered test reveals drift.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">data</span><span class="tag">eda</span></div>
+      </article>
+
+      <h2 data-qa-sec>Method</h2>
+
+      <article class="qa" id="p09">
+        <div class="qa-head"><span class="qa-id">P09</span>
+          <h3 class="qa-q">Why did you choose SVM?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">It rests on a clean convex optimisation with one global optimum, works well with a few thousand samples, predicts fast because only support vectors matter, and every step can be derived and explained.</p>
+      <p>That suits a mathematics project and a safety system, where you must be able to justify the model.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">method</span><span class="tag">svm</span></div>
+      </article>
+
+      <article class="qa" id="p10">
+        <div class="qa-head"><span class="qa-id">P10</span>
+          <h3 class="qa-q">Why start with a linear SVM on raw data?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">To have an honest baseline, so the improvement from scaling and the kernel can be measured rather than claimed.</p>
+      <p>Baseline 80.31% → tuned linear on scaled data 84.79% → RBF 98.23%. Each step's contribution is visible.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">method</span><span class="tag">baseline</span></div>
+      </article>
+
+      <article class="qa" id="p11">
+        <div class="qa-head"><span class="qa-id">P11</span>
+          <h3 class="qa-q">Why standardise the features?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">The RBF kernel uses distances, and MQ8 varies three times more than MQ6, so without scaling MQ8 would dominate.</p>
+      <p>Means and standard deviations come from the training data only, so no test information leaks in.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">method</span><span class="tag">scaling</span></div>
+      </article>
+
+      <article class="qa" id="p12">
+        <div class="qa-head"><span class="qa-id">P12</span>
+          <h3 class="qa-q">How did you choose C and γ?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Grid search with stratified 5-fold cross-validation on the training set: 42 pairs, 210 fits; the best was C = 100, γ = 10 at 97.63%.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">method</span><span class="tag">tuning</span></div>
+      </article>
+
+      <article class="qa" id="p13">
+        <div class="qa-head"><span class="qa-id">P13</span>
+          <h3 class="qa-q">The SVM is a two-class method. How do you get four classes?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">One-vs-one: six binary SVMs, one for each pair of classes, and the class with the most votes wins.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">method</span><span class="tag">multiclass</span></div>
+      </article>
+
+      <h2 data-qa-sec>Results</h2>
+
+      <article class="qa" id="p14">
+        <div class="qa-head"><span class="qa-id">P14</span>
+          <h3 class="qa-q">What are your main results?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">98.23% test accuracy, macro F1 0.9823, macro AUC 0.9986, 99.03% leak sensitivity, and about 1.1 ms per prediction.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">results</span></div>
+      </article>
+
+      <article class="qa" id="p15">
+        <div class="qa-head"><span class="qa-id">P15</span>
+          <h3 class="qa-q">Where does the model make mistakes, and why?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Only between NoGas and Perfume — 17 of 960 test readings — because the deodorant vapour is weak and the sensors respond to it almost as to clean air.</p>
+      <p>Their class means differ by only a few ADC counts on every sensor. Hazardous classes (Smoke, Mixture) had zero errors.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">results</span><span class="tag">errors</span></div>
+      </article>
+
+      <article class="qa" id="p16">
+        <div class="qa-head"><span class="qa-id">P16</span>
+          <h3 class="qa-q">How do you know it is real-time?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">I timed 500 single-reading predictions: mean 1.10 ms, worst 2.88 ms, while a new reading arrives every 2,000 ms.</p>
+      <p>That uses about 0.06% of the time budget. Even a microcontroller 100 times slower would be fast enough.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">results</span><span class="tag">realtime</span></div>
+      </article>
+
+      <article class="qa" id="p17">
+        <div class="qa-head"><span class="qa-id">P17</span>
+          <h3 class="qa-q">How does it compare with earlier work?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">It beats the earlier sensor-only SVM (88.36%), the LSTM (82%) and the deep sequence models (~93%), and is close to the best random forest (98.67%) — with a single, explainable model.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">results</span><span class="tag">comparison</span></div>
+      </article>
+
+      <article class="qa" id="p18">
+        <div class="qa-head"><span class="qa-id">P18</span>
+          <h3 class="qa-q">What happened in the time-ordered test?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Accuracy fell to 54.37%, because later readings had drifted into regions the model associated with Mixture — this is sensor drift, and it is the main limitation.</p>
+      <p>It means a real system needs periodic recalibration or retraining. Retraining an SVM on a few thousand readings takes seconds.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">results</span><span class="tag">drift</span></div>
+      </article>
+
+      <h2 data-qa-sec>Closing</h2>
+
+      <article class="qa" id="p19">
+        <div class="qa-head"><span class="qa-id">P19</span>
+          <h3 class="qa-q">What are the limitations?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Laboratory gases rather than industrial ones, sensor drift, no calibration to ppm, and latency measured on a laptop rather than a microcontroller.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">limitations</span></div>
+      </article>
+
+      <article class="qa" id="p20">
+        <div class="qa-head"><span class="qa-id">P20</span>
+          <h3 class="qa-q">What would you do next?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Collect data with real industrial gases over months, add drift compensation, use support vector regression to estimate concentration, and run the model on an ESP32.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">future</span></div>
+      </article>
+
+      <article class="qa" id="p21">
+        <div class="qa-head"><span class="qa-id">P21</span>
+          <h3 class="qa-q">What did you learn from this project?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">That preprocessing and tuning matter as much as the model, and that a strong result must be tested in a harder, more realistic way before you trust it.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">reflection</span></div>
+      </article>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

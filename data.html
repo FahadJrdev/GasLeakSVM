@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The dataset and what it shows — Gas Leak SVM project defence</title>
+<meta name="description" content="The MultimodalGasData sensor readings, how they were recorded, and what the exploratory analysis shows.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="data">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">The dataset and what it shows</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col col-wide">
+
+      <p class="eyebrow">04 · The problem &amp; the data</p>
+      <h1>The dataset and what it shows</h1>
+      <p class="lede">
+        Section 3.2–3.4 of the report: where the numbers come from, what they look like, and the
+        three things the pictures tell you before any model is trained.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          Researchers in Pune, India put seven MQ sensors side by side and recorded them every
+          2 seconds. They did this four times: in clean air, with deodorant spray, with incense
+          smoke, and with both. That gives four classes of 1,600 readings each, 6,400 in total.
+          Each reading is just seven whole numbers.
+        </p>
+        <p>
+          Before training anything, you looked at the data. Three facts stood out.
+          <strong>Smoke and Mixture look very different</strong> from the rest, so they should be
+          easy. <strong>NoGas and Perfume look almost the same</strong>, so they will be hard.
+          And <strong>the readings change slowly over time</strong>, so neighbouring readings are
+          near-copies of each other. All three facts come back in the results.
+        </p>
+      </section>
+
+      <h2>Where the data comes from</h2>
+      <dl class="kv">
+        <dt>Name</dt><dd>MultimodalGasData (Narkhede et al., 2022), Mendeley Data, DOI 10.17632/zkwgkjkjn9.2</dd>
+        <dt>Licence</dt><dd>CC BY 4.0 — free to use with credit</dd>
+        <dt>Recorded at</dt><dd>Symbiosis Institute of Technology, Pune, India</dd>
+        <dt>Sensors</dt><dd>MQ2, MQ3, MQ5, MQ6, MQ7, MQ8, MQ135 (+ a thermal camera, not used here)</dd>
+        <dt>Values</dt><dd>10-bit ADC counts (integers, observed range 220–824), not ppm</dd>
+        <dt>Sampling</dt><dd>one reading every 2 seconds</dd>
+        <dt>Gas sources</dt><dd>Perfume = deodorant (≈95% alcohol); Smoke = incense sticks; Mixture = both; NoGas = clean air</dd>
+        <dt>Size</dt><dd>6,400 rows × 10 columns, no missing values, 228 exact repeated readings</dd>
+      </dl>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Serial</th><th>MQ2</th><th>MQ3</th><th>MQ5</th><th>MQ6</th><th>MQ7</th><th>MQ8</th><th>MQ135</th><th>Gas</th></tr></thead>
+          <tbody class="num-col">
+            <tr><td>0</td><td>555</td><td>515</td><td>377</td><td>338</td><td>666</td><td>451</td><td>416</td><td>NoGas</td></tr>
+            <tr><td>0</td><td>592</td><td>517</td><td>370</td><td>341</td><td>632</td><td>419</td><td>389</td><td>Perfume</td></tr>
+            <tr><td>0</td><td>518</td><td>341</td><td>365</td><td>400</td><td>572</td><td>572</td><td>332</td><td>Smoke</td></tr>
+            <tr><td>0</td><td>506</td><td>392</td><td>344</td><td>311</td><td>395</td><td>222</td><td>302</td><td>Mixture</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">The first reading of each class. The serial number restarts at 0 for every class.</p>
+
+      <h2>Class means — the first clue</h2>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Class</th><th>MQ2</th><th>MQ3</th><th>MQ5</th><th>MQ6</th><th>MQ7</th><th>MQ8</th><th>MQ135</th></tr></thead>
+          <tbody class="num-col">
+            <tr><td>NoGas</td><td>748.4</td><td>528.9</td><td>430.7</td><td>425.4</td><td>606.3</td><td>637.1</td><td>474.5</td></tr>
+            <tr><td>Perfume</td><td>745.3</td><td>527.7</td><td>439.9</td><td>429.0</td><td>617.2</td><td>633.8</td><td>480.9</td></tr>
+            <tr><td>Smoke</td><td>623.2</td><td>372.4</td><td>340.2</td><td>368.2</td><td>580.2</td><td>583.7</td><td>308.1</td></tr>
+            <tr><td>Mixture</td><td>593.4</td><td>419.1</td><td>407.5</td><td>376.5</td><td>460.1</td><td>315.2</td><td>403.4</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        NoGas and Perfume differ by only a few counts on every sensor. Smoke drops MQ3 and MQ135
+        sharply. Mixture has by far the lowest MQ8 (315 versus about 600).
+      </p>
+
+      <figure class="fig">
+  <img src="figures/fig_boxplots.png" alt="Box plots per sensor and class" loading="lazy">
+  <figcaption><span class="fig-n">Figure 5</span>Box plots per sensor and class. The NoGas and Perfume boxes overlap almost completely; Smoke and Mixture are clearly shifted.</figcaption>
+</figure>
+
+      <h2>Readings over time — the second clue</h2>
+      <figure class="fig">
+  <img src="figures/fig_signals.png" alt="All seven sensors in time order for each class" loading="lazy">
+  <figcaption><span class="fig-n">Figure 6</span>All seven sensors in time order for each class. The repeated rises and slow decays come from gas being sprayed in again and again. In the Smoke session MQ3 climbs from about 350 to 430: this slow creep is drift.</figcaption>
+</figure>
+      <div class="note warn">
+        <p class="note-title">Why this picture matters later</p>
+        <p>
+          Readings 2 seconds apart are almost identical. A random split therefore puts near-twins
+          in both the training and test sets, which makes the test easier. That is why Chapter 4
+          also runs a <strong>time-ordered</strong> test. See <a href="qa-weakspots.html">page 11</a>.
+        </p>
+      </div>
+
+      <h2>Scales and correlation</h2>
+      <p>
+        The sensors use very different ranges. The standard deviation of MQ8 is 151.0 but of MQ6
+        only 45.1. A distance-based method would let MQ8 dominate, so every feature is
+        standardised before the RBF-SVM (see <a href="tuning.html">page 07</a>).
+      </p>
+      <figure class="fig">
+  <img src="figures/fig_correlation.png" alt="Pearson correlation between sensors" loading="lazy">
+  <figcaption><span class="fig-n">Figure 7</span>Pearson correlation between sensors. MQ5–MQ6 (0.91), MQ3–MQ135 (0.90) and MQ7–MQ8 (0.90) move together because MOS sensors share target gases. They still carry some different information, which is why the array works.</figcaption>
+</figure>
+
+      <h2>PCA — the third clue</h2>
+      <p>
+        PCA finds the directions along which the data spreads most. They are the eigenvectors of
+        the covariance matrix \(\mathbf{S}\) of the standardised data:
+      </p>
+      <div class="math"><div>$$\mathbf{S}\mathbf{v}_k=\lambda_k\mathbf{v}_k,\qquad \text{explained variance ratio}_k=\frac{\lambda_k}{\sum_{j=1}^{7}\lambda_j}$$</div><span class="num">(3.1)</span></div>
+      <figure class="fig">
+  <img src="figures/fig_pca.png" alt="The first two components keep 70" loading="lazy">
+  <figcaption><span class="fig-n">Figure 8</span>The first two components keep 70.2% + 17.6% = 87.8% of the variance. Smoke is an isolated island; Mixture is mostly separate; NoGas and Perfume are interleaved. No straight line separates them, so a curved (kernel) boundary is needed.</figcaption>
+</figure>
+      <p class="footnote">PCA is used only for pictures. The SVM always uses all seven standardised features.</p>
+
+      <h2>Class balance and the split</h2>
+      <p>
+        Every class has exactly 1,600 readings, so accuracy is a fair summary and no
+        re-balancing is needed. The data were split with a fixed random seed (42), keeping the
+        1:1:1:1 ratio in every part:
+      </p>
+      <div class="grid grid-3">
+        <div class="card stat"><span class="k">Training · 70%</span><span class="v">4,480 readings</span></div>
+        <div class="card stat"><span class="k">Validation · 15%</span><span class="v">960 readings</span></div>
+        <div class="card stat"><span class="k">Test · 15%</span><span class="v">960 readings</span></div>
+      </div>
+
+      <div class="say">
+        <p class="say-label">Say this if asked to describe the data</p>
+        <p>"It is the public MultimodalGasData set: 6,400 readings from seven MQ sensors, recorded every two seconds, in four balanced classes — clean air, deodorant, incense smoke and both. I used only the sensor values, which are raw 10-bit ADC counts. Exploration showed smoke and mixture are easy to separate but clean air and perfume overlap heavily, which is exactly where the final model's few errors are."</p>
+      </div>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

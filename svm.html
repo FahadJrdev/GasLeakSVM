@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The SVM idea: margins — Gas Leak SVM project defence</title>
+<meta name="description" content="The geometric idea behind the Support Vector Machine: hyperplanes, margins, support vectors, slack and the kernel trick.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="svm">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">The SVM idea: margins</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col">
+
+      <p class="eyebrow">05 · The mathematics</p>
+      <h1>The SVM idea: margins</h1>
+      <p class="lede">
+        Before the algebra, the picture. This page explains what an SVM is trying to do and why.
+        <a href="derivation.html">Page 06</a> then proves it line by line.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          Imagine red and blue marbles on a table and you must lay a ruler between them. Many
+          positions work. Which is best? The SVM's answer: <strong>the one that stays as far as
+          possible from the nearest marble on each side.</strong> A wide gap means a new marble
+          that lands a little off is still classified correctly. That gap is the
+          <em>margin</em>.
+        </p>
+        <p>
+          Only the marbles touching the edge of the gap matter. Move any other marble a bit and
+          the ruler does not move. Those few edge marbles are the <strong>support
+          vectors</strong>, which gives the method its name.
+        </p>
+        <p>
+          Real data overlap, so some marbles must be allowed on the wrong side, at a price
+          (<strong>soft margin</strong>, price \(C\)). And when no straight ruler works, the
+          <strong>kernel trick</strong> bends the boundary by measuring similarity instead of
+          position.
+        </p>
+      </section>
+
+      <h2>1 · A hyperplane</h2>
+      <p>
+        A reading is a vector \(\mathbf{x}\in\mathbb{R}^7\). Take two classes with labels
+        \(y_i\in\{-1,+1\}\). A <strong>hyperplane</strong> is a flat boundary:
+      </p>
+      <div class="math"><div>$$H=\{\mathbf{x}\in\mathbb{R}^d:\ \mathbf{w}^{\top}\mathbf{x}+b=0\}$$</div><span class="num">(3.4)</span></div>
+      <p>
+        \(\mathbf{w}\) is perpendicular to the boundary (its direction) and \(b\) shifts it.
+        A new reading is classified by the <strong>sign</strong> of \(\mathbf{w}^\top\mathbf{x}+b\).
+        The distance of any point from \(H\) is
+      </p>
+      <div class="math"><div>$$\operatorname{dist}(\mathbf{x},H)=\frac{|\mathbf{w}^{\top}\mathbf{x}+b|}{\|\mathbf{w}\|}$$</div><span class="num">(3.5)</span></div>
+      <p class="footnote">Why: write \(\mathbf{x}=\mathbf{x}_H+r\,\mathbf{w}/\|\mathbf{w}\|\) with \(\mathbf{x}_H\) on the plane. Then \(\mathbf{w}^\top\mathbf{x}+b=r\|\mathbf{w}\|\), so \(r=(\mathbf{w}^\top\mathbf{x}+b)/\|\mathbf{w}\|\).</p>
+
+      <h2>2 · The margin is 2/‖w‖</h2>
+      <p>
+        Scaling \(\mathbf{w}\) and \(b\) by the same number does not move the plane, so we fix
+        the scale: the closest points satisfy \(|\mathbf{w}^\top\mathbf{x}+b|=1\). Then every
+        point is correctly classified with room to spare when
+      </p>
+      <div class="math"><div>$$y_i(\mathbf{w}^{\top}\mathbf{x}_i+b)\ge 1,\qquad i=1,\dots,n$$</div><span class="num">(3.6)</span></div>
+      <p>
+        The closest points lie on the two planes \(\mathbf{w}^\top\mathbf{x}+b=\pm1\), each
+        \(1/\|\mathbf{w}\|\) from \(H\). So the empty band between them is
+      </p>
+      <div class="math"><div>$$\rho=\frac{2}{\|\mathbf{w}\|}$$</div><span class="num">(3.7)</span></div>
+      <p>
+        Making the margin wide means making \(\|\mathbf{w}\|\) small. That gives the
+        <strong>hard-margin SVM</strong>, a convex quadratic programme:
+      </p>
+      <div class="math"><div>$$\min_{\mathbf{w},b}\ \tfrac12\|\mathbf{w}\|^2\quad\text{subject to}\quad y_i(\mathbf{w}^{\top}\mathbf{x}_i+b)\ge1$$</div><span class="num">(3.8)</span></div>
+      <figure class="fig">
+  <img src="figures/fig_svm_margin.png" alt="(a) Hard margin: no point inside the band; the circled points are support vectors" loading="lazy">
+  <figcaption><span class="fig-n">Figure 9</span>(a) Hard margin: no point inside the band; the circled points are support vectors. (b) Soft margin: some points break the band, each with a slack \(\xi_i\).</figcaption>
+</figure>
+
+      <h2>3 · Soft margin: allowing mistakes at a price</h2>
+      <p>
+        NoGas and Perfume overlap, so no perfect boundary exists. Give each point a
+        <strong>slack</strong> \(\xi_i\ge0\) and charge \(C\) per unit of slack:
+      </p>
+      <div class="math"><div>$$\min_{\mathbf{w},b,\boldsymbol{\xi}}\ \tfrac12\|\mathbf{w}\|^2+C\sum_{i=1}^{n}\xi_i\quad\text{s.t.}\quad y_i(\mathbf{w}^{\top}\phi(\mathbf{x}_i)+b)\ge1-\xi_i,\ \ \xi_i\ge0$$</div><span class="num">(3.9)</span></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Slack</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>\(\xi_i=0\)</td><td>outside the margin, correctly classified</td></tr>
+            <tr><td>\(0&lt;\xi_i\le1\)</td><td>inside the margin, but still on the right side</td></tr>
+            <tr><td>\(\xi_i&gt;1\)</td><td>on the wrong side: a training mistake</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        So \(\sum\xi_i\) is an upper bound on the number of training mistakes.
+        <strong>\(C\) is the trade-off dial:</strong> large \(C\) punishes mistakes hard (narrow
+        margin, risk of overfitting); small \(C\) tolerates them (wide margin, risk of
+        underfitting). At the optimum \(\xi_i=\max\{0,1-y_if(\mathbf{x}_i)\}\), so the problem is
+        the same as minimising the <strong>hinge loss</strong> plus a penalty on \(\|\mathbf{w}\|\):
+      </p>
+      <div class="math"><div>$$\min_{\mathbf{w},b}\ \tfrac12\|\mathbf{w}\|^2+C\sum_{i=1}^{n}\max\{0,\ 1-y_if(\mathbf{x}_i)\}$$</div><span class="num">(3.11)</span></div>
+
+      <h2>4 · The kernel trick: curved boundaries</h2>
+      <p>
+        If the classes cannot be split by a flat boundary, map them to a bigger space with a
+        function \(\phi\) where they can. Figure 10 shows the idea in one dimension.
+      </p>
+      <figure class="fig">
+  <img src="figures/fig_kernel_trick.png" alt="(a) On a line, no single cut separates the classes" loading="lazy">
+  <figcaption><span class="fig-n">Figure 10</span>(a) On a line, no single cut separates the classes. (b) After \(\phi(x)=(x,x^2)\) a flat line does.</figcaption>
+</figure>
+      <p>
+        The magic is that the SVM never needs \(\phi\) itself, only inner products
+        \(\phi(\mathbf{x})^\top\phi(\mathbf{z})\). A <strong>kernel</strong> computes that inner
+        product directly. The one used here is the RBF (Gaussian) kernel:
+      </p>
+      <div class="math"><div>$$K(\mathbf{x},\mathbf{z})=\exp\!\left(-\gamma\|\mathbf{x}-\mathbf{z}\|^2\right),\qquad \gamma&gt;0$$</div><span class="num">(3.22)</span></div>
+      <p>
+        It equals 1 when two readings are identical and fades toward 0 as they move apart.
+        \(\gamma\) controls how fast it fades.
+      </p>
+      <figure class="fig">
+  <img src="figures/fig_rbf_gamma.png" alt="(a) Larger \(\gamma\) makes similarity fade faster" loading="lazy">
+  <figcaption><span class="fig-n">Figure 11</span>(a) Larger \(\gamma\) makes similarity fade faster. (b)–(d) Small \(\gamma\) gives a nearly straight boundary (underfit); very large \(\gamma\) wraps tightly around points (overfit, many support vectors).</figcaption>
+</figure>
+
+      <h2>5 · Four classes from two-class SVMs</h2>
+      <p>
+        An SVM separates two classes. For four classes, scikit-learn (LIBSVM) trains one SVM per
+        <strong>pair</strong> — one-vs-one — and lets them vote:
+      </p>
+      <div class="math"><div>$$N_{\text{OvO}}=\frac{k(k-1)}{2}=\frac{4\times3}{2}=6$$</div><span class="num">(3.24)</span></div>
+      <figure class="fig">
+  <img src="figures/fig_ovo.png" alt="Each new reading goes to all six pairwise SVMs" loading="lazy">
+  <figcaption><span class="fig-n">Figure 12</span>Each new reading goes to all six pairwise SVMs. Each votes for one of its two classes; the class with the most votes wins.</figcaption>
+</figure>
+
+      <div class="grid grid-2">
+        <div class="card"><h4>Why SVM suits this project</h4><p>Solid convex theory with one global optimum; works well with thousands (not millions) of samples; prediction depends only on support vectors, so it is fast; and every step can be written down and explained.</p></div>
+        <div class="card"><h4>What it does not do</h4><p>It does not use time order (each reading is judged alone), and it does not give calibrated probabilities without extra fitting (Platt scaling).</p></div>
+      </div>
+
+      <div class="say">
+        <p class="say-label">Say this if asked "what is an SVM?"</p>
+        <p>"An SVM separates two classes with the boundary that leaves the widest possible gap to the nearest points. Those nearest points are the support vectors and they alone fix the boundary. A soft margin lets some points cross at a cost C, and a kernel such as the RBF makes the boundary curved without ever computing the high-dimensional features."</p>
+      </div>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

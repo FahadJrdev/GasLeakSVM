@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Start here — Gas Leak SVM project defence</title>
+<meta name="description" content="Defence preparation for the M.S. project 'Real-Time Gas Leak Detection in Logistics and Manufacturing Environments Using Support Vector Machine on IoT Gas Sensor Data'.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="index">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Start here</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col">
+
+      <p class="eyebrow">00 · Orientation</p>
+      <h1>Your gas-leak project, ready to defend.</h1>
+      <p class="lede">
+        This site explains one document: <em>Real-Time Gas Leak Detection in Logistics and
+        Manufacturing Environments Using Support Vector Machine on IoT Gas Sensor Data</em>, your
+        M.S. project report. Every number here comes from the real experiment. Where the work has
+        limits, this site says so plainly, so you hear it here first and not in the viva.
+      </p>
+
+      <div class="downloads">
+        <a href="GasLeakSVM.pdf" target="_blank" rel="noopener">
+          <span class="k">Read · PDF</span><span class="v">The full report</span>
+          <span class="d">70 pages · open in the browser</span>
+        </a>
+        <a href="GasLeakSVM.docx" download>
+          <span class="k">Edit · DOCX</span><span class="v">The Word version</span>
+          <span class="d">Editable equations, tables and contents</span>
+        </a>
+        <a href="data/svm_gas_experiment.py" download>
+          <span class="k">Run · Python</span><span class="v">The experiment script</span>
+          <span class="d">Reproduces every number in the report</span>
+        </a>
+        <a href="data/Gas_Sensors_Measurements.csv" download>
+          <span class="k">Data · CSV</span><span class="v">The sensor readings</span>
+          <span class="d">6,400 rows · MultimodalGasData, CC BY 4.0</span>
+        </a>
+      </div>
+
+      <div class="hero">
+        <canvas data-wave aria-label="Two classes of points separated by a line with the widest possible gap"></canvas>
+        <p class="hero-cap">
+          The whole idea of a Support Vector Machine in one picture. Teal circles are one class,
+          orange squares the other. The solid line separates them; the dashed lines mark the
+          margin, the empty gap on each side. The SVM picks the line with the widest gap. The
+          circled points touch the margin: they are the support vectors, and only they decide
+          where the line goes.
+        </p>
+      </div>
+
+      <section class="plain">
+        <p class="plain-label">In plain words — what you actually did</p>
+        <p>
+          Factories, warehouses and cold stores use gases such as LPG and ammonia. Leaks kill
+          people. Most cheap gas alarms just watch one sensor and ring when it passes a fixed
+          level. That alarm cannot tell a dangerous leak from a harmless smell like perfume, so it
+          gives false alarms and people learn to ignore it.
+        </p>
+        <p>
+          You used <strong>seven cheap gas sensors at once</strong>. Each sensor reacts a little
+          differently to each gas, so together they give a pattern, like a fingerprint. You then
+          trained a <strong>Support Vector Machine (SVM)</strong> to read that fingerprint and say
+          which of four situations it is: no gas, perfume, smoke, or a mixture.
+        </p>
+        <p>
+          A plain straight-line SVM got <strong>80.31%</strong> right. After putting all sensors on
+          the same scale and choosing two settings carefully, the curved (RBF) SVM got
+          <strong>98.23%</strong> right on readings it had never seen. It decides in about
+          <strong>1 millisecond</strong>, while a new reading arrives only every 2 seconds. So it
+          is fast enough for real-time use.
+        </p>
+        <p class="aside">
+          Every page opens with a box like this one. Read those boxes in order and you will have
+          the whole project in about twenty minutes, without a single equation. The mathematics
+          sits underneath for when you need it.
+        </p>
+      </section>
+
+      <h2>The project in one paragraph</h2>
+      <p>
+        Using the public <strong>MultimodalGasData</strong> set (6,400 readings from 7 MQ metal-oxide
+        sensors, 4 balanced classes), you derived the soft-margin SVM from first principles
+        (margin, Lagrangian dual, KKT conditions, RBF kernel, one-vs-one voting), then trained it.
+        Standardisation plus a 5-fold cross-validated grid search chose
+        \(C = 100\) and \(\gamma = 10\). The model reached 98.23% test accuracy, macro F1 0.9823,
+        macro ROC-AUC 0.9986, 99.03% leak sensitivity and about 1.1 ms per prediction. A
+        time-ordered test then showed the main limit honestly: sensor drift.
+      </p>
+
+      <div class="grid grid-3">
+        <div class="card stat"><span class="k">Model</span><span class="v">RBF-kernel SVM, C = 100, γ = 10</span></div>
+        <div class="card stat"><span class="k">Test accuracy</span><span class="v">80.31% → 98.23%</span></div>
+        <div class="card stat"><span class="k">Speed</span><span class="v">≈ 1.1 ms per reading</span></div>
+      </div>
+
+      <h2>How to use this site</h2>
+      <ol class="steps">
+        <li>
+          <h4>Learn the words first</h4>
+          <p>
+            Page 02 defines every key term in one or two sentences: margin, kernel, support
+            vector, recall and so on. If a word on another page is unclear, it is there.
+          </p>
+        </li>
+        <li>
+          <h4>Rebuild the report in your own words</h4>
+          <p>
+            Pages 03–08 walk through the problem, the data, the SVM idea, the full derivation, the
+            tuning and the results. Read them once, end to end.
+          </p>
+        </li>
+        <li>
+          <h4>Answer out loud</h4>
+          <p>
+            The Q&amp;A pages (09–11) have a <strong>Quiz mode</strong>. Turn it on, read the
+            question, answer aloud, then click to reveal. Each answer starts with one
+            <strong>bold sentence</strong>: that is what you say first.
+          </p>
+        </li>
+        <li>
+          <h4>Run the model yourself</h4>
+          <p>
+            Page 13 runs real Python and scikit-learn inside the browser. It loads the same data,
+            trains the same SVM and gets the same 98.23%. Being able to show that live is very
+            convincing in a viva.
+          </p>
+        </li>
+      </ol>
+
+      <div class="note info">
+        <p class="note-title">Where you actually stand</p>
+        <p>
+          This is an <strong>applied mathematics + machine learning</strong> project on a public
+          laboratory dataset. You did not build hardware and the gases are deodorant and incense
+          smoke, not LPG or ammonia. Say this early and calmly. The method is the contribution;
+          the data is the test bed. Page 11 prepares you for exactly these questions.
+        </p>
+      </div>
+
+      <h2>The facts, in case you are asked flatly</h2>
+      <div class="tw">
+        <table>
+          <tbody>
+            <tr><th>Title</th><td>Real-Time Gas Leak Detection in Logistics and Manufacturing Environments Using Support Vector Machine on IoT Gas Sensor Data</td></tr>
+            <tr><th>Degree</th><td>M.S. in Mathematics (Applied Mathematics) — course code AMAT-527</td></tr>
+            <tr><th>Institution</th><td>Department of Mathematics, University of Chittagong</td></tr>
+            <tr><th>Supervisor</th><td>Dr. Mohammad Jalal Ahammad, Professor</td></tr>
+            <tr><th>Length</th><td>70 pages · 5 chapters · 22 figures · 19 tables · 34 numbered equations · 100 references</td></tr>
+            <tr><th>Data</th><td>MultimodalGasData (Narkhede et al., 2022), sensor CSV only, CC BY 4.0</td></tr>
+            <tr><th>Tools</th><td>Python 3, scikit-learn 1.9.1 (LIBSVM), NumPy, pandas, Matplotlib, Seaborn</td></tr>
+            <tr><th>Hardware</th><td>Ordinary laptop, Intel Core i3-6006U, 8 GB RAM, no GPU</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note good">
+        <p class="note-title">One line to open with</p>
+        <p>
+          <em>"My project classifies gas conditions from a seven-sensor array with a Support Vector
+          Machine. I derived the SVM mathematically, tuned an RBF kernel, and reached 98.23% test
+          accuracy at about one millisecond per reading, so it works in real time. I also tested it
+          on later readings and showed that sensor drift is its main limitation."</em>
+        </p>
+      </div>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

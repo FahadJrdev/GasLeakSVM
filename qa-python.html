@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Q&A — programming — Gas Leak SVM project defence</title>
+<meta name="description" content="Viva questions on the Python implementation of the gas leak SVM: scikit-learn, pipelines, data leakage, timing and reproducibility.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="qa-python">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Q&A — programming</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col">
+
+      <p class="eyebrow">14 · Programming</p>
+      <h1>Q&amp;A — programming</h1>
+      <p class="lede">
+        Questions about your code and tools. Keep answers concrete: name the function, the
+        argument, and why.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          The whole experiment is one Python script of about 250 lines. It loads a CSV with
+          pandas, splits it, scales it, trains SVMs with scikit-learn, and saves figures with
+          Matplotlib. Examiners usually ask three things: <strong>which library does the real
+          work</strong> (LIBSVM, inside scikit-learn's <code>SVC</code>), <strong>how you avoided
+          cheating</strong> (scaler fitted on training data only, inside a pipeline), and
+          <strong>can you reproduce it</strong> (fixed seed 42 — and the <a href="lab.html">lab</a>
+          does it live).
+        </p>
+      </section>
+
+      <div class="qa-toolbar">
+        <input class="search" data-search type="search" placeholder="Filter questions…" aria-label="Filter questions">
+        <button class="btn" type="button" data-quiz>Quiz mode</button>
+        <button class="btn" type="button" data-reveal-all>Reveal all</button>
+        <span class="counter" data-counter></span>
+      </div>
+
+      <h2 data-qa-sec>Tools</h2>
+
+      <article class="qa" id="y01">
+        <div class="qa-head"><span class="qa-id">Y01</span>
+          <h3 class="qa-q">Which language and libraries did you use?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Python 3 with scikit-learn 1.9.1 for the SVM, NumPy and pandas for data, and Matplotlib and Seaborn for figures.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">tools</span></div>
+      </article>
+
+      <article class="qa" id="y02">
+        <div class="qa-head"><span class="qa-id">Y02</span>
+          <h3 class="qa-q">Did you implement the SVM yourself?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">No — I derived it mathematically, but training uses scikit-learn's <code>SVC</code>, which wraps LIBSVM, a well-tested SMO-type solver; writing my own would add bugs, not insight.</p>
+      <p>I did check the implementation against the theory: the <a href="lab.html#c7">lab, Cell 7</a> recomputes \(f(\mathbf{x})=\sum\alpha_iy_iK+b\) from the model's own support vectors and matches it to 10 decimal places.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">tools</span><span class="tag">libsvm</span></div>
+      </article>
+
+      <article class="qa" id="y03">
+        <div class="qa-head"><span class="qa-id">Y03</span>
+          <h3 class="qa-q">Can someone else run your code?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Yes — the script runs unchanged in Google Colab after uploading the CSV, and it is listed in full in Section 3.9 and downloadable from this site.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">tools</span><span class="tag">colab</span></div>
+      </article>
+
+      <h2 data-qa-sec>The pipeline</h2>
+
+      <article class="qa" id="y04">
+        <div class="qa-head"><span class="qa-id">Y04</span>
+          <h3 class="qa-q">Why use a <code>Pipeline</code>?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">It ties the scaler and the SVM together, so in cross-validation the scaler is re-fitted on each training fold and never sees the validation fold — that prevents data leakage.</p>
+<pre class="out">Pipeline([("scaler", StandardScaler()),
+          ("svm", SVC(kernel="rbf", C=100, gamma=10))])</pre>
+        </div>
+        <div class="qa-tags"><span class="tag">pipeline</span></div>
+      </article>
+
+      <article class="qa" id="y05">
+        <div class="qa-head"><span class="qa-id">Y05</span>
+          <h3 class="qa-q">What is data leakage, and how did you avoid it?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Leakage is when information from the test data influences training; I fitted the scaler on training data only, tuned on training folds only, and touched the test set once at the end.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">leakage</span></div>
+      </article>
+
+      <article class="qa" id="y06">
+        <div class="qa-head"><span class="qa-id">Y06</span>
+          <h3 class="qa-q">How did you make the 70/15/15 split?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Two calls to <code>train_test_split</code> with <code>stratify</code> and <code>random_state=42</code>: first 70/30, then the 30% halved into validation and test.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">split</span></div>
+      </article>
+
+      <article class="qa" id="y07">
+        <div class="qa-head"><span class="qa-id">Y07</span>
+          <h3 class="qa-q">How does <code>GridSearchCV</code> work here?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">It trains the pipeline for every \((C,\gamma)\) pair on each of 5 stratified folds, averages the accuracy, picks the best pair, and refits on all training data.</p>
+<pre class="out">GridSearchCV(pipe, {"svm__C": [...], "svm__gamma": [...]},
+             cv=StratifiedKFold(5, shuffle=True, random_state=42),
+             scoring="accuracy", n_jobs=-1)</pre>
+      <p>The double underscore in <code>svm__C</code> means "the C parameter of the step named svm".</p>
+        </div>
+        <div class="qa-tags"><span class="tag">gridsearch</span></div>
+      </article>
+
+      <article class="qa" id="y08">
+        <div class="qa-head"><span class="qa-id">Y08</span>
+          <h3 class="qa-q">Where is the one-vs-one voting in your code?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Inside <code>SVC</code> — it always trains one-vs-one for multi-class; <code>decision_function_shape="ovr"</code> only reshapes the output to one score per class.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">multiclass</span></div>
+      </article>
+
+      <article class="qa" id="y09">
+        <div class="qa-head"><span class="qa-id">Y09</span>
+          <h3 class="qa-q">How did you get probabilities for the ROC curves?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short"><code>SVC(probability=True)</code>, which runs Platt scaling with internal 5-fold cross-validation; it is deprecated in scikit-learn 1.9, where <code>CalibratedClassifierCV</code> is the recommended replacement.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">probability</span></div>
+      </article>
+
+      <h2 data-qa-sec>Measurement and reproducibility</h2>
+
+      <article class="qa" id="y10">
+        <div class="qa-head"><span class="qa-id">Y10</span>
+          <h3 class="qa-q">How did you measure latency?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">With <code>time.perf_counter()</code> around <code>model.predict()</code> for one reading at a time, 500 times, after one warm-up call; I report mean, median, 95th percentile and maximum.</p>
+      <p>One reading at a time is deliberate: a live sensor delivers readings one by one, so batch timing (0.21 ms per reading) would flatter the system.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">latency</span></div>
+      </article>
+
+      <article class="qa" id="y11">
+        <div class="qa-head"><span class="qa-id">Y11</span>
+          <h3 class="qa-q">How do you make the results reproducible?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">A fixed seed (42) for splitting, cross-validation and probability fitting, stated library versions, and all numbers written to a <code>results.json</code> file by the script.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">reproducibility</span></div>
+      </article>
+
+      <article class="qa" id="y12">
+        <div class="qa-head"><span class="qa-id">Y12</span>
+          <h3 class="qa-q">How did you code the time-ordered split?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Rows in the CSV are already in time order within each class, so for each class I took the first 70% of its row indices for training and the rest for testing.</p>
+<pre class="out">for c in range(4):
+    idx = np.where(y == c)[0]
+    cut = int(0.7 * len(idx))
+    tr += list(idx[:cut]); te += list(idx[cut:])</pre>
+        </div>
+        <div class="qa-tags"><span class="tag">drift</span><span class="tag">code</span></div>
+      </article>
+
+      <article class="qa" id="y13">
+        <div class="qa-head"><span class="qa-id">Y13</span>
+          <h3 class="qa-q">How would you put this model on a microcontroller?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Export the support vectors, the \(\alpha_iy_i\) coefficients, the six biases and the 14 scaling constants, then compute \(f(\mathbf{x})=\sum\alpha_iy_iK(\mathbf{x}_i,\mathbf{x})+b\) and the votes in C — about 50 KB of numbers.</p>
+      <p>Tools such as micromlgen or emlearn can generate that C code automatically.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">deployment</span></div>
+      </article>
+
+      <article class="qa" id="y14">
+        <div class="qa-head"><span class="qa-id">Y14</span>
+          <h3 class="qa-q">Could this be done in Octave or MATLAB?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Yes — MATLAB's <code>fitcsvm</code> and <code>fitcecoc</code>, or LIBSVM's own Octave interface, provide the same SVM; I used Python because scikit-learn's pipelines and grid search make leakage-free tuning simple.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">octave</span></div>
+      </article>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
