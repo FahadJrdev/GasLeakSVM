@@ -52,12 +52,13 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <div class="note good">
         <p class="note-title">Tested on Colab</p>
         <p>
-          All twelve steps were run in a real Colab notebook (Python 3.13, scikit-learn 1.6.1,
+          All thirteen steps were run in a real Colab notebook (Python 3.13, scikit-learn 1.6.1,
           pandas 2.2.3). Every accuracy figure matched the report and the laptop run exactly:
           98.23% test accuracy, C = 100, γ = 10, 1,304 support vectors, 54.37% on the drift
-          test. Only timings differ. Colab updates its libraries from time to time, and the
-          numbers stay the same. Step 12, the pipeline case study, was added later and was tested
-          on the laptop (Python 3.12), not yet on Colab.
+          test, and in the pipeline case study 88.35% on leak pressure, 88.83% on all 12 classes
+          and 81.94% on the ordered split. The whole notebook, steps 00 to 12 with full grids,
+          took about 7 minutes. Only timings differ. Colab updates its libraries from time to
+          time, and the numbers stay the same.
         </p>
       </div>
 
@@ -173,7 +174,7 @@ ALL GOOD. You can run 01_load_data.py next.</pre>
             <tr><td>11</td><td><code>!python 09_realtime_latency.py</code></td><td>mean about 1 ms per reading (yours will differ)</td></tr>
             <tr><td>12</td><td><code>!python 10_drift_test.py</code></td><td><code>Chronological-split accuracy: 54.37%</code></td></tr>
             <tr><td>13</td><td><code>!python 11_make_illustrations.py</code></td><td><code>Illustrations written to …</code></td></tr>
-            <tr><td>14</td><td><code>!python 12_pipeline_case_study.py</code></td><td>Leak pressure RBF test <strong>88.35%</strong>; all 12 classes 88.83%; ordered split 81.94%</td><td>about 1 min on the laptop</td></tr>
+            <tr><td>14</td><td><code>!python 12_pipeline_case_study.py</code></td><td>Leak pressure RBF test <strong>88.35%</strong>; all 12 classes 88.83%; ordered split 81.94%</td><td>about 1 min</td></tr>
           </tbody>
         </table>
       </div>
@@ -184,8 +185,8 @@ ALL GOOD. You can run 01_load_data.py next.</pre>
           Cells can hold several lines. Putting steps 01 to 04 in one cell, and steps 06 to 12 in
           another, works fine. For a quick demo, one cell with
           <code>!python run_all.py --quick</code> runs the whole sequence with smaller grids, with
-          the same final numbers. Steps 00 to 11 took about 2½ minutes on Colab (tested); step 12
-          adds about a minute more.
+          the same final numbers. Steps 00 to 11 took about 2½ minutes on Colab in quick mode
+          (tested); step 12 adds about a minute more.
         </p>
       </div>
 
