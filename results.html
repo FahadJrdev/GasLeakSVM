@@ -61,6 +61,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <a href="#rt">Speed</a>
         <a href="#drift">Drift</a>
         <a href="#cmp">Comparison</a>
+        <a href="#pipe">Pipeline case study</a>
       </nav>
 
       <div class="grid grid-3">
@@ -73,7 +74,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <div class="fig-pair">
         <figure class="fig">
   <img src="figures/fig_confusion_baseline.png" alt="Linear SVM, C = 1, unscaled" loading="lazy">
-  <figcaption><span class="fig-n">Figure 16</span>Linear SVM, C = 1, unscaled. Test accuracy 80.31%, macro F1 0.8023.</figcaption>
+  <figcaption><span class="fig-n">Figure 17</span>Linear SVM, C = 1, unscaled. Test accuracy 80.31%, macro F1 0.8023.</figcaption>
 </figure>
         <div>
           <p>
@@ -91,7 +92,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <h2 id="grid">2 · The grid search</h2>
       <figure class="fig">
   <img src="figures/fig_grid_heatmap.png" alt="Cross-validation accuracy for all 42 pairs" loading="lazy">
-  <figcaption><span class="fig-n">Figure 17</span>Cross-validation accuracy for all 42 pairs. Best: C = 100, γ = 10 (0.976).</figcaption>
+  <figcaption><span class="fig-n">Figure 18</span>Cross-validation accuracy for all 42 pairs. Best: C = 100, γ = 10 (0.976).</figcaption>
 </figure>
       <ul>
         <li><strong>Small γ (0.001):</strong> nearly linear, 80–93%. Underfits.</li>
@@ -116,7 +117,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <div class="fig-pair">
         <figure class="fig">
   <img src="figures/fig_confusion_improved.png" alt="Only 17 errors in 960 test readings: 10 NoGas → Perfume and 7 Perfume → NoGas" loading="lazy">
-  <figcaption><span class="fig-n">Figure 18</span>Only 17 errors in 960 test readings: 10 NoGas → Perfume and 7 Perfume → NoGas.</figcaption>
+  <figcaption><span class="fig-n">Figure 19</span>Only 17 errors in 960 test readings: 10 NoGas → Perfume and 7 Perfume → NoGas.</figcaption>
 </figure>
         <div class="tw">
           <table>
@@ -141,11 +142,11 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <div class="fig-pair">
         <figure class="fig">
   <img src="figures/fig_roc.png" alt="AUC: Smoke 1" loading="lazy">
-  <figcaption><span class="fig-n">Figure 19</span>AUC: Smoke 1.0000, Mixture 1.0000, NoGas 0.9973, Perfume 0.9971. Macro 0.9986.</figcaption>
+  <figcaption><span class="fig-n">Figure 20</span>AUC: Smoke 1.0000, Mixture 1.0000, NoGas 0.9973, Perfume 0.9971. Macro 0.9986.</figcaption>
 </figure>
         <figure class="fig">
   <img src="figures/fig_learning_curve.png" alt="Cross-validation accuracy rises from 90" loading="lazy">
-  <figcaption><span class="fig-n">Figure 20</span>Cross-validation accuracy rises from 90.6% (358 samples) to 97.6% (3,584). Still rising, so more data would help a little.</figcaption>
+  <figcaption><span class="fig-n">Figure 21</span>Cross-validation accuracy rises from 90.6% (358 samples) to 97.6% (3,584). Still rising, so more data would help a little.</figcaption>
 </figure>
       </div>
 
@@ -166,7 +167,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       </p>
       <figure class="fig">
   <img src="figures/fig_decision_regions.png" alt="An RBF-SVM drawn in the 2-D PCA plane (illustration only; the real model uses all 7 features)" loading="lazy">
-  <figcaption><span class="fig-n">Figure 21</span>An RBF-SVM drawn in the 2-D PCA plane (illustration only; the real model uses all 7 features). Curved regions, Smoke isolated, NoGas and Perfume interlocked.</figcaption>
+  <figcaption><span class="fig-n">Figure 22</span>An RBF-SVM drawn in the 2-D PCA plane (illustration only; the real model uses all 7 features). Curved regions, Smoke isolated, NoGas and Perfume interlocked.</figcaption>
 </figure>
 
       <h2 id="leak">6 · As a leak detector</h2>
@@ -193,7 +194,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <div class="fig-pair">
         <figure class="fig">
   <img src="figures/fig_latency.png" alt="Time to classify one reading, 500 readings, Intel Core i3 laptop" loading="lazy">
-  <figcaption><span class="fig-n">Figure 22</span>Time to classify one reading, 500 readings, Intel Core i3 laptop.</figcaption>
+  <figcaption><span class="fig-n">Figure 23</span>Time to classify one reading, 500 readings, Intel Core i3 laptop.</figcaption>
 </figure>
         <div class="tw">
           <table>
@@ -260,6 +261,27 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <p class="say-label">Say this — the results in thirty seconds</p>
         <p>"The linear baseline reached 80%. Scaling and a tuned RBF kernel raised it to 98.23% on unseen test data, with macro F1 0.982 and AUC 0.999. Smoke and mixture were never misclassified; the only errors were clean air versus perfume. As a leak detector it caught 99% of gas readings, and it classifies a reading in about one millisecond. A time-ordered test dropped accuracy to 54%, which shows drift is the main limitation."</p>
       </div>
+
+      <h2 id="pipe">Pipeline case study (Section 4.10) <span class="new">new</span></h2>
+      <p>
+        The same method on a second, real dataset: GPLA-12, 684 recordings of leaks on a gas
+        pipeline test rig. Each sound becomes 39 Fourier features. The tuned RBF-SVM
+        (\(C=1000,\ \gamma=0.01\)) recognised the <strong>pipe pressure</strong> with
+        <strong>88.35%</strong> test accuracy and all 12 conditions with 88.83%. All pressure errors
+        were between neighbouring pressures.
+      </p>
+      <div class="fig-pair">
+        <figure class="fig">
+  <img src="figures/fig_pipe_confusion_pressure.png" alt="Leak pressure on the test set: 0" loading="lazy">
+  <figcaption><span class="fig-n">Figure 27</span>Leak pressure on the test set: 0.2 and 0.5 MPa are never confused.</figcaption>
+</figure>
+        <figure class="fig">
+  <img src="figures/fig_pipe_band_energy.png" alt="Mean band energy per pressure: the higher the pressure, the flatter the spectrum" loading="lazy">
+  <figcaption><span class="fig-n">Figure 25</span>Mean band energy per pressure: the higher the pressure, the flatter the spectrum.</figcaption>
+</figure>
+      </div>
+      <p>All figures, the table of four tasks and the honest limits are on <a href="pipeline.html">page 09</a>.</p>
+
 
       <nav data-pagenav></nav>
     </div>

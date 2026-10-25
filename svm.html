@@ -91,7 +91,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <div class="math"><div>$$\min_{\mathbf{w},b}\ \tfrac12\|\mathbf{w}\|^2\quad\text{subject to}\quad y_i(\mathbf{w}^{\top}\mathbf{x}_i+b)\ge1$$</div><span class="num">(3.8)</span></div>
       <figure class="fig">
   <img src="figures/fig_svm_margin.png" alt="(a) Hard margin: no point inside the band; the circled points are support vectors" loading="lazy">
-  <figcaption><span class="fig-n">Figure 9</span>(a) Hard margin: no point inside the band; the circled points are support vectors. (b) Soft margin: some points break the band, each with a slack \(\xi_i\).</figcaption>
+  <figcaption><span class="fig-n">Figure 10</span>(a) Hard margin: no point inside the band; the circled points are support vectors. (b) Soft margin: some points break the band, each with a slack \(\xi_i\).</figcaption>
 </figure>
 
       <h2>3 · Soft margin: allowing mistakes at a price</h2>
@@ -122,11 +122,11 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <h2>4 · The kernel trick: curved boundaries</h2>
       <p>
         If the classes cannot be split by a flat boundary, map them to a bigger space with a
-        function \(\phi\) where they can. Figure 10 shows the idea in one dimension.
+        function \(\phi\) where they can. Figure 11 shows the idea in one dimension.
       </p>
       <figure class="fig">
   <img src="figures/fig_kernel_trick.png" alt="(a) On a line, no single cut separates the classes" loading="lazy">
-  <figcaption><span class="fig-n">Figure 10</span>(a) On a line, no single cut separates the classes. (b) After \(\phi(x)=(x,x^2)\) a flat line does.</figcaption>
+  <figcaption><span class="fig-n">Figure 11</span>(a) On a line, no single cut separates the classes. (b) After \(\phi(x)=(x,x^2)\) a flat line does.</figcaption>
 </figure>
       <p>
         The magic is that the SVM never needs \(\phi\) itself, only inner products
@@ -140,7 +140,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       </p>
       <figure class="fig">
   <img src="figures/fig_rbf_gamma.png" alt="(a) Larger \(\gamma\) makes similarity fade faster" loading="lazy">
-  <figcaption><span class="fig-n">Figure 11</span>(a) Larger \(\gamma\) makes similarity fade faster. (b)–(d) Small \(\gamma\) gives a nearly straight boundary (underfit); very large \(\gamma\) wraps tightly around points (overfit, many support vectors).</figcaption>
+  <figcaption><span class="fig-n">Figure 12</span>(a) Larger \(\gamma\) makes similarity fade faster. (b)–(d) Small \(\gamma\) gives a nearly straight boundary (underfit); very large \(\gamma\) wraps tightly around points (overfit, many support vectors).</figcaption>
 </figure>
 
       <h2>5 · Four classes from two-class SVMs</h2>
@@ -151,7 +151,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <div class="math"><div>$$N_{\text{OvO}}=\frac{k(k-1)}{2}=\frac{4\times3}{2}=6$$</div><span class="num">(3.24)</span></div>
       <figure class="fig">
   <img src="figures/fig_ovo.png" alt="Each new reading goes to all six pairwise SVMs" loading="lazy">
-  <figcaption><span class="fig-n">Figure 12</span>Each new reading goes to all six pairwise SVMs. Each votes for one of its two classes; the class with the most votes wins.</figcaption>
+  <figcaption><span class="fig-n">Figure 13</span>Each new reading goes to all six pairwise SVMs. Each votes for one of its two classes; the class with the most votes wins.</figcaption>
 </figure>
 
       <div class="grid grid-2">

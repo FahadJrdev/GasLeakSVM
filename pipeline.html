@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The pipeline case study — Gas Leak SVM project defence</title>
+<meta name="description" content="Why gas pipelines are the real-life setting of the project, and how the same SVM recognised leak strength from real gas-pipeline leak recordings (GPLA-12).">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="pipeline">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">The pipeline case study</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col col-wide">
+
+      <p class="eyebrow">09 · The pipeline</p>
+      <h1>The pipeline case study</h1>
+      <p class="lede">
+        Your instructor asked for a gas <em>pipeline</em> leak project. This page explains what
+        was added to the report for that: the real-life pipeline setting (Section 1.3), the
+        literature (2.6), a second, real pipeline dataset and its maths (3.9), and the results
+        (4.10).
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          The main experiment used gas sensors in a lab with deodorant and incense, not gas from a
+          pipe. So the report now does two things. First, it explains <strong>where the system
+          would live on a real gas pipeline</strong>: at the low-pressure end, where pipes reach
+          factories, warehouses and homes. That is where the deadly Dhaka and Narayanganj leaks
+          happened.
+        </p>
+        <p>
+          Second, it <strong>tests the same SVM method on real gas-pipe leak recordings</strong>.
+          A Chinese university recorded the <em>sound</em> of leaks on a real pipeline test rig at
+          three pressures. You turned each sound into 39 numbers using the Fourier transform. The
+          SVM then told the pipe pressure, which shows how strong the leak is, correctly
+          <strong>88.35%</strong> of the time. On all 12 recording conditions it scored
+          <strong>88.83%</strong>. The original authors' SVM had managed only about 0.3–0.5 F1.
+        </p>
+      </section>
+
+      <nav class="jump">
+        <a href="#why">Why pipelines</a>
+        <a href="#network">The network</a>
+        <a href="#setting">Where the SVM sits</a>
+        <a href="#data">The pipe data</a>
+        <a href="#features">Fourier features</a>
+        <a href="#results">Results</a>
+        <a href="#limits">Honest limits</a>
+        <a href="#say">Say this</a>
+      </nav>
+
+      <div class="grid grid-3">
+        <div class="card stat"><span class="k">Leak pressure (3 classes)</span><span class="v">88.35%</span></div>
+        <div class="card stat"><span class="k">All 12 classes</span><span class="v">88.83%</span></div>
+        <div class="card stat"><span class="k">Published SVM on this data</span><span class="v">F1 ≈ 0.3–0.5</span></div>
+      </div>
+
+      <h2 id="why">1 · Why pipelines matter in Bangladesh</h2>
+      <ul>
+        <li><strong>Gas is almost pure methane.</strong> Bangladeshi natural gas averages 97.33% methane, 1.72% ethane and 0.35% propane (Banglapedia).</li>
+        <li><strong>The network is old.</strong> Titas Gas had 13,238 km of pipelines and about 2.88 million customers on 30 June 2021. Its distribution lines were built from the 1970s to the late 1980s for a 30-year life (The Business Standard, 18 May 2023).</li>
+        <li><strong>Leaks are everywhere.</strong> A survey of 1,682 km in 2021–22 found methane at 9,926 locations and 459 leaks were repaired. Officials said a full survey would probably find more (same source).</li>
+        <li><strong>They kill.</strong> Narayanganj mosque, 2020: 34 dead from a leaking underground line. Siddique Bazar, Dhaka, 2023: investigators found gas leaking from a hole in an abandoned Titas pipe in the basement (Prothom Alo, 10 March 2023).</li>
+        <li><strong>Smell is not enough.</strong> Experts say odorant reveals only part of the leaks and is not used regularly across the whole network (The Daily Star, 26 April 2023).</li>
+        <li><strong>It is being fixed slowly.</strong> A Tk 8,069 crore project will replace 2,781 km of ageing pipe from July 2025 to December 2030 (The Business Standard, 15 August 2025).</li>
+      </ul>
+
+      <h2 id="network">2 · The stages of a gas pipeline network</h2>
+      <p>Table 2 of the report (after Murvay &amp; Silea, 2012, and Adegboye et al., 2019):</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Stage</th><th>What it does</th><th>Pressure</th><th>Where</th><th>Main leak risk</th></tr></thead>
+          <tbody>
+            <tr><td>Gathering line</td><td>wells → processing plant</td><td>high</td><td>gas fields</td><td>large releases far from people</td></tr>
+            <tr><td>Transmission line</td><td>long-distance transport</td><td>highest</td><td>across the country, buried</td><td>ruptures, third-party damage</td></tr>
+            <tr><td>City gate / regulating station</td><td>lowers pressure, meters gas</td><td>high → medium</td><td>edge of towns, industrial estates</td><td>valve, flange and seal leaks</td></tr>
+            <tr><td>Distribution main</td><td>spreads gas under streets</td><td>medium → low</td><td>under roads</td><td>corrosion, digging, old joints</td></tr>
+            <tr><td>Service line and riser</td><td>one building's connection</td><td>low</td><td>factories, warehouses, homes</td><td>gas collecting indoors</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Leaks are described by <strong>size</strong> (a slow pin-hole leak or a sudden rupture)
+        and <strong>location</strong> (buried, where gas can creep through soil into basements,
+        or above ground). Main causes: external interference, corrosion, construction defects,
+        material failure and ground movement (Murvay &amp; Silea, 2012).
+      </p>
+
+      <h2 id="setting">3 · Where your SVM sits on the pipeline</h2>
+      <figure class="fig">
+  <img src="figures/fig_pipeline_scenario.png" alt="The real-life setting" loading="lazy">
+  <figcaption><span class="fig-n">Figure 1 of the report</span>The real-life setting. Gas-sensor nodes (G, orange) smell the air near risers and factory gas lines. Acoustic nodes (A, blue) listen to the pipe. Each runs an SVM and reports to a gateway that raises the alarm.</figcaption>
+</figure>
+      <div class="grid grid-2">
+        <div class="card"><h4>G · Gas-sensor node = the main study</h4><p>Seven MQ sensors near a riser or a factory gas line say <strong>which gas</strong> is in the air. MQ2, MQ5 and MQ6 are made for methane, natural gas and LPG. Tested result: 98.23% on four classes.</p></div>
+        <div class="card"><h4>A · Acoustic node = the case study</h4><p>A microphone on the pipe says <strong>how strong</strong> the leak is from its sound. Tested on real pipe recordings: 88.35% on three pressures.</p></div>
+      </div>
+      <p>
+        Why the low-pressure end? Because that is where pipeline gas meets people, and where the
+        manufacturing and logistics theme of the title meets the pipeline theme. Long
+        transmission lines are watched with pressure and flow methods. A cheap point sensor makes
+        most sense at risers, regulating stations and factory gas lines.
+      </p>
+
+      <h2 id="data">4 · The real pipe data: GPLA-12</h2>
+      <dl class="kv">
+        <dt>Source</dt><dd>Li &amp; Yao (2021), Chongqing University of Science and Technology. Public on GitHub (EPL-2.0 licence); arXiv:2106.10277.</dd>
+        <dt>Rig</dt><dd>A real gas pipeline test system: screw compressor, pressure-regulating valves, flowmeters, pressure transmitters, and artificial leaks.</dd>
+        <dt>Gas</dt><dd>Compressed air (not methane).</dd>
+        <dt>Sensors</dt><dd>Two different microphones next to the leak (MAX4466 and LM386 modules).</dd>
+        <dt>Samples</dt><dd>684 recordings, each 5 s long and stored as 1,460 numbers.</dd>
+        <dt>12 classes</dt><dd>3 pipe pressures (0.2, 0.4, 0.5 MPa) × 2 microphones × quiet or noisy. 57 recordings each.</dd>
+        <dt>Main task</dt><dd>Recognise the <strong>pipe pressure</strong> from the leak sound. Higher pressure means gas escapes faster, so this measures how strong and dangerous the leak is.</dd>
+      </dl>
+      <div class="note warn">
+        <p class="note-title">Every recording is a leak</p>
+        <p>GPLA-12 has no "no leak" class, so on this data the SVM estimates <em>leak conditions</em>. It does not decide whether there is a leak. Say this before anyone asks.</p>
+      </div>
+      <p>
+        <strong>Why this dataset?</strong> A search of Kaggle, Mendeley Data, Zenodo, UCI and the
+        literature found no public dataset with MQ gas sensors on real pipe leaks. The
+        "pipeline" datasets on Kaggle and Mendeley were simulated, and real utility data (for
+        example from Hefei, China) is not public. GPLA-12 was the only real, downloadable gas
+        pipeline leak dataset.
+      </p>
+
+      <h2 id="features">5 · Turning a sound into 39 numbers (Section 3.9.1)</h2>
+      <p>
+        A raw recording \(\mathbf{s}=(s_0,\dots,s_{N-1})\), \(N=1460\), looks like random bursts
+        in time. The information is in <strong>how much energy the sound has at each
+        frequency</strong>. So, after removing the mean \(\bar s\), take the discrete Fourier
+        transform:
+      </p>
+      <div class="math"><div>$$S_k=\sum_{n=0}^{N-1}(s_n-\bar{s})\,e^{-2\pi i\,kn/N},\qquad k=0,1,\dots,N/2$$</div><span class="num">(3.35)</span></div>
+      <p>The power spectrum is \(P_k=|S_k|^2\). Parseval's theorem says the signal's energy is shared out among the frequencies:</p>
+      <div class="math"><div>$$\sum_{n=0}^{N-1}(s_n-\bar{s})^2=\frac{1}{N}\sum_{k=0}^{N-1}|S_k|^2$$</div><span class="num">(3.36)</span></div>
+      <p>Split the 731 frequencies into 32 bands of about 23 and take the log of each band's energy (energies differ by orders of magnitude):</p>
+      <div class="math"><div>$$E_b=\log\Big(1+\sum_{k\in\mathcal{B}_b}P_k\Big),\qquad b=1,\dots,32$$</div><span class="num">(3.37)</span></div>
+      <p>Add 7 simple statistics: mean, standard deviation, largest deviation, fraction of zeros, first and third quartiles, and the zero-crossing rate</p>
+      <div class="math"><div>$$\mathrm{ZCR}=\frac{1}{N-1}\sum_{n=0}^{N-2}\mathbf{1}\big[(s_n-\bar{s})(s_{n+1}-\bar{s})<0\big]$$</div><span class="num">(3.38)</span></div>
+      <p>
+        Result: \(\boldsymbol{\phi}(\mathbf{s})\in\mathbb{R}^{39}\), 37 times shorter than the raw
+        signal. After that, it is the <strong>same method</strong> as the main study:
+        standardise with the training means, RBF-SVM, 5-fold cross-validated grid search over
+        \(C\in\{0.1,\dots,1000\}\) and \(\gamma\), a stratified 70/30 split (478 train, 206 test)
+        and seed 42.
+      </p>
+      <div class="fig-pair">
+        <figure class="fig">
+  <img src="figures/fig_pipe_signals.png" alt="One quiet recording per pressure (left) and its power spectrum (right)" loading="lazy">
+  <figcaption><span class="fig-n">Figure 24</span>One quiet recording per pressure (left) and its power spectrum (right). In time the three look alike; the spectra have peaks.</figcaption>
+</figure>
+        <figure class="fig">
+  <img src="figures/fig_pipe_band_energy.png" alt="Mean band energy per pressure" loading="lazy">
+  <figcaption><span class="fig-n">Figure 25</span>Mean band energy per pressure. Same shape, different levels: at the peaks 0.2 MPa is highest; in the valleys 0.5 MPa is highest. Higher pressure means a flatter spectrum.</figcaption>
+</figure>
+      </div>
+
+      <h2 id="results">6 · Results (Section 4.10)</h2>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Task</th><th>Linear SVM, raw signal</th><th>Linear SVM, 39 features</th><th>RBF-SVM CV</th><th>RBF-SVM test</th><th>Best C, γ</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Leak pressure (3 classes)</strong></td><td>65.05%</td><td>82.04%</td><td>91.23%</td><td><strong>88.35%</strong></td><td>1000, 0.01</td></tr>
+            <tr><td>All 12 classes</td><td>52.91%</td><td>89.32%</td><td>87.66%</td><td>88.83%</td><td>1000, 0.01</td></tr>
+            <tr><td>Noisy vs quiet</td><td>68.45%</td><td>98.54%</td><td>99.58%</td><td>100.00%</td><td>1, scale</td></tr>
+            <tr><td>Microphone 1 vs 2</td><td>100.00%</td><td>100.00%</td><td>100.00%</td><td>100.00%</td><td>0.1, scale</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">Table 21 of the report. 206 test recordings. "scale" is scikit-learn's default γ = 1/(d·Var), about 0.026 here.</p>
+      <div class="fig-pair">
+        <figure class="fig">
+  <img src="figures/fig_pipe_confusion_pressure.png" alt="Leak pressure, test set" loading="lazy">
+  <figcaption><span class="fig-n">Figure 27</span>Leak pressure, test set. All errors are between neighbouring pressures; 0.2 MPa and 0.5 MPa are never confused.</figcaption>
+</figure>
+        <div>
+          <p><strong>What to remember:</strong></p>
+          <ul>
+            <li><strong>Features make it learnable.</strong> On the raw signal a linear SVM gets 65% (pressure) and 53% (12 classes). On the 39 Fourier features it gets 82% and 89%.</li>
+            <li><strong>The RBF kernel adds 6.3 points</strong> on the hardest task (pressure: 82.04% → 88.35%). For the 12 classes, linear and RBF are about equal once the features exist.</li>
+            <li><strong>Errors are sensible.</strong> 11 of the 24 errors are 0.5 MPa called 0.4 MPa. These two pressures are only 0.1 MPa apart.</li>
+            <li><strong>Noise is detected perfectly,</strong> so a real node can know when it is listening in a noisy place.</li>
+            <li><strong>Far above the published SVM.</strong> Li &amp; Yao reported SVM F1 ≈ 0.3–0.5 (their best, a CNN, ≈ 0.7). The tuned SVM reached macro F1 0.89 on 12 classes. It is the same lesson as the main study: scaling and tuning turn a weak SVM into a strong one.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="fig-pair">
+        <figure class="fig">
+  <img src="figures/fig_pipe_grid.png" alt="5-fold CV accuracy for each (C, γ) on the pressure task" loading="lazy">
+  <figcaption><span class="fig-n">Figure 26</span>5-fold CV accuracy for each (C, γ) on the pressure task. Best: C = 1000, γ = 0.01 (91.23%).</figcaption>
+</figure>
+        <figure class="fig">
+  <img src="figures/fig_pipe_confusion12.png" alt="All 12 classes, test set (88" loading="lazy">
+  <figcaption><span class="fig-n">Figure 28</span>All 12 classes, test set (88.83%). Errors stay between classes that differ only in pressure.</figcaption>
+</figure>
+      </div>
+
+      <h2 id="limits">7 · Honest limits</h2>
+      <ul>
+        <li><strong>Ordered split check:</strong> training on the first 70% of each class and testing on the last 30% gives 81.94% (random split: 88.35%). The drop is small, unlike the drift test of the main study (54.37%).</li>
+        <li><strong>Compressed air, not methane.</strong> The sound of a leak depends mainly on pressure and hole size, but the gas is different.</li>
+        <li><strong>Every recording is a leak:</strong> it estimates leak strength, not leak or no leak.</li>
+        <li><strong>One test rig,</strong> 684 recordings, so the test accuracy is uncertain by a few percentage points.</li>
+        <li><strong>No public dataset combines MQ sensors with real pipe leaks.</strong> Future work: record gas and sound together at real risers and factory gas lines, including normal operation.</li>
+      </ul>
+
+      <div class="note info">
+        <p class="note-title">Run it yourself</p>
+        <p>The case study is step 12 of the code folder: <code>python 12_pipeline_case_study.py</code>. It takes about 1 minute and prints every number on this page. See <a href="vscode.html">Run it in VS Code</a> or <a href="colab.html">Google Colab</a>.</p>
+      </div>
+
+      <div class="say" id="say">
+        <p class="say-label">Say this if asked "where is the pipeline in your project?"</p>
+        <p>"Pipelines are the real-life setting. In Bangladesh, old Titas distribution lines leak in thousands of places and have caused deadly blasts, so my system is designed for the low-pressure end: risers, regulating stations and factory gas lines. The main experiment is the gas-sensor node, which says which gas is present with 98.23% accuracy. Because no public dataset has MQ sensors on real pipe leaks, I also tested the same SVM method on GPLA-12, real leak recordings from a gas pipeline test rig. With Fourier band-energy features it recognised the pipe pressure, meaning how strong the leak is, with 88.35% accuracy, far above the published SVM result. The honest limits are that the gas there is compressed air and every recording is a leak."</p>
+      </div>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -29,7 +29,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
   <main class="main" id="main">
     <div class="col">
 
-      <p class="eyebrow">11 · The interview</p>
+      <p class="eyebrow">12 · The interview</p>
       <h1>Hard questions &amp; honest gaps</h1>
       <p class="lede">
         Every project has weak points. A good examiner will find them. The best defence is to
@@ -136,7 +136,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
           <p class="qa-short">It isn't directly — the dataset is a laboratory benchmark; I used it to develop and validate the method, and real industrial gases are clearly stated as future work.</p>
-      <p>The method transfers: MQ2, MQ5, MQ6 target LPG and natural gas, MQ7 CO, MQ135 ammonia. Only retraining on real data is needed.</p>
+      <p>The method transfers: MQ2, MQ5, MQ6 target LPG and natural gas, MQ7 CO, MQ135 ammonia. Only retraining on real data is needed. To get closer to reality I also tested the same method on real gas-pipeline leak recordings (GPLA-12), where it reached 88.35% on leak pressure.</p>
         </div>
         <div class="qa-tags"><span class="tag">data</span><span class="tag">realism</span></div>
       </article>
@@ -172,6 +172,63 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <p>That is the main advantage over a threshold alarm.</p>
         </div>
         <div class="qa-tags"><span class="tag">classes</span></div>
+      </article>
+
+      <h2 data-qa-sec>The pipeline case study</h2>
+
+      <article class="qa" id="w16">
+        <div class="qa-head"><span class="qa-id">W16</span>
+          <h3 class="qa-q">Why didn't you use a dataset of MQ sensors on a real leaking gas pipe?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Because none is public — I searched Kaggle, Mendeley Data, Zenodo, UCI and the literature; the "pipeline" datasets there were simulated, and real utility data, such as from Hefei, is not released.</p>
+      <p>GPLA-12 was the only real, downloadable gas-pipeline leak dataset, so I used it for the case study and kept MultimodalGasData for the gas-sensor part.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">pipeline</span><span class="tag">data</span></div>
+      </article>
+
+      <article class="qa" id="w17">
+        <div class="qa-head"><span class="qa-id">W17</span>
+          <h3 class="qa-q">GPLA-12 uses compressed air, not natural gas. Does it count?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">It counts as a real pipeline leak, not as a natural-gas test: the leak sound comes from gas escaping through an opening and depends mainly on pressure and hole size, but the gas itself differs, so I state that limit openly.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">pipeline</span><span class="tag">realism</span></div>
+      </article>
+
+      <article class="qa" id="w18">
+        <div class="qa-head"><span class="qa-id">W18</span>
+          <h3 class="qa-q">Every GPLA-12 recording is a leak. So your model cannot detect a leak at all?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">On that dataset it estimates leak strength (pipe pressure), not leak versus no leak — the leak/no-leak decision in my system comes from the gas-sensor node, and recording normal pipe sound is future work.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">pipeline</span><span class="tag">task</span></div>
+      </article>
+
+      <article class="qa" id="w19">
+        <div class="qa-head"><span class="qa-id">W19</span>
+          <h3 class="qa-q">Could the 88% be inflated because pieces of the same recording are in training and test?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">I checked: training on the first 70% of each class and testing on the last 30% still gave 81.94%, a small drop compared with the 54% of the drift test in the main study.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">pipeline</span><span class="tag">leakage</span></div>
+      </article>
+
+      <article class="qa" id="w20">
+        <div class="qa-head"><span class="qa-id">W20</span>
+          <h3 class="qa-q">On 12 classes the linear SVM on features (89.32%) beat your RBF-SVM (88.83%). Why use RBF?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Once the Fourier features exist, those 12 classes are almost linearly separable, so both are equal within the test uncertainty; on the harder pressure task the RBF kernel was clearly better (88.35% versus 82.04%).</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">pipeline</span><span class="tag">linear</span></div>
       </article>
 
       <h2 data-qa-sec>Data and method details</h2>

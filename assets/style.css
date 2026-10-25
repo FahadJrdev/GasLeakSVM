@@ -659,3 +659,11 @@ body.quiz .qa.revealed .qa-head::after { content: ""; }
   text-transform: uppercase; letter-spacing: .08em; color: var(--text-faint);
 }
 .stepnum { font-family: var(--mono); color: var(--accent); margin-right: .45rem; }
+
+/* "new" badge for sections added with the pipeline case study */
+.new {
+  display: inline-block; margin-left: .35rem; padding: 0 .4rem; border-radius: 999px;
+  font-family: var(--mono); font-size: var(--fs-xs); font-weight: 600; letter-spacing: .04em;
+  text-transform: uppercase; vertical-align: .1em;
+  background: var(--accent-soft); color: var(--accent);
+}

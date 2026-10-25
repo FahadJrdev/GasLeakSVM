@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gas leaks and gas sensors — Gas Leak SVM project defence</title>
-<meta name="description" content="Why gas leaks in manufacturing and logistics matter, how metal-oxide sensors work, and why threshold alarms are not enough.">
+<meta name="description" content="Why gas leaks in pipelines, manufacturing and logistics matter, how metal-oxide sensors work, and why threshold alarms are not enough.">
 <script>/* applied before first paint so the layout never jumps */
 try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
 if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
@@ -65,6 +65,25 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         existed, or it failed to give a warning people trusted.
       </p>
 
+      <h2>Gas pipelines: the real-life setting <span class="new">new</span></h2>
+      <p>
+        Section 1.3 of the report. Bangladeshi natural gas is 97.33% methane and reaches users
+        through pipelines: gathering lines, high-pressure transmission lines, regulating stations
+        (city gates), distribution mains under the streets, and service lines and risers into each
+        building. The Titas network alone had 13,238 km of pipes in 2021, mostly built from the
+        1970s to the late 1980s. A survey of 1,682 km found methane at 9,926 places. The
+        Narayanganj and Siddique Bazar blasts both came from leaking Titas lines.
+      </p>
+      <figure class="fig">
+  <img src="figures/fig_pipeline_scenario.png" alt="Where the SVM sits: gas-sensor nodes (G) at risers and factory gas lines, acoustic nodes (A) on the pipe, all reporting to a gateway" loading="lazy">
+  <figcaption><span class="fig-n">Figure 1 of the report</span>Where the SVM sits: gas-sensor nodes (G) at risers and factory gas lines, acoustic nodes (A) on the pipe, all reporting to a gateway.</figcaption>
+</figure>
+      <p>
+        Your system targets the low-pressure end, where pipeline gas meets factories, warehouses
+        and homes. The full story, and the test on real gas-pipe leak recordings, is on
+        <a href="pipeline.html">page 09</a>.
+      </p>
+
       <h2>Common dangerous gases</h2>
       <div class="tw">
         <table>
@@ -116,7 +135,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <h2>Ways to detect leaks</h2>
       <figure class="fig">
   <img src="figures/fig_taxonomy.png" alt="Leak detection methods fall into four groups" loading="lazy">
-  <figcaption><span class="fig-n">Figure 1 of the report</span>Leak detection methods fall into four groups. Your work sits in the data-driven group: a sensor array read by an SVM.</figcaption>
+  <figcaption><span class="fig-n">Figure 2 of the report</span>Leak detection methods fall into four groups. Your work sits in the data-driven group: a sensor array read by an SVM.</figcaption>
 </figure>
 
       <h2>Why a threshold alarm is not enough</h2>
@@ -142,7 +161,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
 
       <div class="say">
         <p class="say-label">Say this if asked "why this project?"</p>
-        <p>"Cheap gas alarms watch one sensor and ring at a fixed level, so they cannot tell a dangerous leak from a harmless smell, and people stop trusting them. I used seven cheap sensors together and an SVM to recognise the pattern, which names the gas and does it within about a millisecond."</p>
+        <p>"Gas leaks from old pipelines and factory gas lines kill people in Bangladesh, and cheap gas alarms watch one sensor and ring at a fixed level, so they cannot tell a dangerous leak from a harmless smell, and people stop trusting them. I used seven cheap sensors together and an SVM to recognise the pattern, which names the gas and does it within about a millisecond. I also tested the same method on real gas-pipeline leak recordings."</p>
       </div>
 
       <nav data-pagenav></nav>

@@ -64,19 +64,23 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <h2 id="front">Front matter</h2>
       <p>
         Title page, abstract, acknowledgements, certification, declaration, table of contents,
-        list of 19 tables, list of 22 figures and a list of abbreviations. The
-        <strong>abstract</strong> already contains every headline number: 80.31% → 98.23%,
-        F1 0.9823, AUC 0.9986, 99.03% sensitivity, about 1.1 ms per reading.
+        list of 22 tables, list of 28 figures and a list of abbreviations. The title is now
+        <em>Real-Time Gas Leak Detection in Pipelines, Logistics and Manufacturing Using Support
+        Vector Machines on IoT Sensor Data</em>. The <strong>abstract</strong> already contains
+        every headline number: 80.31% → 98.23%, F1 0.9823, AUC 0.9986, 99.03% sensitivity, about
+        1.1 ms per reading, and for the pipeline case study 88.35% (leak pressure) and 88.83%
+        (12 classes).
       </p>
 
       <h2 id="c1">Chapter 1 — Introduction</h2>
       <dl class="kv">
         <dt>1.1</dt><dd>Why it matters: ILO figures (2.78 million work deaths a year) and real accidents — Bhopal, LG Polymers, Shanghai and Alabama ammonia cold stores, and in Bangladesh the BM Container Depot (51 dead), Seema Oxygen plant, Siddique Bazar and Narayanganj.</dd>
         <dt>1.2</dt><dd>Table 1: safety limits (OSHA, NIOSH, IDLH, LEL) for LPG, methane, CO, H₂S, ammonia, hydrogen and benzene.</dd>
-        <dt>1.3</dt><dd>Causes of leaks: equipment failure, corrosion, storage and temperature failure, cylinder handling, illegal connections, human error.</dd>
-        <dt>1.4</dt><dd>Sensor types; how a metal-oxide (MOS) sensor works; Table 2 lists the seven MQ sensors.</dd>
-        <dt>1.5–1.6</dt><dd>Figure 1 taxonomy of detection methods; why threshold alarms fail; what "real-time" means.</dd>
-        <dt>1.7</dt><dd>Four objectives: derive the SVM, build the model, evaluate it, test real-time speed and drift.</dd>
+        <dt>1.3 <span class="new">new</span></dt><dd><strong>Gas pipelines and pipeline leaks: the real-life setting.</strong> Table 2: the five stages of a gas network. Bangladeshi gas is 97.33% methane. Titas has 13,238 km of ageing pipes; a survey found methane at 9,926 points and 459 leaks. Figure 1 shows where the SVM nodes sit. See <a href="pipeline.html">page 09</a>.</dd>
+        <dt>1.4</dt><dd>Causes of leaks: equipment failure, corrosion, storage and temperature failure, cylinder handling, illegal connections, human error.</dd>
+        <dt>1.5</dt><dd>Sensor types; how a metal-oxide (MOS) sensor works; Table 3 lists the seven MQ sensors.</dd>
+        <dt>1.6–1.7</dt><dd>Figure 2 taxonomy of detection methods; why threshold alarms fail; what "real-time" means.</dd>
+        <dt>1.8</dt><dd>Five objectives: derive the SVM, build the model, evaluate it, test real-time speed and drift, and test the method on real gas-pipeline leak recordings.</dd>
       </dl>
       <div class="note info"><p class="note-title">Most likely question</p><p>"Why not just use a threshold alarm?" — because one sensor cannot tell a dangerous gas from a harmless one. See <a href="problem.html">page 03</a>.</p></div>
 
@@ -84,21 +88,26 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <p>
         About 45 studies in six themes: machine learning for sensor arrays, SVMs for gas, IoT and
         TinyML detectors, deep learning on this exact dataset, industrial and cold-chain uses, and
-        sensor drift. Table 3 lists earlier results on MultimodalGasData. Section 2.7 states the
-        <strong>research gap</strong>: the only sensor-only SVM on this data scored 88.36% with no
-        tuning described, and nobody measured real-time speed.
+        sensor drift, plus a new section on pipeline leak detection (2.6). Table 4 lists earlier
+        results on MultimodalGasData. Section 2.6 introduces GPLA-12, the real gas-pipeline leak
+        sound dataset, on which the authors' own SVM scored only about 0.3–0.5 F1. Section 2.8
+        states the <strong>research gap</strong>: the only sensor-only SVM on this data scored
+        88.36% with no tuning described, nobody measured real-time speed, and no tuned SVM had been
+        tried on the pipeline recordings.
       </p>
       <div class="note info"><p class="note-title">Most likely question</p><p>"What is new in your work?" — a full derivation, a properly tuned SVM that beats the earlier SVM by about 10 points, measured latency, and an honest drift test.</p></div>
 
       <h2 id="c3">Chapter 3 — Methodology</h2>
       <dl class="kv">
-        <dt>3.1</dt><dd>Figure 2: the research workflow.</dd>
+        <dt>3.1</dt><dd>Figure 3: the research workflow.</dd>
         <dt>3.2</dt><dd>The dataset: 6,400 rows, 7 sensors, 4 classes of 1,600, sample thermal images (not used for modelling).</dd>
         <dt>3.3</dt><dd>Data exploration: statistics, box plots, time plots, correlation and PCA (Eq. 3.1).</dd>
         <dt>3.4</dt><dd>70/15/15 stratified split and z-score scaling (Eqs. 3.2–3.3).</dd>
         <dt>3.5</dt><dd>The heart of the report — the SVM derived step by step (Eqs. 3.4–3.27). See <a href="svm.html">page 05</a> and <a href="derivation.html">page 06</a>.</dd>
         <dt>3.6–3.7</dt><dd>Grid search with 5-fold cross-validation, and every evaluation formula (Eqs. 3.28–3.34).</dd>
-        <dt>3.8–3.9</dt><dd>The real-time deployment idea (Figure 15) and the full Python code.</dd>
+        <dt>3.8</dt><dd>The real-time deployment idea (Figure 16), and where the unit sits on a pipeline.</dd>
+        <dt>3.9 <span class="new">new</span></dt><dd><strong>Pipeline case study: data and frequency features.</strong> Table 12 describes GPLA-12. The discrete Fourier transform, Parseval's theorem, 32 log band energies and the zero-crossing rate (Eqs. 3.35–3.38) turn each 1,460-point sound into 39 numbers.</dd>
+        <dt>3.10</dt><dd>The full Python code, plus the feature function of the case study.</dd>
       </dl>
       <div class="note info"><p class="note-title">Most likely question</p><p>"Derive the dual problem." Practise it on <a href="derivation.html">page 06</a> until you can do it on a whiteboard.</p></div>
 
@@ -107,24 +116,29 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         Baseline 80.31%; grid search picks \(C=100,\ \gamma=10\); tuned model 98.23%; confusion
         matrix with only 17 errors, all between NoGas and Perfume; ROC curves; learning curve;
         kernel comparison (linear 84.79%, polynomial 95.52%, RBF 98.23%); leak view (99.03%
-        sensitivity); latency about 1.1 ms; drift test (54.37%); comparison with earlier studies.
+        sensitivity); latency about 1.1 ms; drift test (54.37%).
+        <strong>New Section 4.10, the pipeline case study:</strong> leak pressure 88.35%, all 12
+        classes 88.83%, noise 100%, ordered split 81.94% (Table 21, Figures 24–28). Then the
+        comparison with earlier studies (4.11) and the discussion (4.12).
       </p>
-      <div class="note info"><p class="note-title">Most likely question</p><p>"Why does accuracy drop to 54% in the time-ordered test?" — sensor drift. See <a href="qa-weakspots.html">page 11</a>.</p></div>
+      <div class="note info"><p class="note-title">Most likely question</p><p>"Why does accuracy drop to 54% in the time-ordered test?" — sensor drift. See <a href="qa-weakspots.html">page 12</a>.</p></div>
 
       <h2 id="c5">Chapter 5 — Conclusion</h2>
       <p>
-        Summary, five contributions, four limitations (lab gases, drift, no ppm calibration,
-        latency measured on a laptop) and five ideas for future work (real industrial gases, drift
-        compensation, support vector regression for concentration, ESP32 deployment, time-based
-        features).
+        Summary (now including the pipeline result), six contributions, five limitations (lab
+        gases, drift, no ppm calibration, latency measured on a laptop, and a case study with
+        compressed air and leak-only recordings) and six ideas for future work (real industrial
+        gases, drift compensation, support vector regression for concentration, ESP32 deployment,
+        time-based features, and recording gas and sound together at real risers and factory gas
+        lines).
       </p>
 
       <div class="say" id="say">
         <p class="say-label">Say this — the ninety-second walkthrough</p>
-        <p>"Chapter 1 explains why gas leaks in factories and warehouses are dangerous, with real cases from Bangladesh, and why single-sensor threshold alarms give false alarms."</p>
+        <p>"Chapter 1 explains why gas leaks from pipelines, factories and warehouses are dangerous, with real cases from Bangladesh such as the leaking Titas lines, shows where my system sits on a gas pipeline, and why single-sensor threshold alarms give false alarms."</p>
         <p>"Chapter 2 reviews about forty-five studies and finds the gap: on this dataset the only sensor-only SVM reached 88%, untuned, and nobody measured speed."</p>
-        <p>"Chapter 3 derives the SVM fully — margin, dual problem, KKT conditions, RBF kernel and one-vs-one voting — and explains scaling, tuning and the metrics."</p>
-        <p>"Chapter 4 shows the tuned model reaches 98.23%, decides in about a millisecond, and catches 99% of gas readings, and it honestly shows that sensor drift lowers accuracy on later readings."</p>
+        <p>"Chapter 3 derives the SVM fully — margin, dual problem, KKT conditions, RBF kernel and one-vs-one voting — explains scaling, tuning and the metrics, and shows how Fourier features turn a pipe-leak sound into 39 numbers."</p>
+        <p>"Chapter 4 shows the tuned model reaches 98.23%, decides in about a millisecond, and catches 99% of gas readings, and it honestly shows that sensor drift lowers accuracy on later readings. On real gas-pipeline leak recordings the same method recognised the leak pressure with 88% accuracy."</p>
         <p>"Chapter 5 concludes that a well-tuned, explainable SVM is a practical real-time detector, and lists the next steps: real industrial gases and drift compensation."</p>
       </div>
 

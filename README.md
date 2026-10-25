@@ -1,8 +1,8 @@
 # GasLeakSVM — project defence & interview prep
 
 Defence preparation for the M.S. project
-*Real-Time Gas Leak Detection in Logistics and Manufacturing Environments Using Support Vector
-Machine on IoT Gas Sensor Data* by **Md. Ashfaqur Rahman** (ID 18203096, Session MS 2023-2024), Department of Mathematics,
+*Real-Time Gas Leak Detection in Pipelines, Logistics and Manufacturing Using Support Vector
+Machines on IoT Sensor Data* by **Md. Ashfaqur Rahman** (ID 18203096, Session MS 2023-2024), Department of Mathematics,
 University of Chittagong, AMAT-527, supervisor Dr. Mohammad Jalal Ahammad.
 
 **Live site:** https://fahadjrdev.github.io/GasLeakSVM/
@@ -33,14 +33,15 @@ svm.html            05  the SVM idea: margins
 derivation.html     06  the derivation, line by line
 tuning.html         07  scaling, tuning and metrics
 results.html        08  the results, figure by figure
-qa-project.html     09  Q&A — the project
-qa-math.html        10  Q&A — the mathematics
-qa-weakspots.html   11  hard questions & honest gaps
-cheatsheet.html     12  cheat sheet
-lab.html            13  Python lab (Pyodide + scikit-learn in the browser)
-vscode.html         14  run the experiment on your own computer in VS Code
-colab.html          15  run it in Google Colab and share the notebook
-qa-python.html      16  Q&A — programming
+pipeline.html       09  pipeline case study: real-life setting + SVM on real gas-pipe leak sounds
+qa-project.html     10  Q&A — the project
+qa-math.html        11  Q&A — the mathematics
+qa-weakspots.html   12  hard questions & honest gaps
+cheatsheet.html     13  cheat sheet
+lab.html            14  Python lab (Pyodide + scikit-learn in the browser)
+vscode.html         15  run the experiment on your own computer in VS Code
+colab.html          16  run it in Google Colab and share the notebook
+qa-python.html      17  Q&A — programming
 assets/style.css        design system, light + dark
 assets/app.js           nav, theme, quiz mode, KaTeX, Pyodide runner
 figures/                the report's figures
@@ -60,6 +61,9 @@ Lab cells 1–4 load `data/Gas_Sensors_Measurements.csv`, make the same 70/15/15
 - RBF-SVM with C = 100, γ = 10: 98.23% test accuracy, 1,304 support vectors
 - time-ordered split: 54.37% test accuracy
 
+The pipeline case study (report Sections 3.9 and 4.10, script `12_pipeline_case_study.py`) uses
+GPLA-12 (Li & Yao, 2021): RBF-SVM on 39 Fourier features, leak pressure 88.35%, 12 classes 88.83%.
+
 Cell 7 recomputes the decision function f(x) = Σ αᵢyᵢK(xᵢ, x) + b from the model's support
 vectors and shows that it matches scikit-learn.
 
@@ -67,4 +71,5 @@ vectors and shows that it matches scikit-learn.
 
 MultimodalGasData — Narkhede, P., Walambe, R., Chandel, P., Mandaokar, S., & Kotecha, K. (2022).
 Mendeley Data, https://doi.org/10.17632/zkwgkjkjn9.2 — licensed CC BY 4.0. The sensor CSV is
-included here unchanged, with attribution.
+included here unchanged, with attribution. GPLA-12 — Li, J., & Yao, L. (2021), arXiv:2106.10277,
+https://github.com/Deep-AI-Application-DAIP/acoustic-leakage-dataset-GPLA-12 (EPL-2.0).

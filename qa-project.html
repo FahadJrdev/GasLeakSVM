@@ -29,7 +29,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
   <main class="main" id="main">
     <div class="col">
 
-      <p class="eyebrow">09 · The interview</p>
+      <p class="eyebrow">10 · The interview</p>
       <h1>Q&amp;A — your project</h1>
       <p class="lede">
         Each answer opens with a <strong>bold one-sentence version</strong>. Say that first, then
@@ -84,19 +84,20 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
 
       <article class="qa" id="p03">
         <div class="qa-head"><span class="qa-id">P03</span>
-          <h3 class="qa-q">Why is your project titled "Real-Time Gas Leak Detection in Logistics and Manufacturing Environments Using Support Vector Machine on IoT Gas Sensor Data"?</h3>
+          <h3 class="qa-q">Why is your project titled "Real-Time Gas Leak Detection in Pipelines, Logistics and Manufacturing Using Support Vector Machines on IoT Sensor Data"?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
-          <p class="qa-short">Because every part of the title names one piece of the work: what it does (detects gas leaks), how fast (in real time), where it is meant for (logistics and manufacturing sites), which method (a Support Vector Machine), and what data it reads (low-cost IoT gas sensors).</p>
+          <p class="qa-short">Because every part of the title names one piece of the work: what it does (detects gas leaks), how fast (in real time), where it is meant for (gas pipelines and the logistics and manufacturing sites they supply), which method (Support Vector Machines), and what data it reads (low-cost IoT sensors — gas sensors in the main study, microphones in the pipeline case study).</p>
       <div class="tw"><table><tbody>
       <tr><th>Real-Time</th><td>Each reading is classified in about 1.1 ms, while a new reading arrives every 2 s — so the answer is always ready before the next reading. I measured this, not just claimed it.</td></tr>
       <tr><th>Gas Leak Detection</th><td>The goal: notice gas in the air and say which kind it is (no gas, perfume, smoke or a mixture), not just ring when one sensor passes a fixed level.</td></tr>
-      <tr><th>in Logistics and Manufacturing Environments</th><td>The places the system is designed for: factories, warehouses, cold stores and container depots, where LPG, ammonia and other gases are stored and moved — and where real accidents happened, such as the BM Container Depot fire in Sitakunda.</td></tr>
-      <tr><th>Using Support Vector Machine</th><td>The single model I chose and derived: a maximum-margin classifier with an RBF kernel. It is mathematically transparent, fast and works well with a few thousand readings.</td></tr>
-      <tr><th>on IoT Gas Sensor Data</th><td>The input: readings from seven cheap MQ metal-oxide sensors digitised by a 10-bit ADC — the same kind of sensor used in IoT gas monitors built on Arduino or ESP32.</td></tr>
+      <tr><th>in Pipelines</th><td>The real-life setting asked for by my instructor: the low-pressure end of a gas network — regulating stations, service lines, risers and factory gas lines — where Bangladesh's leaking Titas lines caused the Narayanganj and Siddique Bazar blasts. Section 1.3 explains it and Section 4.10 tests the method on real gas-pipeline leak recordings.</td></tr>
+      <tr><th>Logistics and Manufacturing</th><td>The places those pipelines supply: factories, warehouses, cold stores and container depots, where LPG, ammonia and other gases are stored and moved — and where real accidents happened, such as the BM Container Depot fire in Sitakunda.</td></tr>
+      <tr><th>Using Support Vector Machines</th><td>The one method I chose and derived: a maximum-margin classifier with an RBF kernel, used twice — once on gas-sensor data and once on pipe-leak sounds. It is mathematically transparent, fast and works well with a few thousand readings.</td></tr>
+      <tr><th>on IoT Sensor Data</th><td>The input: readings from seven cheap MQ metal-oxide sensors digitised by a 10-bit ADC (main study), and microphone recordings of pipe leaks (case study) — the kinds of sensor used in IoT monitors built on Arduino or ESP32.</td></tr>
       </tbody></table></div>
-      <p><strong>Where it came from:</strong> my supervisor gave the topic "Real-time gas leak detection using logistics &amp; manufacturing and machine learning". I made it precise by naming the setting (logistics and manufacturing environments), the exact machine-learning method (SVM) and the data source (IoT gas sensors), so the title says exactly what the report delivers.</p>
-      <div class="say"><p class="say-label">Say this</p><p>"The title has five parts and each matches a part of the work. Gas leak detection is the goal. Real-time means it decides in about one millisecond, far inside the two-second sampling interval. Logistics and manufacturing environments are where it is meant to be used — factories, warehouses, cold stores. Support Vector Machine is the method I derived and tuned. And IoT gas sensor data means it runs on readings from cheap MQ sensors like those in IoT devices."</p></div>
+      <p><strong>Where it came from:</strong> my supervisor gave the topic "Real-time gas leak detection using logistics &amp; manufacturing and machine learning", and my instructor asked for a gas pipeline focus. I made it precise by naming the setting (pipelines, logistics and manufacturing), the exact machine-learning method (SVM) and the data source (IoT sensors), so the title says exactly what the report delivers.</p>
+      <div class="say"><p class="say-label">Say this</p><p>"Each part of the title matches a part of the work. Gas leak detection is the goal. Real-time means it decides in about one millisecond, far inside the two-second sampling interval. Pipelines, logistics and manufacturing are where it is meant to be used — the risers and gas lines that feed factories, warehouses and cold stores. Support Vector Machines is the method I derived and tuned. And IoT sensor data means cheap MQ gas sensors, plus microphones in the pipeline case study."</p></div>
       <p>If they then ask "but your data are from a lab" — see the next question.</p>
         </div>
         <div class="qa-tags"><span class="tag">topic</span><span class="tag">title</span></div>
@@ -104,11 +105,11 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
 
       <article class="qa" id="p04">
         <div class="qa-head"><span class="qa-id">P04</span>
-          <h3 class="qa-q">Your title says "logistics and manufacturing". Where is that in your data?</h3>
+          <h3 class="qa-q">Your title says "pipelines, logistics and manufacturing". Where is that in your data?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
-          <p class="qa-short">That is the application setting; the data are a public laboratory benchmark I used to develop and test the method.</p>
-      <p>The method — a sensor array plus an SVM — is exactly what such sites would deploy. The dataset uses deodorant and incense smoke, so I state clearly that real industrial gases are future work. See <a href="qa-weakspots.html">page 11</a>.</p>
+          <p class="qa-short">Those are the application setting; the main data are a public laboratory benchmark I used to develop the method, and the pipeline case study adds real recordings from a gas pipeline test rig.</p>
+      <p>The method — a sensor array plus an SVM — is exactly what such sites would deploy. The dataset uses deodorant and incense smoke, so I state clearly that real industrial gases are future work. See <a href="qa-weakspots.html">page 12</a>.</p>
         </div>
         <div class="qa-tags"><span class="tag">topic</span></div>
       </article>
@@ -118,10 +119,78 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
           <h3 class="qa-q">What is new in your work?</h3>
           <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
         <div class="qa-body">
-          <p class="qa-short">A complete derivation of the multi-class SVM for this problem, a properly tuned SVM that raises the best sensor-only SVM on this data from 88.36% to 98.23%, measured real-time latency, and an honest drift test.</p>
+          <p class="qa-short">A complete derivation of the multi-class SVM for this problem, a properly tuned SVM that raises the best sensor-only SVM on this data from 88.36% to 98.23%, measured real-time latency, an honest drift test, and a pipeline case study where the same method reached 88.83% on real gas-pipe leak recordings, where the published SVM had F1 of only about 0.3–0.5.</p>
       <p>No earlier study on this dataset reported prediction speed or tested on time-ordered data.</p>
         </div>
         <div class="qa-tags"><span class="tag">novelty</span></div>
+      </article>
+
+      <h2 data-qa-sec>The pipeline</h2>
+
+      <article class="qa" id="pl1">
+        <div class="qa-head"><span class="qa-id">PL1</span>
+          <h3 class="qa-q">Where is the gas pipeline in your project?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">It is the real-life setting (Section 1.3) and the subject of a case study on real gas-pipeline leak recordings (Sections 3.9 and 4.10).</p>
+      <p>The system is meant for the low-pressure end of a gas network: regulating stations, service lines, risers and the gas lines inside factories and warehouses. A gas-sensor node there says which gas is present (main study, 98.23%); an acoustic node on the pipe says how strong a leak is (case study, 88.35%). See <a href="pipeline.html">page 09</a>.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">pipeline</span></div>
+      </article>
+
+      <article class="qa" id="pl2">
+        <div class="qa-head"><span class="qa-id">PL2</span>
+          <h3 class="qa-q">Why do pipeline leaks matter in Bangladesh?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">The distribution network is old and leaks widely: Titas has about 13,238 km of pipes built from the 1970s to the late 1980s for a 30-year life, and a survey of 1,682 km found methane at 9,926 locations and 459 leaks.</p>
+      <p>Leaks have killed: 34 people in a Narayanganj mosque (2020), and at Siddique Bazar (2023) investigators found gas leaking from an abandoned Titas pipe in the basement. Odorant reveals only part of the leaks, so instruments are needed.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">pipeline</span><span class="tag">bangladesh</span></div>
+      </article>
+
+      <article class="qa" id="pl3">
+        <div class="qa-head"><span class="qa-id">PL3</span>
+          <h3 class="qa-q">What is GPLA-12?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">A public dataset of 684 five-second acoustic recordings of leaks on a real gas pipeline test rig, made by Li and Yao (2021) at Chongqing University of Science and Technology, in 12 classes: 3 pipe pressures × 2 microphones × quiet or noisy.</p>
+      <p>The gas was compressed air. Each recording is stored as 1,460 numbers. It is on GitHub under the EPL-2.0 licence.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">pipeline</span><span class="tag">data</span></div>
+      </article>
+
+      <article class="qa" id="pl4">
+        <div class="qa-head"><span class="qa-id">PL4</span>
+          <h3 class="qa-q">How did you turn a sound into SVM input?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">I took the discrete Fourier transform, split the 731 frequencies into 32 bands, took the log of each band's energy and added 7 simple statistics — 39 numbers per recording.</p>
+      <p>By Parseval's theorem the band energies share out the signal's total energy by frequency. The log is used because energies differ by orders of magnitude. Then the same standardisation, RBF kernel and 5-fold grid search as the main study.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">pipeline</span><span class="tag">features</span></div>
+      </article>
+
+      <article class="qa" id="pl5">
+        <div class="qa-head"><span class="qa-id">PL5</span>
+          <h3 class="qa-q">What did the pipeline case study find?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">The tuned RBF-SVM recognised the pipe pressure — how strong the leak is — with 88.35% test accuracy, and all 12 conditions with 88.83%; noisy versus quiet was 100%.</p>
+      <p>All pressure errors were between neighbouring pressures (mostly 0.5 called 0.4 MPa); 0.2 and 0.5 MPa were never confused. An ordered split still gave 81.94%.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">pipeline</span><span class="tag">results</span></div>
+      </article>
+
+      <article class="qa" id="pl6">
+        <div class="qa-head"><span class="qa-id">PL6</span>
+          <h3 class="qa-q">How does that compare with the dataset authors?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Their SVM reached an F1-score of only about 0.3–0.5 and their best model, a CNN, about 0.7; my scaled and tuned SVM reached macro F1 0.89 on all 12 classes.</p>
+      <p>The splits differ, so it is not an exact comparison, but the gap is large — the same lesson as the main study: scaling and tuning make the SVM strong.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">pipeline</span><span class="tag">comparison</span></div>
       </article>
 
       <h2 data-qa-sec>Data</h2>

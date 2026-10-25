@@ -29,10 +29,10 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
   <main class="main" id="main">
     <div class="col col-wide">
 
-      <p class="eyebrow">14 · Programming</p>
+      <p class="eyebrow">15 · Programming</p>
       <h1>Run it in VS Code, step by step</h1>
       <p class="lede">
-        The whole experiment is split into twelve small scripts. You run them one at a time and
+        The whole experiment is split into thirteen small scripts. You run them one at a time and
         watch each result appear, in the same order as the report. It works on Windows, macOS
         and Linux, and the only things you install are Python and a few libraries.
       </p>
@@ -40,7 +40,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <div class="downloads">
         <a href="colab.html">
           <span class="k">No install?</span><span class="v">Use Google Colab</span>
-          <span class="d">Same scripts in the browser, on page 15</span>
+          <span class="d">Same scripts in the browser, on page 16</span>
         </a>
       </div>
 
@@ -123,8 +123,9 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
           </p>
           <p>Inside you should see:</p>
 <pre class="cmd">svm_gas_code/
-  data/                         the sensor CSV and four thermal images
-  00_check_setup.py  ...  11_make_illustrations.py
+  data/                         the sensor CSV, four thermal images, and GPLA12_data.csv +
+                                GPLA12_label.csv (the pipe-leak recordings)
+  00_check_setup.py  ...  12_pipeline_case_study.py
   common.py   run_all.py   all_in_one_svm_gas_experiment.py
   requirements.txt   README.md</pre>
         </li>
@@ -347,7 +348,7 @@ Support vectors per class: {'NoGas': 331, 'Perfume': 312, 'Smoke': 241, 'Mixture
       <h3><span class="stepnum">06</span>Evaluate the tuned model</h3>
       <p>
         Precision, recall, confusion matrix, ROC curves and the learning curve. Needs step 05
-        first. Report Sections 4.3 to 4.5. About 1 to 2 minutes.
+        first. Report Sections 4.4 and 4.7. About 1 to 2 minutes.
       </p>
 <pre class="cmd">python 06_evaluate_model.py</pre>
       <span class="cmd-label">You should see (shortened)</span>
@@ -371,7 +372,7 @@ ROC-AUC per class:
       <h3><span class="stepnum">07</span>Compare kernels</h3>
       <p>
         Tunes a linear, a polynomial and an RBF kernel and compares them on the test data.
-        Report Section 4.4. It repeats a grid search, so it takes 2 to 5 minutes (<code>--quick</code> works here too).
+        Report Section 4.5. It repeats a grid search, so it takes 2 to 5 minutes (<code>--quick</code> works here too).
       </p>
 <pre class="cmd">python 07_kernel_comparison.py</pre>
       <span class="cmd-label">You should see</span>
@@ -392,7 +393,7 @@ linear                   {'svm__C': 100}        85.31          84.79
 
       <h3><span class="stepnum">09</span>Real-time speed</h3>
       <p>
-        Times one prediction at a time, like a live sensor. Needs step 05. Report Section 4.7.
+        Times one prediction at a time, like a live sensor. Needs step 05. Report Section 4.8.
         About 15 seconds.
       </p>
 <pre class="cmd">python 09_realtime_latency.py</pre>
@@ -414,7 +415,7 @@ Simulated live stream:
 
       <h3><span class="stepnum">10</span>The drift test (the honest limitation)</h3>
       <p>
-        Trains on the earlier readings and tests on the later ones. Report Section 4.8. About
+        Trains on the earlier readings and tests on the later ones. Report Section 4.9. About
         15 seconds.
       </p>
 <pre class="cmd">python 10_drift_test.py</pre>
@@ -441,25 +442,58 @@ Mixture      0        0      0      480</pre>
 <pre class="cmd">python 11_make_illustrations.py</pre>
 <pre class="cmd result">Illustrations written to ...\outputs\figures</pre>
 
+      <h3><span class="stepnum">12</span>The pipeline case study (real gas-pipe leaks)</h3>
+      <p>
+        Runs the same SVM method on GPLA-12, 684 sound recordings of leaks on a real gas pipeline
+        test rig (the two <code>GPLA12_*.csv</code> files in <code>data</code>). It turns each
+        sound into 39 Fourier features, tunes an RBF-SVM and predicts the pipe pressure. Report
+        Sections 3.9 and 4.10. Independent of the other steps. About 1 minute.
+      </p>
+<pre class="cmd">python 12_pipeline_case_study.py</pre>
+      <span class="cmd-label">You should see</span>
+<pre class="cmd result">Recordings: 684   points per recording: 1460   per class: 57
+Feature matrix: 684 x 39  (32 band energies + 7 statistics)
+
+Task                               lin raw  lin feat    RBF CV  RBF test  best (C, gamma)
+Leak pressure (3 classes)           65.05%    82.04%    91.23%    88.35%  (1000, 0.01)
+All 12 classes                      52.91%    89.32%    87.66%    88.83%  (1000, 0.01)
+Noisy vs quiet (2 classes)          68.45%    98.54%    99.58%   100.00%  (1, scale)
+Microphone 1 vs 2 (2 classes)      100.00%   100.00%   100.00%   100.00%  (0.1, scale)
+
+12 classes, RBF-SVM on the raw 1,460-point signal: 86.89% (features help a little and need 37x fewer numbers)
+
+Leak pressure, confusion matrix on the test set (rows = true, columns = predicted):
+         0.2 MPa  0.4 MPa  0.5 MPa
+0.2 MPa       65        4        0
+0.4 MPa        5       60        4
+0.5 MPa        0       11       57
+
+Ordered split (first 70% of each class -&gt; train): pressure accuracy 81.94%  (random split: 88.35%)</pre>
+      <p>
+        From the sound of a real pipe leak, the SVM tells the pipe pressure (how strong the leak
+        is) correctly 88.35% of the time. The full explanation is on
+        <a href="pipeline.html">page 09</a>.
+      </p>
+
       <h3>What you now have</h3>
 <pre class="cmd">outputs/
-  figures/   22 PNG files   (every figure in the report)
-  results/    6 files       (statistics, grid-search table, kernel comparison, ...)
+  figures/   27 PNG files   (every figure in the report)
+  results/    7 files       (statistics, grid-search table, kernel comparison, ...)
   models/     1 file        (best_rbf_svm.joblib, the trained model)</pre>
 
       <h2 id="all">C · Run everything at once</h2>
       <p>
-        When you have seen each step, one command runs all twelve in order and stops at the first
+        When you have seen each step, one command runs all thirteen in order and stops at the first
         error:
       </p>
 <pre class="cmd">python run_all.py</pre>
       <p>
-        With full grids it takes about <strong>10 to 15 minutes</strong> on a 4-core laptop. For a
+        With full grids it takes about <strong>11 to 16 minutes</strong> on a 4-core laptop. For a
         fast demo use the quick version:
       </p>
 <pre class="cmd">python run_all.py --quick</pre>
       <p>
-        It takes about <strong>5 minutes</strong> and gives the same final numbers. Quick mode only shrinks the
+        It takes about <strong>6 minutes</strong> and gives the same final numbers. Quick mode only shrinks the
         <code>C</code>/<code>γ</code> grid in steps 05 and 07, so the grid-search heat map has
         fewer cells. The report's figure comes from the full run.
       </p>

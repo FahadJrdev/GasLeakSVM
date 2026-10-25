@@ -52,6 +52,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <a href="#opt">Optimisation</a>
         <a href="#eval">Evaluation</a>
         <a href="#rt">Real-time</a>
+        <a href="#pipe">Pipelines &amp; signals</a>
       </nav>
 
       <h2 id="gas">Gas and sensors</h2>
@@ -142,6 +143,22 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="term"><dt>Edge / TinyML</dt><dd>Running the model on the small device itself rather than in the cloud. Faster and works without internet.</dd></div>
         <div class="term"><dt>Microcontroller (e.g. ESP32)</dt><dd>A tiny, cheap computer on one chip that reads sensors and can run a small model.</dd></div>
       </dl>
+
+      <h2 id="pipe">Pipelines and signals</h2>
+      <dl class="terms">
+        <div class="term"><dt>Transmission line</dt><dd>A large buried pipeline that carries gas at the highest pressure over long distances, from the gas fields to towns.</dd></div>
+        <div class="term"><dt>Regulating station (city gate)</dt><dd>The place where pipeline pressure is reduced and the gas is metered before it enters the town's distribution network.</dd></div>
+        <div class="term"><dt>Distribution main</dt><dd>A medium- to low-pressure pipe under the streets that spreads gas through a town.</dd></div>
+        <div class="term"><dt>Service line and riser</dt><dd>The small pipe that connects one building, and the vertical part that rises into it. This is where pipeline gas meets people.</dd></div>
+        <div class="term"><dt>MPa</dt><dd>Megapascal, a unit of pressure. 1 MPa = 10 bar, about ten times normal air pressure.</dd></div>
+        <div class="term"><dt>GPLA-12</dt><dd>A public dataset of 684 acoustic recordings of leaks on a real gas pipeline test rig, in 12 classes (3 pressures × 2 microphones × quiet or noisy), by Li and Yao (2021).</dd></div>
+        <div class="term"><dt>Discrete Fourier transform (DFT)</dt><dd>Rewrites a signal as a sum of waves of different frequencies. \(S_k\) says how strongly frequency \(k\) is present. The FFT is a fast way to compute it.</dd></div>
+        <div class="term"><dt>Power spectrum</dt><dd>\(P_k=|S_k|^2\): how much of the signal's energy lies at each frequency.</dd></div>
+        <div class="term"><dt>Parseval's theorem</dt><dd>The energy of a signal equals the sum of its power spectrum divided by \(N\). So the spectrum shares out the energy by frequency.</dd></div>
+        <div class="term"><dt>Band energy</dt><dd>The total power in a group of neighbouring frequencies. The case study uses the log of 32 band energies as features.</dd></div>
+        <div class="term"><dt>Zero-crossing rate</dt><dd>The fraction of neighbouring sample pairs on opposite sides of the mean. A rough measure of how "high-pitched" a signal is.</dd></div>
+      </dl>
+
 
       <nav data-pagenav></nav>
     </div>

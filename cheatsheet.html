@@ -29,7 +29,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
   <main class="main" id="main">
     <div class="col">
 
-      <p class="eyebrow">12 · The interview</p>
+      <p class="eyebrow">13 · The interview</p>
       <h1>Cheat sheet</h1>
       <p class="lede">Everything on one page. Read it the morning of the viva.</p>
 
@@ -38,7 +38,9 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <p>
           Seven cheap sensors → seven numbers per reading → scale them → an RBF-kernel SVM with
           \(C=100\), \(\gamma=10\) → one of four classes, in about a millisecond, 98.23% correct
-          on unseen readings. Main limit: sensor drift (54.37% on later readings).
+          on unseen readings. Main limit: sensor drift (54.37% on later readings). Pipeline case
+          study: leak sound → 39 Fourier features → the same kind of SVM → pipe pressure 88.35%
+          correct on real gas-pipe leak recordings.
         </p>
       </section>
 
@@ -59,6 +61,10 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
             <tr><th>Drift test</th><td>54.37% accuracy, F1 0.5187</td></tr>
             <tr><th>PCA</th><td>PC1 70.2% + PC2 17.6% = 87.8%</td></tr>
             <tr><th>Earlier work</th><td>LSTM 82% · untuned SVM 88.36% · BiLSTM 93.39% · RF 98.67%</td></tr>
+            <tr><th>Pipeline data</th><td>GPLA-12 (Li &amp; Yao, 2021): 684 leak sounds × 1,460 points · 12 classes = 3 pressures × 2 mics × quiet/noisy · compressed air</td></tr>
+            <tr><th>Pipeline features</th><td>32 log FFT band energies + 7 statistics = 39 · split 478 / 206 (70/30)</td></tr>
+            <tr><th>Pipeline results</th><td>pressure <strong>88.35%</strong> (C = 1000, γ = 0.01, CV 91.23%) · 12 classes 88.83% · noise 100% · ordered split 81.94% · published SVM F1 ≈ 0.3–0.5</td></tr>
+            <tr><th>Bangladesh pipes</th><td>gas 97.33% methane · Titas 13,238 km · survey of 1,682 km: methane at 9,926 points, 459 leaks</td></tr>
           </tbody>
         </table>
       </div>
@@ -72,6 +78,7 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       <div class="math"><div>$$K(\mathbf{x},\mathbf{z})=e^{-\gamma\|\mathbf{x}-\mathbf{z}\|^2},\qquad f(\mathbf{x})=\sum_{i\in SV}\alpha_iy_iK(\mathbf{x}_i,\mathbf{x})+b$$</div></div>
       <div class="math"><div>$$z=\frac{x-\mu}{\sigma},\qquad N_{\text{OvO}}=\frac{k(k-1)}{2}=6,\qquad T_{\text{predict}}=O(n_{SV}d)$$</div></div>
       <div class="math"><div>$$P=\frac{TP}{TP+FP},\quad R=\frac{TP}{TP+FN},\quad F1=\frac{2PR}{P+R}$$</div></div>
+      <div class="math"><div>$$S_k=\sum_{n}(s_n-\bar s)e^{-2\pi i kn/N},\qquad E_b=\log\Big(1+\sum_{k\in\mathcal B_b}|S_k|^2\Big)$$</div></div>
 
       <h2>Sentences to say</h2>
       <div class="grid grid-2">
@@ -81,6 +88,8 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <div class="card"><h4>Why scale?</h4><p>RBF uses distance; MQ8 varies 3× more than MQ6 and would dominate.</p></div>
         <div class="card"><h4>Is it real-time?</h4><p>1.1 ms per reading against a 2 s sampling interval.</p></div>
         <div class="card"><h4>Main limitation?</h4><p>Sensor drift: 54% on later readings. Needs recalibration or drift compensation.</p></div>
+        <div class="card"><h4>Where is the pipeline?</h4><p>The real setting: risers, regulating stations and factory gas lines. Tested on real gas-pipe leak sounds: 88.35% on leak pressure.</p></div>
+        <div class="card"><h4>Limits of the pipe test?</h4><p>Compressed air, one rig, and every recording is a leak, so it measures leak strength, not leak or no leak.</p></div>
       </div>
 
       <h2>Python in four lines</h2>

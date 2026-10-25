@@ -39,17 +39,20 @@
       ["tuning.html", "07", "Scaling, tuning and metrics"],
       ["results.html", "08", "The results, figure by figure"]
     ]],
+    ["The pipeline", [
+      ["pipeline.html", "09", "Pipeline case study — real pipe leaks"]
+    ]],
     ["The interview", [
-      ["qa-project.html", "09", "Q&A — your project"],
-      ["qa-math.html", "10", "Q&A — the mathematics"],
-      ["qa-weakspots.html", "11", "Hard questions & honest gaps"],
-      ["cheatsheet.html", "12", "Cheat sheet"]
+      ["qa-project.html", "10", "Q&A — your project"],
+      ["qa-math.html", "11", "Q&A — the mathematics"],
+      ["qa-weakspots.html", "12", "Hard questions & honest gaps"],
+      ["cheatsheet.html", "13", "Cheat sheet"]
     ]],
     ["Programming", [
-      ["lab.html", "13", "Python lab — train the SVM here"],
-      ["vscode.html", "14", "Run it in VS Code"],
-      ["colab.html", "15", "Run it in Google Colab"],
-      ["qa-python.html", "16", "Q&A — programming"]
+      ["lab.html", "14", "Python lab — train the SVM here"],
+      ["vscode.html", "15", "Run it in VS Code"],
+      ["colab.html", "16", "Run it in Google Colab"],
+      ["qa-python.html", "17", "Q&A — programming"]
     ]]
   ];
 
