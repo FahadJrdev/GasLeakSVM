@@ -13,7 +13,6 @@ University of Chittagong, AMAT-527, supervisor Dr. Mohammad Jalal Ahammad.
 | Report (Word) | https://fahadjrdev.github.io/GasLeakSVM/GasLeakSVM.docx |
 | Experiment script | https://fahadjrdev.github.io/GasLeakSVM/data/svm_gas_experiment.py |
 | Sensor data (CSV) | https://fahadjrdev.github.io/GasLeakSVM/data/Gas_Sensors_Measurements.csv |
-| Runnable project folder (ZIP) | https://fahadjrdev.github.io/GasLeakSVM/svm_gas_code.zip |
 
 The site is static HTML/CSS/JS. There is no build step on the server and no backend. Open
 `index.html` directly, or serve the folder:

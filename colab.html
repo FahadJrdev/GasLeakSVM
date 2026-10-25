@@ -98,29 +98,28 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
 
         <li>
           <h4>Cell 1 — bring the project into Colab</h4>
-          <p>Click into the first cell, paste this, and press <kbd>Shift</kbd>+<kbd>Enter</kbd>:</p>
-<pre class="cmd">!wget -q https://fahadjrdev.github.io/GasLeakSVM/svm_gas_code.zip
-!unzip -q -o svm_gas_code.zip
-%cd /content/svm_gas_code
-!ls</pre>
           <p>
-            It downloads the project zip from this site, unpacks it, moves into the folder, and lists
-            it. The first line of output is <code>/content/svm_gas_code</code>, followed by the
-            files <code>00_check_setup.py</code> to <code>run_all.py</code>, <code>common.py</code>,
-            <code>data</code> and the rest.
+            First, on your own computer, <strong>zip the <code>svm_gas_code</code> folder</strong>
+            (Windows: right-click the folder → Send to → Compressed (zipped) folder; Mac:
+            right-click → Compress). You get <code>svm_gas_code.zip</code>.
           </p>
-          <div class="note info">
-            <p class="note-title">Prefer to upload the zip yourself?</p>
-            <p>
-              Download <a href="svm_gas_code.zip" download>svm_gas_code.zip</a> to your computer. In Colab,
-              click the <strong>folder icon</strong> in the left bar, then the <strong>upload
-              icon</strong> (the arrow pointing up), and choose the zip. Wait until the little
-              progress circle disappears, then run the same cell without the first line:
-            </p>
+          <p>
+            In Colab, click the <strong>folder icon</strong> in the left bar, then the <strong>upload
+            icon</strong> (the arrow pointing up), and choose the zip. Wait until the little
+            progress circle disappears. Then click into the first cell, paste this, and press
+            <kbd>Shift</kbd>+<kbd>Enter</kbd>:
+          </p>
 <pre class="cmd">!unzip -q -o svm_gas_code.zip
 %cd /content/svm_gas_code
 !ls</pre>
-          </div>
+          <p>
+            It unpacks the zip, moves into the folder, and lists it. The first line of output is
+            <code>/content/svm_gas_code</code>, followed by the files <code>00_check_setup.py</code>
+            to <code>run_all.py</code>, <code>common.py</code>, <code>data</code> and the rest.
+          </p>
+          <p>
+            Uploaded files disappear when the Colab session ends, so repeat this cell next time.
+          </p>
         </li>
 
         <li>
@@ -276,8 +275,6 @@ for path in sorted(glob.glob("outputs/figures/*.png")):
                 <td>You are not inside the project folder. Run <code>%cd /content/svm_gas_code</code>, then try again. This happens after the runtime restarts.</td></tr>
             <tr><td><code>unzip: cannot find or open svm_gas_code.zip</code></td>
                 <td>The upload has not finished, or the zip has another name. Check the file list in the left bar.</td></tr>
-            <tr><td><code>wget</code> shows <code>404 Not Found</code></td>
-                <td>The zip is not on the site yet. Use the “upload the zip yourself” route in Cell 1.</td></tr>
             <tr><td><code>The tuned model does not exist yet</code></td>
                 <td>The model is created by step 05. Run it first, or again if the runtime was reset.</td></tr>
             <tr><td>Everything has vanished after a break</td>

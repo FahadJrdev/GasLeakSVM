@@ -38,10 +38,6 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
       </p>
 
       <div class="downloads">
-        <a href="svm_gas_code.zip" download>
-          <span class="k">Download · ZIP</span><span class="v">svm_gas_code</span>
-          <span class="d">All scripts, the sensor data and requirements · about 2 MB</span>
-        </a>
         <a href="colab.html">
           <span class="k">No install?</span><span class="v">Use Google Colab</span>
           <span class="d">Same scripts in the browser, on page 15</span>
@@ -117,10 +113,13 @@ if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}
         <li>
           <h4>Get the project folder</h4>
           <p>
-            Download <a href="svm_gas_code.zip" download>svm_gas_code.zip</a> from this site, then
-            <strong>extract it</strong> (Windows: right-click → Extract All; Mac: double-click).
-            Put the extracted <code>svm_gas_code</code> folder somewhere easy, such as Documents.
-            Do not run anything from inside the zip.
+            You need the <code>svm_gas_code</code> folder (the scripts plus the <code>data</code>
+            folder). If you are working on your own computer, it is already there. To move it to
+            another computer, <strong>zip the folder</strong> (Windows: right-click the folder →
+            Send to → Compressed (zipped) folder; Mac: right-click → Compress) and copy the zip
+            across. On the new computer, <strong>extract it</strong> (Windows: right-click → Extract
+            All; Mac: double-click) and put the <code>svm_gas_code</code> folder somewhere easy,
+            such as Documents. Do not run anything from inside the zip.
           </p>
           <p>Inside you should see:</p>
 <pre class="cmd">svm_gas_code/
@@ -481,7 +480,7 @@ Mixture      0        0      0      480</pre>
             <tr><td><code>ModuleNotFoundError: No module named 'sklearn'</code> (or pandas, seaborn…)</td>
                 <td>The environment is not active, or the libraries are not installed. Look for <code>(.venv)</code> at the start of the prompt, then run <code>python -m pip install -r requirements.txt</code> again.</td></tr>
             <tr><td><code>Cannot find …Gas_Sensors_Measurements.csv</code></td>
-                <td>The <code>data</code> folder is not next to the scripts. Re-extract the zip and keep the folder together.</td></tr>
+                <td>The <code>data</code> folder is not next to the scripts. Re-extract the zip, or copy the whole folder again, and keep it together.</td></tr>
             <tr><td><code>The tuned model does not exist yet</code></td>
                 <td>Run <code>05_tune_rbf_svm.py</code> first, then 06, 08 or 09.</td></tr>
             <tr><td>Step 05 or 07 seems frozen</td>
