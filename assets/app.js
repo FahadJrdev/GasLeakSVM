@@ -47,7 +47,9 @@
     ]],
     ["Programming", [
       ["lab.html", "13", "Python lab — train the SVM here"],
-      ["qa-python.html", "14", "Q&A — programming"]
+      ["vscode.html", "14", "Run it in VS Code"],
+      ["colab.html", "15", "Run it in Google Colab"],
+      ["qa-python.html", "16", "Q&A — programming"]
     ]]
   ];
 

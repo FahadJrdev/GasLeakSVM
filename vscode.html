@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run it in VS Code — Gas Leak SVM project defence</title>
+<meta name="description" content="Step-by-step guide to run the gas leak SVM project on your own Windows, Mac or Linux computer in VS Code, one script at a time, with the exact output to expect.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="vscode">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Run it in VS Code</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col col-wide">
+
+      <p class="eyebrow">14 · Programming</p>
+      <h1>Run it in VS Code, step by step</h1>
+      <p class="lede">
+        The whole experiment is split into twelve small scripts. You run them one at a time and
+        watch each result appear, in the same order as the report. It works on Windows, macOS
+        and Linux, and the only things you install are Python and a few libraries.
+      </p>
+
+      <div class="downloads">
+        <a href="svm_gas_code.zip" download>
+          <span class="k">Download · ZIP</span><span class="v">svm_gas_code</span>
+          <span class="d">All scripts, the sensor data and requirements · about 2 MB</span>
+        </a>
+        <a href="colab.html">
+          <span class="k">No install?</span><span class="v">Use Google Colab</span>
+          <span class="d">Same scripts in the browser, on page 15</span>
+        </a>
+      </div>
+
+      <div class="note good">
+        <p class="note-title">Tested, not guessed</p>
+        <p>
+          Every step on this page was run from a fresh virtual environment on a Windows 10
+          computer, from a folder whose path contains spaces: the full run with Python 3.14, and
+          the quick run (section C) with Python 3.12. The outputs shown are copied from those
+          runs. The accuracy numbers were identical in both and on Google Colab too; only the
+          timings change.
+          The macOS and Linux commands are the standard equivalents. I could not test those on
+          a Mac here.
+        </p>
+      </div>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          Think of the folder as a small kitchen. <strong>Python</strong> is the stove,
+          the <strong>libraries</strong> (scikit-learn, pandas, matplotlib) are the pots, and the
+          <strong>virtual environment</strong> is a private cupboard that holds only the pots
+          this project needs, so nothing else on your computer is touched. Each numbered script
+          is one recipe step: load the data, split it, train, evaluate.
+        </p>
+        <p>
+          Everything uses <strong>seed 42</strong>, so your numbers will match the report exactly:
+          98.23% test accuracy for the tuned RBF-SVM.
+        </p>
+      </section>
+
+      <nav class="jump">
+        <a href="#setup">A · One-time setup</a>
+        <a href="#run">B · Run the steps</a>
+        <a href="#all">C · Run everything</a>
+        <a href="#fix">D · If something breaks</a>
+      </nav>
+
+      <h2 id="setup">A · One-time setup (about 10 minutes)</h2>
+
+      <ol class="steps">
+        <li>
+          <h4>Install Python 3.9 or newer</h4>
+          <p>
+            Download it from <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads</a>.
+            <strong>On Windows, tick “Add python.exe to PATH” on the first installer screen</strong>,
+            then press Install Now. Missing that tick is the most common reason nothing works later.
+          </p>
+          <p>
+            On Linux, Python is usually already there:
+            <code>sudo apt install python3 python3-venv python3-pip</code> adds anything missing.
+            Check it:
+          </p>
+          <span class="cmd-label">Windows (PowerShell)</span>
+<pre class="cmd">py --version</pre>
+          <span class="cmd-label">macOS / Linux (Terminal)</span>
+<pre class="cmd">python3 --version</pre>
+          <p>It should print something like <code>Python 3.12.10</code>.</p>
+        </li>
+
+        <li>
+          <h4>Install VS Code and its Python extension</h4>
+          <p>
+            Get VS Code from <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">code.visualstudio.com</a>.
+            Open it, press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd> (Mac: <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>),
+            search for <strong>Python</strong>, and install the one published by <strong>Microsoft</strong>.
+          </p>
+        </li>
+
+        <li>
+          <h4>Get the project folder</h4>
+          <p>
+            Download <a href="svm_gas_code.zip" download>svm_gas_code.zip</a> from this site, then
+            <strong>extract it</strong> (Windows: right-click → Extract All; Mac: double-click).
+            Put the extracted <code>svm_gas_code</code> folder somewhere easy, such as Documents.
+            Do not run anything from inside the zip.
+          </p>
+          <p>Inside you should see:</p>
+<pre class="cmd">svm_gas_code/
+  data/                         the sensor CSV and four thermal images
+  00_check_setup.py  ...  11_make_illustrations.py
+  common.py   run_all.py   all_in_one_svm_gas_experiment.py
+  requirements.txt   README.md</pre>
+        </li>
+
+        <li>
+          <h4>Open the folder in VS Code</h4>
+          <p>
+            <strong>File → Open Folder…</strong>, choose <code>svm_gas_code</code>, and click
+            “Yes, I trust the authors” if asked. The Explorer panel on the left now lists the files.
+            Open the folder itself, not a single file. The scripts find the data by their own
+            location, so this keeps everything working.
+          </p>
+        </li>
+
+        <li>
+          <h4>Open a terminal inside VS Code</h4>
+          <p>
+            <strong>Terminal → New Terminal</strong> (or <kbd>Ctrl</kbd>+<kbd>`</kbd>). A panel opens
+            at the bottom, and its prompt should end with <code>svm_gas_code</code>. Every command
+            below is typed there, one at a time, followed by <kbd>Enter</kbd>.
+          </p>
+        </li>
+
+        <li>
+          <h4>Create the virtual environment</h4>
+          <p>This makes a hidden folder called <code>.venv</code> inside the project.</p>
+          <span class="cmd-label">Windows (PowerShell)</span>
+<pre class="cmd">py -m venv .venv</pre>
+          <span class="cmd-label">macOS / Linux</span>
+<pre class="cmd">python3 -m venv .venv</pre>
+          <p>
+            If VS Code pops up “We noticed a new environment has been created. Do you want to
+            select it?”, click <strong>Yes</strong>.
+          </p>
+        </li>
+
+        <li>
+          <h4>Switch the environment on</h4>
+          <span class="cmd-label">Windows (PowerShell)</span>
+<pre class="cmd">.venv\Scripts\Activate.ps1</pre>
+          <span class="cmd-label">macOS / Linux</span>
+<pre class="cmd">source .venv/bin/activate</pre>
+          <p>
+            The prompt now starts with <code>(.venv)</code>. <strong>Check for it before every
+            session.</strong> From here on, <code>python</code> means the project's Python on every system.
+          </p>
+          <div class="note warn">
+            <p class="note-title">Windows says “running scripts is disabled on this system”?</p>
+            <p>
+              Run this once, then activate again:
+              <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code>
+              and answer <code>Y</code>. Or open a Command Prompt terminal instead and use
+              <code>.venv\Scripts\activate.bat</code>.
+            </p>
+          </div>
+        </li>
+
+        <li>
+          <h4>Tell VS Code which Python to use</h4>
+          <p>
+            Press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> (Mac: <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>),
+            type <strong>Python: Select Interpreter</strong>, and pick the entry that mentions
+            <code>.venv</code>. The bottom-right corner of VS Code then shows it. This only matters
+            for the ▶ Run button; commands typed in the terminal use whatever is activated there.
+          </p>
+        </li>
+
+        <li>
+          <h4>Install the libraries</h4>
+<pre class="cmd">python -m pip install -r requirements.txt</pre>
+          <p>
+            This downloads numpy, pandas, matplotlib, seaborn, scikit-learn and joblib. It needs
+            internet and takes one to three minutes. It ends with a line starting
+            <code>Successfully installed</code>.
+          </p>
+        </li>
+
+        <li>
+          <h4>Check that everything is ready</h4>
+<pre class="cmd">python 00_check_setup.py</pre>
+          <span class="cmd-label">You should see (version numbers will differ on your computer)</span>
+<pre class="cmd result">Python  : 3.12.10 at C:\...\svm_gas_code\.venv\Scripts\python.exe
+numpy      : 2.5.4
+pandas     : 3.1.0
+matplotlib : 3.11.2
+seaborn    : 0.13.2
+sklearn    : 1.9.1
+joblib     : 1.6.0
+Data    : found -> C:\...\svm_gas_code\data\Gas_Sensors_Measurements.csv
+
+ALL GOOD. You can run 01_load_data.py next.</pre>
+          <p>
+            If it says <code>NOT READY</code>, the message tells you what is missing. See
+            <a href="#fix">section D</a>.
+          </p>
+        </li>
+      </ol>
+
+      <h2 id="run">B · Run the steps one by one</h2>
+
+      <p>
+        You can run a script two ways. <strong>Terminal:</strong> type the command shown.
+        <strong>Button:</strong> open the file in VS Code and click the ▶ at the top right
+        (“Run Python File”). Both give the same output. The scripts print their results in the
+        terminal and save figures and tables into a new folder called <code>outputs</code>. Click
+        any <code>.png</code> in the Explorer to view it inside VS Code.
+      </p>
+
+      <div class="note info">
+        <p class="note-title">Order matters for three scripts</p>
+        <p>
+          Step 05 trains the main model and saves it. Steps 06, 08 and 09 load that saved model, so
+          run <strong>05 before them</strong>. The others do not depend on each other.
+        </p>
+      </div>
+
+      <h3><span class="stepnum">01</span>Load the data</h3>
+      <p>Reads the CSV and prints its shape and class counts. Report Section 3.2. Takes a few seconds.</p>
+<pre class="cmd">python 01_load_data.py</pre>
+      <span class="cmd-label">You should see (shortened)</span>
+<pre class="cmd result">Shape (rows, columns): (6400, 10)
+
+Samples per class:
+NoGas      1600
+Perfume    1600
+Smoke      1600
+Mixture    1600
+
+Missing values: 0
+Feature matrix X: (6400, 7)   labels y: (6400,)   label codes: {0: 'NoGas', 1: 'Perfume', 2: 'Smoke', 3: 'Mixture'}</pre>
+
+      <h3><span class="stepnum">02</span>Explore the data</h3>
+      <p>
+        Statistics tables and four figures: box plots, signals over time, correlation heat map and
+        class distribution. Report Section 3.3. About 20 seconds.
+      </p>
+<pre class="cmd">python 02_explore_data.py</pre>
+      <span class="cmd-label">You should see (shortened)</span>
+<pre class="cmd result">              MQ2      MQ3      MQ5      MQ6      MQ7      MQ8    MQ135
+count     6400.00  6400.00  6400.00  6400.00  6400.00  6400.00  6400.00
+mean       677.59   462.02   404.58   399.76   565.95   542.47   416.73
+...
+  saved figure -> ...\outputs\figures\fig_boxplots.png
+  saved figure -> ...\outputs\figures\fig_signals.png
+  saved figure -> ...\outputs\figures\fig_correlation.png
+  saved figure -> ...\outputs\figures\fig_class_distribution.png</pre>
+
+      <h3><span class="stepnum">03</span>Split the data and draw PCA</h3>
+      <p>
+        The stratified 70/15/15 split, z-score scaling, and the 2-D PCA picture. Report Sections
+        3.3 and 3.4.
+      </p>
+<pre class="cmd">python 03_split_and_pca.py</pre>
+      <span class="cmd-label">You should see</span>
+<pre class="cmd result">Rows  train / validation / test : 4480 / 960 / 960
+  train      {'NoGas': 1120, 'Perfume': 1120, 'Smoke': 1120, 'Mixture': 1120}
+  validation {'NoGas': 240, 'Perfume': 240, 'Smoke': 240, 'Mixture': 240}
+  test       {'NoGas': 240, 'Perfume': 240, 'Smoke': 240, 'Mixture': 240}
+...
+Variance explained by each principal component (%): [70.15 17.61  7.73  2.69  1.25  0.39  0.18]
+PC1 + PC2 together: 87.76%   (the report rounds these to 70.2% and 87.8%)</pre>
+
+      <h3><span class="stepnum">04</span>The baseline: a plain linear SVM</h3>
+      <p>
+        Trains a linear SVM on the raw readings, with no scaling. It is the “before” picture.
+        Report Section 4.2. About 10 seconds.
+      </p>
+<pre class="cmd">python 04_baseline_linear_svm.py</pre>
+      <span class="cmd-label">You should see</span>
+<pre class="cmd result">Baseline linear SVM
+  train      accuracy  77.81%   macro F1 0.7752
+  validation accuracy  78.65%   macro F1 0.7850
+  test       accuracy  80.31%   macro F1 0.8023
+
+Confusion matrix on test data (rows = true, columns = predicted):
+         NoGas  Perfume  Smoke  Mixture
+NoGas      161       79      0        0
+Perfume    110      130      0        0
+Smoke        0        0    240        0
+Mixture      0        0      0        240</pre>
+      <p>
+        Smoke and Mixture are perfect; NoGas and Perfume are confused. That is the problem the
+        RBF kernel and scaling fix next.
+      </p>
+
+      <h3><span class="stepnum">05</span>The main model: tuned RBF-SVM</h3>
+      <p>
+        Scales the data, then tries 42 combinations of <code>C</code> and <code>γ</code> with
+        5-fold cross-validation (210 model fits), keeps the best, and saves it. Report Sections
+        3.6, 3.7 and 4.3.
+      </p>
+      <div class="note warn">
+        <p class="note-title">This is the slow step: 2 to 4 minutes</p>
+        <p>
+          It prints <code>Fitting 5 folds for each of 42 candidates</code> and then looks frozen.
+          It is working. On an older or two-core computer it can take up to 10 minutes. In a
+          hurry? Add <code>--quick</code> to try only 9 combinations in about 30 seconds (same
+          best answer, a smaller heat map).
+        </p>
+      </div>
+<pre class="cmd">python 05_tune_rbf_svm.py</pre>
+      <span class="cmd-label">You should see</span>
+<pre class="cmd result">Searching 42 settings with 5-fold CV (full grid) ... please wait.
+Fitting 5 folds for each of 42 candidates, totalling 210 fits
+Done in 204.9 s
+
+Best parameters : {'svm__C': 100, 'svm__gamma': 10}
+Best CV accuracy: 97.63%
+
+Tuned RBF-SVM
+  train      accuracy  99.98%   macro F1 0.9998
+  validation accuracy  98.12%   macro F1 0.9812
+  test       accuracy  98.23%   macro F1 0.9823
+Support vectors per class: {'NoGas': 331, 'Perfume': 312, 'Smoke': 241, 'Mixture': 420}   total: 1304</pre>
+      <p>
+        That <strong>98.23%</strong> is the headline number of the report. Only the “Done in … s” time differs
+        on your computer.
+      </p>
+
+      <h3><span class="stepnum">06</span>Evaluate the tuned model</h3>
+      <p>
+        Precision, recall, confusion matrix, ROC curves and the learning curve. Needs step 05
+        first. Report Sections 4.3 to 4.5. About 1 to 2 minutes.
+      </p>
+<pre class="cmd">python 06_evaluate_model.py</pre>
+      <span class="cmd-label">You should see (shortened)</span>
+<pre class="cmd result">Test accuracy: 98.23%
+              precision    recall  f1-score   support
+       NoGas     0.9705    0.9583    0.9644       240
+     Perfume     0.9588    0.9708    0.9648       240
+       Smoke     1.0000    1.0000    1.0000       240
+     Mixture     1.0000    1.0000    1.0000       240
+
+Leak-detection view:  TP=713  TN=230  FP=10  FN=7
+  sensitivity 99.03%   specificity 95.83%   false-alarm rate 4.17%   missed-leak rate 0.97%
+
+ROC-AUC per class:
+  NoGas    0.9973
+  Perfume  0.9971
+  Smoke    1.0000
+  Mixture  1.0000
+  macro    0.9986</pre>
+
+      <h3><span class="stepnum">07</span>Compare kernels</h3>
+      <p>
+        Tunes a linear, a polynomial and an RBF kernel and compares them on the test data.
+        Report Section 4.4. It repeats a grid search, so it takes 2 to 5 minutes (<code>--quick</code> works here too).
+      </p>
+<pre class="cmd">python 07_kernel_comparison.py</pre>
+      <span class="cmd-label">You should see</span>
+<pre class="cmd result">kernel                       best_params  cv_accuracy  test_accuracy
+linear                   {'svm__C': 100}        85.31          84.79
+  poly {'svm__C': 100, 'svm__degree': 3}        94.84          95.52
+   rbf {'svm__C': 100, 'svm__gamma': 10}        97.63          98.23</pre>
+
+      <h3><span class="stepnum">08</span>Draw the decision regions</h3>
+      <p>
+        Shows the SVM's boundaries in 2-D PCA space. It is only an illustration: the real model
+        uses all 7 sensors, so the 2-D version scores lower. Needs step 05. Report Section 4.6.
+        About 30 to 90 seconds.
+      </p>
+<pre class="cmd">python 08_decision_regions.py</pre>
+      <span class="cmd-label">You should see</span>
+<pre class="cmd result">Drawing regions with C = 100; accuracy of this 2-D model on test data: 89.58%  (lower than 98.23%: only 2 dimensions)</pre>
+
+      <h3><span class="stepnum">09</span>Real-time speed</h3>
+      <p>
+        Times one prediction at a time, like a live sensor. Needs step 05. Report Section 4.7.
+        About 15 seconds.
+      </p>
+<pre class="cmd">python 09_realtime_latency.py</pre>
+      <span class="cmd-label">You should see (your milliseconds will differ)</span>
+<pre class="cmd result">Prediction time for ONE reading (ms) over 500 readings:
+  mean 1.63   median 1.33   95th percentile 2.96   max 5.42
+Batch prediction: 0.261 ms per sample
+Sensors send a reading every 2000 ms, so this is about 1228x faster than needed.
+
+Simulated live stream:
+     sample    true predicted  P(NoGas)  P(Perfume)  P(Smoke)  P(Mixture)
+    0_NoGas   NoGas     NoGas    0.9401      0.0458    0.0058      0.0084
+...
+200_Mixture Mixture   Mixture    0.0000      0.0000    0.0000      1.0000</pre>
+      <p>
+        The probabilities in the table are the same on every computer. Only the timings
+        change, because they depend on your processor.
+      </p>
+
+      <h3><span class="stepnum">10</span>The drift test (the honest limitation)</h3>
+      <p>
+        Trains on the earlier readings and tests on the later ones. Report Section 4.8. About
+        15 seconds.
+      </p>
+<pre class="cmd">python 10_drift_test.py</pre>
+      <span class="cmd-label">You should see</span>
+<pre class="cmd result">Train rows: 4480   test rows: 1920   (C = 100, gamma = 10, the tuned values)
+Chronological-split accuracy: 54.37%
+
+Confusion matrix (rows = true, columns = predicted):
+         NoGas  Perfume  Smoke  Mixture
+NoGas      289       48      0      143
+Perfume      0      225      0      255
+Smoke        0        0     50      430
+Mixture      0        0      0      480</pre>
+      <p>
+        Accuracy falls from 98.23% to 54.37% because sensor readings drift over time and Smoke
+        slides towards Mixture. This is the limitation the report discusses.
+      </p>
+
+      <h3><span class="stepnum">11</span>The concept diagrams</h3>
+      <p>
+        Draws the margin, kernel-trick, flowchart and other explanatory figures used in Chapter
+        3. No training. About 45 seconds.
+      </p>
+<pre class="cmd">python 11_make_illustrations.py</pre>
+<pre class="cmd result">Illustrations written to ...\outputs\figures</pre>
+
+      <h3>What you now have</h3>
+<pre class="cmd">outputs/
+  figures/   22 PNG files   (every figure in the report)
+  results/    6 files       (statistics, grid-search table, kernel comparison, ...)
+  models/     1 file        (best_rbf_svm.joblib, the trained model)</pre>
+
+      <h2 id="all">C · Run everything at once</h2>
+      <p>
+        When you have seen each step, one command runs all twelve in order and stops at the first
+        error:
+      </p>
+<pre class="cmd">python run_all.py</pre>
+      <p>
+        With full grids it takes about <strong>10 to 15 minutes</strong> on a 4-core laptop. For a
+        fast demo use the quick version:
+      </p>
+<pre class="cmd">python run_all.py --quick</pre>
+      <p>
+        It takes about <strong>5 minutes</strong> and gives the same final numbers. Quick mode only shrinks the
+        <code>C</code>/<code>γ</code> grid in steps 05 and 07, so the grid-search heat map has
+        fewer cells. The report's figure comes from the full run.
+      </p>
+      <p>
+        There is also <code>all_in_one_svm_gas_experiment.py</code>, which is the same experiment
+        written as one long file, in case you prefer to read it top to bottom.
+      </p>
+
+      <h2 id="fix">D · If something breaks</h2>
+      <div class="tw">
+        <table>
+          <thead><tr><th>You see</th><th>What it means and how to fix it</th></tr></thead>
+          <tbody>
+            <tr><td><code>python</code> or <code>py</code> “is not recognized”</td>
+                <td>Python is not installed, or was installed without the PATH tick. Reinstall it with “Add python.exe to PATH” ticked, then close and reopen VS Code.</td></tr>
+            <tr><td>“running scripts is disabled on this system”</td>
+                <td>See the yellow box in step 7: <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code>, or use Command Prompt.</td></tr>
+            <tr><td><code>ModuleNotFoundError: No module named 'sklearn'</code> (or pandas, seaborn…)</td>
+                <td>The environment is not active, or the libraries are not installed. Look for <code>(.venv)</code> at the start of the prompt, then run <code>python -m pip install -r requirements.txt</code> again.</td></tr>
+            <tr><td><code>Cannot find …Gas_Sensors_Measurements.csv</code></td>
+                <td>The <code>data</code> folder is not next to the scripts. Re-extract the zip and keep the folder together.</td></tr>
+            <tr><td><code>The tuned model does not exist yet</code></td>
+                <td>Run <code>05_tune_rbf_svm.py</code> first, then 06, 08 or 09.</td></tr>
+            <tr><td>Step 05 or 07 seems frozen</td>
+                <td>It is working; it can take several minutes on an older computer. Or stop it with <kbd>Ctrl</kbd>+<kbd>C</kbd> and add <code>--quick</code>.</td></tr>
+            <tr><td>The ▶ button uses the wrong Python</td>
+                <td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <strong>Python: Select Interpreter</strong> → choose the <code>.venv</code> one. Or just type the command in the terminal.</td></tr>
+            <tr><td>macOS says <code>python: command not found</code></td>
+                <td>Before activating the environment, use <code>python3</code>. After <code>source .venv/bin/activate</code>, <code>python</code> works.</td></tr>
+            <tr><td>Plots look slightly different in font</td>
+                <td>Figures use Times New Roman when your computer has it and a similar serif font when it does not. The numbers are unaffected.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note good">
+        <p class="note-title">Start a new session later</p>
+        <p>
+          You never repeat the setup. Open the folder in VS Code, open a terminal, activate the
+          environment (step 7), check for <code>(.venv)</code>, and run any script.
+        </p>
+      </div>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -644,3 +644,18 @@ body.quiz .qa.revealed .qa-head::after { content: ""; }
 .term dt .sym { font-family: var(--mono); font-size: var(--fs-sm); color: var(--accent); font-weight: 500; margin-left: .4rem; }
 .term dd { margin: .2rem 0 0; color: var(--text-dim); font-size: var(--fs-ms); line-height: 1.6; }
 @media (max-width: 560px) { .downloads { grid-template-columns: 1fr; } }
+
+/* command and terminal blocks (setup pages) */
+.cmd {
+  font-family: var(--mono); font-size: var(--fs-sm); line-height: 1.65;
+  white-space: pre; overflow-x: auto; tab-size: 4;
+  padding: var(--sp-4); margin: 0 0 var(--sp-5);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg); color: var(--text);
+}
+.cmd.result { color: var(--text-dim); border-style: dashed; }
+.cmd-label {
+  display: block; margin: 0 0 .35rem; font-family: var(--mono); font-size: var(--fs-xs, .75rem);
+  text-transform: uppercase; letter-spacing: .08em; color: var(--text-faint);
+}
+.stepnum { font-family: var(--mono); color: var(--accent); margin-right: .45rem; }

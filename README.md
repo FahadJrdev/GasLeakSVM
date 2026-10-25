@@ -13,6 +13,7 @@ University of Chittagong, AMAT-527, supervisor Dr. Mohammad Jalal Ahammad.
 | Report (Word) | https://fahadjrdev.github.io/GasLeakSVM/GasLeakSVM.docx |
 | Experiment script | https://fahadjrdev.github.io/GasLeakSVM/data/svm_gas_experiment.py |
 | Sensor data (CSV) | https://fahadjrdev.github.io/GasLeakSVM/data/Gas_Sensors_Measurements.csv |
+| Runnable project folder (ZIP) | https://fahadjrdev.github.io/GasLeakSVM/svm_gas_code.zip |
 
 The site is static HTML/CSS/JS. There is no build step on the server and no backend. Open
 `index.html` directly, or serve the folder:
@@ -38,7 +39,9 @@ qa-math.html        10  Q&A — the mathematics
 qa-weakspots.html   11  hard questions & honest gaps
 cheatsheet.html     12  cheat sheet
 lab.html            13  Python lab (Pyodide + scikit-learn in the browser)
-qa-python.html      14  Q&A — programming
+vscode.html         14  run the experiment on your own computer in VS Code
+colab.html          15  run it in Google Colab and share the notebook
+qa-python.html      16  Q&A — programming
 assets/style.css        design system, light + dark
 assets/app.js           nav, theme, quiz mode, KaTeX, Pyodide runner
 figures/                the report's figures

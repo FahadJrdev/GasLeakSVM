@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run it in Google Colab — Gas Leak SVM project defence</title>
+<meta name="description" content="Run the gas leak SVM project in Google Colab, in the browser with nothing to install, step by step, and share the finished notebook with others.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="colab">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Run it in Google Colab</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col col-wide">
+
+      <p class="eyebrow">15 · Programming</p>
+      <h1>Run it in Google Colab, in your browser</h1>
+      <p class="lede">
+        Colab is a free notebook from Google. There is nothing to install: you open a web page,
+        load the project, and run the same twelve scripts one cell at a time. It is the easiest way
+        to <strong>show the work to other people</strong>, because the finished notebook, with all
+        its results and figures, can be shared with one link.
+      </p>
+
+      <div class="downloads">
+        <a href="https://colab.research.google.com/" target="_blank" rel="noopener">
+          <span class="k">Open · Colab</span><span class="v">colab.research.google.com</span>
+          <span class="d">Needs a free Google account</span>
+        </a>
+        <a href="vscode.html">
+          <span class="k">On your computer?</span><span class="v">Use VS Code</span>
+          <span class="d">The same scripts, page 14</span>
+        </a>
+      </div>
+
+      <div class="note good">
+        <p class="note-title">Tested on Colab</p>
+        <p>
+          All twelve steps were run in a real Colab notebook (Python 3.13, scikit-learn 1.6.1,
+          pandas 2.2.3). Every accuracy figure matched the report and the laptop run exactly:
+          98.23% test accuracy, C = 100, γ = 10, 1,304 support vectors, 54.37% on the drift
+          test. Only timings differ. Colab updates its libraries from time to time, and the
+          numbers stay the same.
+        </p>
+      </div>
+
+      <section class="plain">
+        <p class="plain-label">In plain words</p>
+        <p>
+          A Colab notebook is a document made of <strong>cells</strong>. You put a command in a
+          cell, press the ▶ button (or <kbd>Shift</kbd>+<kbd>Enter</kbd>), and the answer appears
+          right under it. The computer that does the work belongs to Google, so even an old
+          laptop is fast enough. Because the answers are saved inside the notebook, anyone you
+          send it to sees them without running anything.
+        </p>
+        <p>
+          Lines that start with <code>!</code> are run as terminal commands. Here, <code>!python
+          05_tune_rbf_svm.py</code> means “run script 05”. It is the same command as on the
+          VS Code page.
+        </p>
+      </section>
+
+      <nav class="jump">
+        <a href="#setup">A · Set up the notebook</a>
+        <a href="#run">B · Run the steps</a>
+        <a href="#figs">C · See the figures</a>
+        <a href="#share">D · Share it</a>
+        <a href="#fix">E · If something breaks</a>
+      </nav>
+
+      <h2 id="setup">A · Set up the notebook (about 3 minutes)</h2>
+
+      <ol class="steps">
+        <li>
+          <h4>Open a new notebook</h4>
+          <p>
+            Go to <a href="https://colab.research.google.com/" target="_blank" rel="noopener">colab.research.google.com</a>,
+            sign in with a Google account, and choose <strong>New notebook</strong>. Leave the
+            runtime on its default (CPU). A GPU does not help an SVM. You will see one empty code cell.
+          </p>
+        </li>
+
+        <li>
+          <h4>Cell 1 — bring the project into Colab</h4>
+          <p>Click into the first cell, paste this, and press <kbd>Shift</kbd>+<kbd>Enter</kbd>:</p>
+<pre class="cmd">!wget -q https://fahadjrdev.github.io/GasLeakSVM/svm_gas_code.zip
+!unzip -q -o svm_gas_code.zip
+%cd /content/svm_gas_code
+!ls</pre>
+          <p>
+            It downloads the project zip from this site, unpacks it, moves into the folder, and lists
+            it. The first line of output is <code>/content/svm_gas_code</code>, followed by the
+            files <code>00_check_setup.py</code> to <code>run_all.py</code>, <code>common.py</code>,
+            <code>data</code> and the rest.
+          </p>
+          <div class="note info">
+            <p class="note-title">Prefer to upload the zip yourself?</p>
+            <p>
+              Download <a href="svm_gas_code.zip" download>svm_gas_code.zip</a> to your computer. In Colab,
+              click the <strong>folder icon</strong> in the left bar, then the <strong>upload
+              icon</strong> (the arrow pointing up), and choose the zip. Wait until the little
+              progress circle disappears, then run the same cell without the first line:
+            </p>
+<pre class="cmd">!unzip -q -o svm_gas_code.zip
+%cd /content/svm_gas_code
+!ls</pre>
+          </div>
+        </li>
+
+        <li>
+          <h4>Cell 2 — check the setup</h4>
+          <p>Click <strong>+ Code</strong> to add a new cell, then:</p>
+<pre class="cmd">!python 00_check_setup.py</pre>
+          <span class="cmd-label">You should see (versions change over time)</span>
+<pre class="cmd result">Python  : 3.13.16 at /usr/bin/python3
+numpy      : 2.1.3
+pandas     : 2.2.3
+matplotlib : 3.10.0
+seaborn    : 0.13.2
+sklearn    : 1.6.1
+joblib     : 1.6.0
+Data    : found -> /content/svm_gas_code/data/Gas_Sensors_Measurements.csv
+
+ALL GOOD. You can run 01_load_data.py next.</pre>
+          <div class="note warn">
+            <p class="note-title">Do not run <code>pip install -r requirements.txt</code> here</p>
+            <p>
+              Colab already has every library. Installing over them can force a session restart and
+              gains nothing.
+            </p>
+          </div>
+        </li>
+      </ol>
+
+      <h2 id="run">B · Run the steps, one cell each</h2>
+
+      <p>
+        Add a new cell for every step (<strong>+ Code</strong>), paste the line, and run it. Run them
+        <strong>in order</strong>, and run step 05 before 06, 08 and 09, because those load the model that
+        05 saves. The output of each step is identical to the one on the
+        <a href="vscode.html#run">VS Code page</a>, where every output is shown in full. Below is the
+        cell to paste and the key line to look for.
+      </p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Cell</th><th>Paste this</th><th>Look for</th><th>Time on Colab</th></tr></thead>
+          <tbody>
+            <tr><td>3</td><td><code>!python 01_load_data.py</code></td><td><code>Shape (rows, columns): (6400, 10)</code></td><td>seconds</td></tr>
+            <tr><td>4</td><td><code>!python 02_explore_data.py</code></td><td>four <code>saved figure</code> lines</td><td>~10 s</td></tr>
+            <tr><td>5</td><td><code>!python 03_split_and_pca.py</code></td><td><code>4480 / 960 / 960</code></td><td>seconds</td></tr>
+            <tr><td>6</td><td><code>!python 04_baseline_linear_svm.py</code></td><td>test accuracy <strong>80.31%</strong></td><td>~5 s</td></tr>
+            <tr><td>7</td><td><code>!python 05_tune_rbf_svm.py</code></td><td>Best <code>C = 100</code>, <code>gamma = 10</code>; test <strong>98.23%</strong>; 1304 support vectors</td><td>~2 min</td></tr>
+            <tr><td>8</td><td><code>!python 06_evaluate_model.py</code></td><td><code>Test accuracy: 98.23%</code>; <code>TP=713  TN=230  FP=10  FN=7</code>; macro ROC-AUC <code>0.9986</code></td><td rowspan="6">about 4 min for these six together</td></tr>
+            <tr><td>9</td><td><code>!python 07_kernel_comparison.py</code></td><td>linear 84.79, poly 95.52, rbf <strong>98.23</strong></td></tr>
+            <tr><td>10</td><td><code>!python 08_decision_regions.py</code></td><td><code>89.58%</code> (the 2-D illustration)</td></tr>
+            <tr><td>11</td><td><code>!python 09_realtime_latency.py</code></td><td>mean about 1 ms per reading (yours will differ)</td></tr>
+            <tr><td>12</td><td><code>!python 10_drift_test.py</code></td><td><code>Chronological-split accuracy: 54.37%</code></td></tr>
+            <tr><td>13</td><td><code>!python 11_make_illustrations.py</code></td><td><code>Illustrations written to …</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note info">
+        <p class="note-title">Want fewer cells?</p>
+        <p>
+          Cells can hold several lines. Putting steps 01 to 04 in one cell, and steps 06 to 11 in
+          another, works fine. For a quick demo, one cell with
+          <code>!python run_all.py --quick</code> runs the whole sequence with smaller grids in
+          about 2½ minutes on Colab (tested), with the same final numbers.
+        </p>
+      </div>
+
+      <h2 id="figs">C · See the figures inside the notebook</h2>
+      <p>
+        Scripts save their figures as files. To show one under a cell, paste this and change the file
+        name:
+      </p>
+<pre class="cmd">from IPython.display import Image, display
+display(Image("outputs/figures/fig_confusion_improved.png", width=500))</pre>
+      <p>
+        You see the confusion matrix with 230, 10, 7 and 233 on the top two rows. To show every
+        figure in one go:
+      </p>
+<pre class="cmd">import glob
+for path in sorted(glob.glob("outputs/figures/*.png")):
+    print(path)
+    display(Image(path, width=600))</pre>
+      <p>
+        There are 22 figures, so this one is long. You can also open the <strong>folder icon</strong> on the left,
+        go to <code>svm_gas_code → outputs → figures</code>, and double-click any picture.
+      </p>
+
+      <h2 id="share">D · Share the finished notebook</h2>
+
+      <ol class="steps">
+        <li>
+          <h4>Run every cell first</h4>
+          <p>
+            The results are saved inside the notebook, so people who open it see your outputs and
+            figures straight away. Colab saves automatically to your Google Drive. Name it
+            (click “Untitled0” at the top), for example <em>Gas Leak SVM — project demo</em>.
+          </p>
+        </li>
+        <li>
+          <h4>Add short headings (optional, but it helps a panel)</h4>
+          <p>
+            Click <strong>+ Text</strong> between cells and write a one-line title such as
+            “Step 5: tune the RBF-SVM (98.23%)”. Then open <strong>View → Table of contents</strong>
+            to show the structure.
+          </p>
+        </li>
+        <li>
+          <h4>Press Share and choose “Anyone with the link”</h4>
+          <p>
+            Click <strong>Share</strong> (top right), change <em>General access</em> from
+            “Restricted” to <strong>Anyone with the link</strong>, keep the role as
+            <strong>Viewer</strong>, and copy the link. Viewers can read everything but cannot change
+            your notebook.
+          </p>
+        </li>
+        <li>
+          <h4>If others want to run it themselves</h4>
+          <p>
+            They open the link, choose <strong>File → Save a copy in Drive</strong>, then
+            <strong>Runtime → Run all</strong>. Cell 1 downloads the project for them, so they need
+            nothing from you. Running everything takes about 7 minutes.
+          </p>
+        </li>
+      </ol>
+
+      <div class="note warn">
+        <p class="note-title">Colab forgets the files, not the results</p>
+        <p>
+          If the notebook sits idle for a while, Colab disconnects and <strong>deletes the
+          unpacked folder and the saved model</strong>. The printed outputs stay in the notebook.
+          To run again, reconnect and re-run Cell 1 and then step 05 before any later step.
+        </p>
+      </div>
+
+      <h2>Colab or VS Code?</h2>
+      <div class="tw">
+        <table>
+          <thead><tr><th></th><th>Google Colab</th><th>VS Code</th></tr></thead>
+          <tbody>
+            <tr><td>Install</td><td>nothing, just a browser</td><td>Python, VS Code, libraries</td></tr>
+            <tr><td>Where it runs</td><td>on Google's computer</td><td>on your own computer</td></tr>
+            <tr><td>Files kept</td><td>until the runtime disconnects</td><td>for good, in your folder</td></tr>
+            <tr><td>Best for</td><td>showing and sharing, a quick demo</td><td>learning the code, editing it, working offline</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="fix">E · If something breaks</h2>
+      <div class="tw">
+        <table>
+          <thead><tr><th>You see</th><th>What it means and how to fix it</th></tr></thead>
+          <tbody>
+            <tr><td><code>python3: can't open file '…/00_check_setup.py'</code></td>
+                <td>You are not inside the project folder. Run <code>%cd /content/svm_gas_code</code>, then try again. This happens after the runtime restarts.</td></tr>
+            <tr><td><code>unzip: cannot find or open svm_gas_code.zip</code></td>
+                <td>The upload has not finished, or the zip has another name. Check the file list in the left bar.</td></tr>
+            <tr><td><code>wget</code> shows <code>404 Not Found</code></td>
+                <td>The zip is not on the site yet. Use the “upload the zip yourself” route in Cell 1.</td></tr>
+            <tr><td><code>The tuned model does not exist yet</code></td>
+                <td>The model is created by step 05. Run it first, or again if the runtime was reset.</td></tr>
+            <tr><td>Everything has vanished after a break</td>
+                <td>The runtime was recycled. Re-run Cell 1, then step 05, then whatever you need.</td></tr>
+            <tr><td>Step 05 takes long</td>
+                <td>Free Colab has two CPU cores, so allow about two minutes. Or use <code>!python 05_tune_rbf_svm.py --quick</code>.</td></tr>
+            <tr><td>The cell shows a spinner for a long time</td>
+                <td>Steps 05, 06 and 07 are slow by nature. A ✓ next to the cell with a time means it finished.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
