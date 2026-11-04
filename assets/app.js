@@ -74,7 +74,7 @@
     var html =
       '<a class="brand" href="index.html">' +
         '<span class="brand-sub">M.S. project defence</span>' +
-        '<span class="brand-name">Real-Time Gas Leak Detection Using Support Vector Machine</span>' +
+        '<span class="brand-name">Review - Real-Time Gas Leak Detection Using Support Vector Machine</span>' +
       "</a>" +
       '<div class="dl-row">' +
         '<a class="btn" href="GasLeakSVM.pdf" target="_blank" rel="noopener">&#8615; PDF</a>' +
