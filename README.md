@@ -11,6 +11,7 @@ University of Chittagong, AMAT-527, supervisor Dr. Mohammad Jalal Ahammad.
 |---|---|
 | Report (PDF) | https://fahadjrdev.github.io/GasLeakSVM/GasLeakSVM.pdf |
 | Report (Word) | https://fahadjrdev.github.io/GasLeakSVM/GasLeakSVM.docx |
+| Presentation (PowerPoint) | https://fahadjrdev.github.io/GasLeakSVM/GasLeakSVM.pptx |
 | Experiment script | https://fahadjrdev.github.io/GasLeakSVM/data/svm_gas_experiment.py |
 | Sensor data (CSV) | https://fahadjrdev.github.io/GasLeakSVM/data/Gas_Sensors_Measurements.csv |
 
@@ -24,7 +25,7 @@ python -m http.server 8080     # then http://localhost:8080
 ## Layout
 
 ```
-index.html          00  start here (with PDF / DOCX downloads)
+index.html          00  start here (with PDF / DOCX / PPTX downloads)
 report.html         01  the report, chapter by chapter
 glossary.html       02  key terms, defined
 problem.html        03  gas leaks and gas sensors

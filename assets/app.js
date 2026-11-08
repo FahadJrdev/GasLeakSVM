@@ -79,6 +79,7 @@
       '<div class="dl-row">' +
         '<a class="btn" href="GasLeakSVM.pdf" target="_blank" rel="noopener">&#8615; PDF</a>' +
         '<a class="btn" href="GasLeakSVM.docx" download>&#8615; DOCX</a>' +
+        '<a class="btn" href="GasLeakSVM.pptx" download>&#8615; PPTX</a>' +
       "</div>";
 
     NAV.forEach(function (group) {

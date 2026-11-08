@@ -622,6 +622,7 @@ body.quiz .qa.revealed .qa-head::after { content: ""; }
   text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: .25rem; }
 .downloads .v { display: block; font-weight: 600; }
 .downloads .d { display: block; font-size: var(--fs-sm); color: var(--text-dim); margin-top: .2rem; }
+.downloads a:last-child:nth-child(odd) { grid-column: 1 / -1; }
 
 /* display mathematics (KaTeX) with an equation number on the right */
 .math {
