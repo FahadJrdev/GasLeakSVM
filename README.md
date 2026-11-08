@@ -43,6 +43,9 @@ lab.html            14  Python lab (Pyodide + scikit-learn in the browser)
 vscode.html         15  run the experiment on your own computer in VS Code
 colab.html          16  run it in Google Colab and share the notebook
 qa-python.html      17  Q&A — programming
+speech.html         18  presentation speech, slide by slide (from presentation/speech.json)
+qa-slides.html      19  Q&A — the presentation
+figures/slides/     slide images used on the speech page
 assets/style.css        design system, light + dark
 assets/app.js           nav, theme, quiz mode, KaTeX, Pyodide runner
 figures/                the report's figures

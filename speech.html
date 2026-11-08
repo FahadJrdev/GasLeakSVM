@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presentation speech — Gas Leak SVM project defence</title>
+<meta name="description" content="The full slide-by-slide speech for the 16-slide defence presentation, from the greeting to the thank-you.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="speech">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Presentation speech</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col">
+
+      <p class="eyebrow">18 · The presentation</p>
+      <h1>Presentation speech, slide by slide</h1>
+      <p class="lede">
+        The complete talk for the 16 slides in
+        <a href="GasLeakSVM.pptx" download>GasLeakSVM.pptx</a>, from the greeting to the
+        thank-you. It takes about <strong>17 minutes</strong> (2,320 words) at a calm
+        speaking pace. The same text is in the PowerPoint's speaker notes, so you can also read it in
+        Presenter View.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">How to use this page</p>
+        <ul>
+          <li><strong>Read it aloud three times</strong> before the defence. The third time, look at the slide, not the text.</li>
+          <li><strong>Learn the numbers, not the sentences.</strong> If you forget a sentence, say the number on the slide and explain it in your own words.</li>
+          <li><strong>Point at the slide</strong> when the speech says "on the left", "the orange bars" or "the animation".</li>
+          <li><strong>Slow down</strong> on slides 8, 10 and 14. They hold the results the examiners care about most.</li>
+          <li>Questions afterwards? Practise with the <a href="qa-slides.html">presentation Q&amp;A</a>.</li>
+        </ul>
+      </section>
+
+      <h2>Timing at a glance</h2>
+      <div class="tw"><table>
+        <thead><tr><th>Slide</th><th>Title</th><th>Time</th><th>Starts at</th></tr></thead>
+        <tbody>
+        <tr><td>1</td><td><a href="#slide-1">Title</a></td><td>0:45</td><td>0:00</td></tr><tr><td>2</td><td><a href="#slide-2">Why gas leaks need real-time detection</a></td><td>1:15</td><td>0:45</td></tr><tr><td>3</td><td><a href="#slide-3">What we did, and what is new</a></td><td>1:00</td><td>2:00</td></tr><tr><td>4</td><td><a href="#slide-4">The data: 7 gas sensors, 4 classes</a></td><td>1:10</td><td>3:00</td></tr><tr><td>5</td><td><a href="#slide-5">Method: from raw readings to a tuned SVM</a></td><td>1:00</td><td>4:10</td></tr><tr><td>6</td><td><a href="#slide-6">How an SVM separates leak from safe air</a></td><td>1:30</td><td>5:10</td></tr><tr><td>7</td><td><a href="#slide-7">Tuning C and gamma with 5-fold cross-validation</a></td><td>1:15</td><td>6:40</td></tr><tr><td>8</td><td><a href="#slide-8">Baseline vs improved: +17.9 points on test</a></td><td>1:15</td><td>7:55</td></tr><tr><td>9</td><td><a href="#slide-9">Why the RBF kernel, and is the data enough?</a></td><td>1:00</td><td>9:10</td></tr><tr><td>10</td><td><a href="#slide-10">Final model on 960 unseen test readings</a></td><td>1:15</td><td>10:10</td></tr><tr><td>11</td><td><a href="#slide-11">Real time: one decision in about 1 ms</a></td><td>1:00</td><td>11:25</td></tr><tr><td>12</td><td><a href="#slide-12">Real-life setting: the SVM along a gas pipeline</a></td><td>1:00</td><td>12:25</td></tr><tr><td>13</td><td><a href="#slide-13">Case study: real pipeline leak sounds (GPLA-12)</a></td><td>1:20</td><td>13:25</td></tr><tr><td>14</td><td><a href="#slide-14">Honest stress test: sensors drift over time</a></td><td>1:15</td><td>14:45</td></tr><tr><td>15</td><td><a href="#slide-15">Conclusions and future work</a></td><td>1:00</td><td>16:00</td></tr><tr><td>16</td><td><a href="#slide-16">Thank you</a></td><td>0:20</td><td>17:00</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2 id="slide-1">Slide 1 · Title</h2>
+      <p class="meta-line"><strong>About 0:45</strong> · starts at 0:00 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s01.jpg" alt="Slide 1: Title" loading="lazy">
+  <figcaption>Slide 1: Title.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>Good morning, respected teachers and examiners.</p>
+<p>My name is Md. Ashfaqur Rahman. My ID is 18203096, and my session is 2023–2024. My supervisor is Dr. Mohammed Jalal Ahammad.</p>
+<p>Today I will present my M.S. project: Real-Time Gas Leak Detection in Pipelines, Logistics and Manufacturing Using Support Vector Machines on IoT Sensor Data.</p>
+<p>In one sentence: I trained a Support Vector Machine that reads seven low-cost gas sensors and decides, in about one millisecond, whether the air is safe or holds a gas, and which gas it is. The picture on the right is the final model: each coloured region is one class the SVM has learned.</p>
+      </div>
+      <h2 id="slide-2">Slide 2 · Why gas leaks need real-time detection</h2>
+      <p class="meta-line"><strong>About 1:15</strong> · starts at 0:45 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s02.jpg" alt="Slide 2: Why gas leaks need real-time detection" loading="lazy">
+  <figcaption>Slide 2: Why gas leaks need real-time detection.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>First, why does this problem matter?</p>
+<p>Look at Bangladesh. Titas Gas runs 13,238 kilometres of pipelines for about 2.88 million customers. Most of these lines were built in the 1970s and 80s, for a life of only 30 years.</p>
+<p>When Titas surveyed just 1,682 kilometres in 2021–22, it found methane leaking at 9,926 spots. And leaks kill. In 2020, gas from a leaking line exploded in a mosque in Narayanganj and killed 34 worshippers. In 2023, the Siddique Bazar explosion in Dhaka was traced to gas leaking from an abandoned pipeline in the basement.</p>
+<p>On the right is the gap. Gas has an odour added, but smell finds only part of the leaks, and nobody can smell a pipe all day. Factories, depots and warehouses, like BM Depot in Sitakunda, face the same risk.</p>
+<p>So we need a sensor and a model that decides on its own, every few seconds. That is the goal of this project.</p>
+      </div>
+      <h2 id="slide-3">Slide 3 · What we did, and what is new</h2>
+      <p class="meta-line"><strong>About 1:00</strong> · starts at 2:00 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s03.jpg" alt="Slide 3: What we did, and what is new" loading="lazy">
+  <figcaption>Slide 3: What we did, and what is new.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>My aim was to detect and identify a gas leak from low-cost IoT gas sensors, in real time, using one well-understood model: the Support Vector Machine.</p>
+<p>These four cards are my contribution.</p>
+<p>One: real sensor data. 6,400 readings from seven MQ gas sensors, in four classes: no gas, perfume, smoke and a mixture.</p>
+<p>Two: one model, studied in depth. I did not compare ten algorithms. I took the SVM from its mathematics, the margin, the dual problem, the kernel and the KKT conditions, all the way to tuned working code.</p>
+<p>Three: real-time proof. I did not just claim it is fast. I measured it: about one millisecond per decision, while the sensors send a reading only every two seconds.</p>
+<p>Four: pipeline and honesty tests. I applied the same method to real pipeline leak sounds, and I ran a time-ordered test that shows the main weakness of these sensors, which is drift.</p>
+<p>Every number in this talk comes from experiments I actually ran.</p>
+      </div>
+      <h2 id="slide-4">Slide 4 · The data: 7 gas sensors, 4 classes</h2>
+      <p class="meta-line"><strong>About 1:10</strong> · starts at 3:00 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s04.jpg" alt="Slide 4: The data: 7 gas sensors, 4 classes" loading="lazy">
+  <figcaption>Slide 4: The data: 7 gas sensors, 4 classes.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>Now the data. I used the public MultimodalGasData set, recorded in a lab in India and released under a CC BY licence.</p>
+<p>On the left are the seven sensors. Each MQ sensor reacts to several gases. For example, MQ2 reacts to LPG and smoke, MQ5 to natural gas, MQ7 to carbon monoxide. Because each sensor responds to more than one gas, no single sensor can name the gas. The model has to learn the pattern across all seven.</p>
+<p>So each reading is simply a vector of seven numbers.</p>
+<p>There are 6,400 readings, exactly 1,600 per class, so the classes are balanced. A new reading arrives every two seconds. The perfume class came from a deodorant spray and the smoke class from incense sticks.</p>
+<p>I split the data into 70 percent for training, 15 percent for validation and 15 percent for the final test, keeping the class balance in each part.</p>
+<p>On the right are thermal camera frames recorded with the readings. I show them only for context. My model uses only the sensor numbers.</p>
+      </div>
+      <h2 id="slide-5">Slide 5 · Method: from raw readings to a tuned SVM</h2>
+      <p class="meta-line"><strong>About 1:00</strong> · starts at 4:10 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s05.jpg" alt="Slide 5: Method: from raw readings to a tuned SVM" loading="lazy">
+  <figcaption>Slide 5: Method: from raw readings to a tuned SVM.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>This flowchart is my whole method, and it follows the chapters of the report.</p>
+<p>Step one, prepare. I split the data, then scale every sensor to mean zero and standard deviation one. This is the z-score. Importantly, the scaling is learned from the training data only, so no information leaks from the test set.</p>
+<p>Step two, baseline. I first trained a simple linear SVM on the raw readings, to see how far a straight boundary can go.</p>
+<p>Step three, improve. I switched to the RBF kernel and chose its two parameters, C and gamma, by five-fold cross-validated grid search.</p>
+<p>Step four, stress-test. I evaluated on the test set, measured the time per reading, tested on later data in time order, and finally applied the method to pipeline data.</p>
+<p>The test set was used only once, at the very end.</p>
+      </div>
+      <h2 id="slide-6">Slide 6 · How an SVM separates leak from safe air</h2>
+      <p class="meta-line"><strong>About 1:30</strong> · starts at 5:10 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s06.jpg" alt="Slide 6: How an SVM separates leak from safe air" loading="lazy">
+  <figcaption>Slide 6: How an SVM separates leak from safe air.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>How does an SVM actually work? The animation shows the idea.</p>
+<p>We have two groups of points: safe air and gas leak. Many lines can separate them. But some lines pass very close to a point, and a small change in a new reading would put it on the wrong side.</p>
+<p>The SVM chooses the line with the widest margin, the widest empty band between the two classes. Only the circled points on the edge of the band decide where the line goes. These are the support vectors.</p>
+<p>On the right is the mathematics. First, maximise the margin: the margin width is two divided by the norm of w, so we minimise half of the norm of w squared, with every point on its correct side.</p>
+<p>Second, real data overlap, so the soft margin allows a few mistakes. The parameter C sets how strongly each mistake is punished.</p>
+<p>Third, the RBF kernel lets the boundary bend. Gamma controls how far the influence of one training point reaches.</p>
+<p>Finally, we have four gases, not two. So six one-versus-one SVMs are trained, one for each pair of classes, and they vote.</p>
+      </div>
+      <h2 id="slide-7">Slide 7 · Tuning C and gamma with 5-fold cross-validation</h2>
+      <p class="meta-line"><strong>About 1:15</strong> · starts at 6:40 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s07.jpg" alt="Slide 7: Tuning C and gamma with 5-fold cross-validation" loading="lazy">
+  <figcaption>Slide 7: Tuning C and gamma with 5-fold cross-validation.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>The RBF-SVM has two knobs, C and gamma, and their values matter a lot.</p>
+<p>The animation on the left shows the effect of gamma, drawn on the first two principal components so we can see it. When gamma is small, the boundary is almost straight and the classes mix. As gamma grows, the boundary bends to follow each gas cluster. The real model uses all seven sensors, not just two components.</p>
+<p>On the right is the grid search. I tried six values of C and seven values of gamma, 42 combinations. Each one was scored by five-fold cross-validation on the training data. Each cell shows the average accuracy.</p>
+<p>You can see that a very small gamma underfits, and gamma equal to 100 overfits, so accuracy drops at both ends.</p>
+<p>The best pair was C equal to 100 and gamma equal to 10, with 97.63 percent cross-validation accuracy. This best point is inside the grid, not at its edge, so the search range was wide enough.</p>
+      </div>
+      <h2 id="slide-8">Slide 8 · Baseline vs improved: +17.9 points on test</h2>
+      <p class="meta-line"><strong>About 1:15</strong> · starts at 7:55 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s08.jpg" alt="Slide 8: Baseline vs improved: +17" loading="lazy">
+  <figcaption>Slide 8: Baseline vs improved: +17.9 points on test.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>Here is the effect of the improvement.</p>
+<p>The grey bars are the baseline: a linear SVM on raw readings. It reached 80.3 percent on the test set. The orange bars are the improved model: scaled data and the RBF kernel. It reached 98.2 percent on the test set. That is a gain of almost 18 percentage points.</p>
+<p>Also notice that training, validation and test accuracy of the improved model are very close. So the model is not just memorising the training data.</p>
+<p>On the right are the two confusion matrices. Rows are the true class and columns are the predicted class. In the baseline, no gas and perfume are mixed up 189 times. Perfume barely changes the sensor values, so a straight line cannot separate it from clean air.</p>
+<p>After scaling and the curved RBF boundary, these errors fall from 189 to 17. Smoke and mixture are now 100 percent correct.</p>
+      </div>
+      <h2 id="slide-9">Slide 9 · Why the RBF kernel, and is the data enough?</h2>
+      <p class="meta-line"><strong>About 1:00</strong> · starts at 9:10 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s09.jpg" alt="Slide 9: Why the RBF kernel, and is the data enough?" loading="lazy">
+  <figcaption>Slide 9: Why the RBF kernel, and is the data enough?.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>Two natural questions: why the RBF kernel, and do we have enough data?</p>
+<p>On the left, I tuned three kernels in the same way and tested each one. Linear reached 84.8 percent, polynomial 95.5 percent, and RBF 98.2 percent. So the curved RBF boundary is the best choice for this data.</p>
+<p>On the right is the learning curve. I trained on growing parts of the training set. The grey line is training accuracy, which stays near 100 percent. The orange line is cross-validation accuracy. It rises from 90.6 percent with 358 readings to 97.6 percent with about 3,600 readings.</p>
+<p>The gap between the two lines is closing, and the orange line is still slowly rising. So the model is learning well, and more recordings would help a little more.</p>
+      </div>
+      <h2 id="slide-10">Slide 10 · Final model on 960 unseen test readings</h2>
+      <p class="meta-line"><strong>About 1:15</strong> · starts at 10:10 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s10.jpg" alt="Slide 10: Final model on 960 unseen test readings" loading="lazy">
+  <figcaption>Slide 10: Final model on 960 unseen test readings.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>These are the final results on 960 test readings that the model had never seen.</p>
+<p>Test accuracy is 98.23 percent. The macro F1-score, which balances precision and recall over all four classes, is 0.982. The macro ROC-AUC is 0.9986, very close to the perfect value of one.</p>
+<p>For safety, the most important question is: does it catch the gas? If we treat any gas as an alarm, the model caught 713 of 720 gas readings, that is 99.0 percent. It raised a false alarm on clean air in 10 of 240 readings, which is 4.2 percent.</p>
+<p>The model keeps 1,304 support vectors out of 4,480 training readings. Only these points define the boundary.</p>
+<p>On the right are the ROC curves, one for each class. All of them hug the top-left corner. Smoke and mixture reach an area of exactly one, and no gas and perfume about 0.997.</p>
+      </div>
+      <h2 id="slide-11">Slide 11 · Real time: one decision in about 1 ms</h2>
+      <p class="meta-line"><strong>About 1:00</strong> · starts at 11:25 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s11.jpg" alt="Slide 11: Real time: one decision in about 1 ms" loading="lazy">
+  <figcaption>Slide 11: Real time: one decision in about 1 ms.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>The title says real time, so I measured it.</p>
+<p>The animation replays recorded sensor readings as a live stream. For each new reading, the trained SVM gives a label on the right. When gas appears, it switches to a leak alarm, and when the air is clean again, it says the air is safe.</p>
+<p>I timed the model one reading at a time, exactly as a live system would use it, on an ordinary laptop. The mean time was 1.10 milliseconds, the median 0.99 milliseconds, and 95 percent of readings finished within 1.57 milliseconds. In a batch, it is only 0.21 milliseconds per reading.</p>
+<p>The sensors send a new reading every two seconds, that is 2,000 milliseconds. So the model is about two thousand times faster than it needs to be. It can easily run on a cheap edge device or gateway.</p>
+      </div>
+      <h2 id="slide-12">Slide 12 · Real-life setting: the SVM along a gas pipeline</h2>
+      <p class="meta-line"><strong>About 1:00</strong> · starts at 12:25 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s12.jpg" alt="Slide 12: Real-life setting: the SVM along a gas pipeline" loading="lazy">
+  <figcaption>Slide 12: Real-life setting: the SVM along a gas pipeline.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>Now, where would this system live in real life? This diagram shows a gas pipeline network, like the Titas network.</p>
+<p>Gas travels from the gas field through high-pressure transmission lines to the city gate, then through distribution mains under the roads, and finally through service lines to factories, warehouses, depots and homes.</p>
+<p>The blue A nodes are acoustic nodes. A microphone on the pipe listens to the leak sound and an SVM estimates how strong the leak is. This is my pipeline case study.</p>
+<p>The orange G nodes are gas-sensor nodes. They are the seven MQ sensors with the SVM from my main study. They sit where gas meets people, near risers and factory gas lines.</p>
+<p>Each node runs its own SVM and sends only its decision to the gateway. The gateway raises the alarm, can shut the valve, and informs the control room.</p>
+      </div>
+      <h2 id="slide-13">Slide 13 · Case study: real pipeline leak sounds (GPLA-12)</h2>
+      <p class="meta-line"><strong>About 1:20</strong> · starts at 13:25 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s13.jpg" alt="Slide 13: Case study: real pipeline leak sounds (GPLA-12)" loading="lazy">
+  <figcaption>Slide 13: Case study: real pipeline leak sounds (GPLA-12).</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>To test my method on a real pipeline, I used GPLA-12, a public dataset from Chongqing University of Science and Technology. They recorded the sound of leaks on a real gas pipeline test rig.</p>
+<p>It has 684 recordings, each five seconds long, at three pipe pressures, with two microphones, in quiet or noisy surroundings. That gives 12 classes.</p>
+<p>Raw sound samples are not useful directly. So I used the discrete Fourier transform to turn each recording into 39 features, mainly the energy in each frequency band.</p>
+<p>The chart shows the effect. A linear SVM on the raw signal reached only 65 percent on pressure and 53 percent on all 12 classes. With the Fourier features, it jumps to 82 and 89 percent. The tuned RBF-SVM reached 88.4 percent on pressure and 88.8 percent on all 12 classes. So here, good features matter most.</p>
+<p>When tested only on later recordings, pressure accuracy was 81.9 percent. And noisy versus quiet, and which microphone, were 100 percent correct.</p>
+<p>One honest limit: this rig used compressed air, and every recording is a leak, so it measures leak strength, not leak versus no leak.</p>
+      </div>
+      <h2 id="slide-14">Slide 14 · Honest stress test: sensors drift over time</h2>
+      <p class="meta-line"><strong>About 1:15</strong> · starts at 14:45 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s14.jpg" alt="Slide 14: Honest stress test: sensors drift over time" loading="lazy">
+  <figcaption>Slide 14: Honest stress test: sensors drift over time.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>This is the most honest slide in my presentation.</p>
+<p>A random split mixes early and late readings. So every test reading has a near twin in the training set. A real sensor, however, must work on future readings.</p>
+<p>So I trained on the first 70 percent of each class in time order, and tested on the last 30 percent.</p>
+<p>The green bars are the random split, where every class is above 95 percent. The orange bars are the time-ordered split. Accuracy falls from 98.2 percent to 54.4 percent. Smoke suffers most: 430 of the 480 later smoke readings look like mixture.</p>
+<p>The reason is sensor drift. Metal-oxide MQ sensors change their baseline as they warm up and age.</p>
+<p>The lesson is clear. A deployed node must be recalibrated or retrained regularly, and a model must be tested on future data, not only on shuffled data. I report this openly because it is the main barrier to real deployment.</p>
+      </div>
+      <h2 id="slide-15">Slide 15 · Conclusions and future work</h2>
+      <p class="meta-line"><strong>About 1:00</strong> · starts at 16:00 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s15.jpg" alt="Slide 15: Conclusions and future work" loading="lazy">
+  <figcaption>Slide 15: Conclusions and future work.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>To conclude.</p>
+<p>What I showed: an RBF-SVM on seven low-cost MQ sensors identifies the gas with 98.23 percent test accuracy, compared with 80.31 percent for the baseline. It decides in about one millisecond per reading, so it fits real-time use on cheap hardware. The same SVM method also works on real pipeline leak sounds, with about 89 percent accuracy on 12 classes. And the time-ordered test shows that sensor drift is the main barrier to deployment.</p>
+<p>What comes next: first, run the model on an edge device such as an ESP32 or a Raspberry Pi at a real site. Second, handle drift with periodic recalibration or online learning. Third, collect field data from Bangladeshi distribution lines, including a true no-leak class. And fourth, combine gas and acoustic nodes in one alarm gateway.</p>
+      </div>
+      <h2 id="slide-16">Slide 16 · Thank you</h2>
+      <p class="meta-line"><strong>About 0:20</strong> · starts at 17:00 into the talk</p>
+      <figure class="fig">
+  <img src="figures/slides/s16.jpg" alt="Slide 16: Thank you" loading="lazy">
+  <figcaption>Slide 16: Thank you.</figcaption>
+</figure>
+      <div class="say"><p class="say-label">Say this</p>
+<p>To summarise in three numbers: 98.23 percent test accuracy, about one millisecond per decision, and 88.8 percent on real pipeline leak sounds.</p>
+<p>Thank you very much for your attention. I am happy to answer your questions.</p>
+      </div>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

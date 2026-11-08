@@ -53,6 +53,10 @@
       ["vscode.html", "15", "Run it in VS Code"],
       ["colab.html", "16", "Run it in Google Colab"],
       ["qa-python.html", "17", "Q&A — programming"]
+    ]],
+    ["The presentation", [
+      ["speech.html", "18", "Presentation speech, slide by slide"],
+      ["qa-slides.html", "19", "Q&A — the presentation"]
     ]]
   ];
 

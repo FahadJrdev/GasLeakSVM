@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Q&A — the presentation — Gas Leak SVM project defence</title>
+<meta name="description" content="Questions examiners are likely to ask after the 16-slide defence presentation, grouped by slide, each with a one-sentence answer.">
+<script>/* applied before first paint so the layout never jumps */
+try{var d=document.documentElement,s=localStorage,t=s.getItem("gasvm.theme");
+if(t==="dark"||t==="light")d.setAttribute("data-theme",t);
+if(s.getItem("gasvm.nav")==="collapsed")d.setAttribute("data-nav","collapsed");}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-page="qa-slides">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <button class="btn btn-icon" type="button" data-menu aria-expanded="false" aria-label="Open navigation">☰</button>
+  <span class="topbar-title">Q&A — the presentation</span>
+  <button class="btn" type="button" data-theme-toggle></button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar"></aside>
+
+  <main class="main" id="main">
+    <div class="col">
+
+      <p class="eyebrow">19 · The presentation</p>
+      <h1>Q&amp;A — the presentation</h1>
+      <p class="lede">
+        Questions an examiner is likely to ask <strong>right after the slides</strong>, grouped in
+        the order of the presentation. Each answer opens with a <strong>bold one-sentence
+        version</strong>. Say that first, then stop. Use the rest only if they ask more. Turn on
+        <strong>Quiz mode</strong> and answer out loud before you reveal.
+      </p>
+
+      <section class="plain">
+        <p class="plain-label">In plain words — how questions after a talk work</p>
+        <ul>
+          <li><strong>They ask about what they just saw.</strong> Most questions point at a slide: "go back to the confusion matrix", "why is this bar so low?" Know which slide answers what.</li>
+          <li><strong>Go back to the slide.</strong> Saying "let me show slide 14" and pointing at the chart is stronger than answering from memory.</li>
+          <li><strong>Short answer, then pause.</strong> Let them ask the follow-up.</li>
+          <li><strong>Admit limits calmly.</strong> The lab data, compressed air in GPLA-12 and drift are known limits. You raised them yourself in the talk.</li>
+        </ul>
+        <p>Deeper questions are on the <a href="qa-project.html">project</a>, <a href="qa-math.html">mathematics</a> and <a href="qa-weakspots.html">hard questions</a> pages. The full talk is on the <a href="speech.html">speech</a> page.</p>
+      </section>
+
+      <div class="qa-toolbar">
+        <input class="search" data-search type="search" placeholder="Filter questions…" aria-label="Filter questions">
+        <button class="btn" type="button" data-quiz>Quiz mode</button>
+        <button class="btn" type="button" data-reveal-all>Reveal all</button>
+        <span class="counter" data-counter></span>
+      </div>
+
+      <h2 data-qa-sec>Slides 1–3 · The problem and the aim</h2>
+
+      <article class="qa" id="s01">
+        <div class="qa-head"><span class="qa-id">S01</span>
+          <h3 class="qa-q">Summarise your project in one minute.</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">I trained a Support Vector Machine that reads seven low-cost MQ gas sensors and says whether the air is clean or holds perfume, smoke or a mixture — 98.23% correct on unseen data, in about one millisecond per reading.</p>
+      <p>Then add: the baseline linear SVM reached 80.31%; scaling plus the RBF kernel, tuned by 5-fold cross-validation, lifted it to 98.23%. I also applied the method to real pipeline leak sounds (88.8% on 12 classes) and showed honestly that sensor drift drops accuracy to 54.4% on later readings.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 1</span><span class="tag">summary</span></div>
+      </article>
+
+      <article class="qa" id="s02">
+        <div class="qa-head"><span class="qa-id">S02</span>
+          <h3 class="qa-q">Why did you start with the Titas pipeline numbers?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Because they show the problem is real and local: 9,926 leaking spots were found in only 1,682 km surveyed, and leaks killed 34 people in Narayanganj in 2020 and caused the Siddique Bazar explosion in 2023.</p>
+      <p>The network is old (built from the 1970s for a 30-year life), and odorant alone finds only part of the leaks. That is why an automatic, continuous detector is useful. The sources are cited in Section 1.3 of the report.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 2</span><span class="tag">motivation</span></div>
+      </article>
+
+      <article class="qa" id="s03">
+        <div class="qa-head"><span class="qa-id">S03</span>
+          <h3 class="qa-q">What is new in your work? SVMs and this dataset already exist.</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">The new part is not a new algorithm; it is a complete, honest study of one model on this problem: derived from the mathematics, tuned properly, timed for real-time use, transferred to pipeline sound data, and stress-tested on future readings.</p>
+      <p>Most papers report only one random-split accuracy. I added three things they usually skip: a measured latency (about 1 ms), a time-ordered drift test (54.4%), and a second, real pipeline dataset with Fourier features.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 3</span><span class="tag">novelty</span></div>
+      </article>
+
+      <article class="qa" id="s04">
+        <div class="qa-head"><span class="qa-id">S04</span>
+          <h3 class="qa-q">Why only one model? Why not compare with a neural network or random forest?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">I chose to study one model in depth rather than many models briefly, and the SVM fits this data well: small, tabular, seven features, with a convex training problem and only two hyperparameters.</p>
+      <p>A neural network needs more data and more tuning and is harder to explain mathematically. With 98.23% already, the remaining errors come from Perfume and NoGas looking almost identical to the sensors, which is a limit of the data more than of the classifier. The kernel comparison on slide 9 is my internal comparison: linear, polynomial and RBF.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 3</span><span class="tag">model choice</span></div>
+      </article>
+
+      <h2 data-qa-sec>Slides 4–5 · Data and method</h2>
+
+      <article class="qa" id="s05">
+        <div class="qa-head"><span class="qa-id">S05</span>
+          <h3 class="qa-q">Where does the data come from, and is it real gas leak data?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">It is the public MultimodalGasData set from a lab in Pune, India (CC BY 4.0): real sensor readings, but the sources were deodorant (perfume) and incense sticks (smoke), not pipeline gas.</p>
+      <p>So the main study shows that the method can tell gases apart from MQ sensor patterns. The pipeline setting is covered by the deployment design (slide 12) and the GPLA-12 case study on real pipe leaks (slide 13). I say this limit openly.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 4</span><span class="tag">data</span></div>
+      </article>
+
+      <article class="qa" id="s06">
+        <div class="qa-head"><span class="qa-id">S06</span>
+          <h3 class="qa-q">What exactly is one reading?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">One reading is a vector of seven numbers, one 10-bit ADC value (0 to 1023) from each MQ sensor, taken every 2 seconds.</p>
+      <p>The values are raw counts, not ppm. The dataset gives no calibration to concentration, so the model learns patterns, not absolute gas levels.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 4</span><span class="tag">data</span></div>
+      </article>
+
+      <article class="qa" id="s07">
+        <div class="qa-head"><span class="qa-id">S07</span>
+          <h3 class="qa-q">Why are there thermal images on your slides if you did not use them?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">They come with the dataset and show what each class looked like, so I use them only for context; my model uses only the seven sensor values.</p>
+      <p>Combining images and sensors is possible future work, but we decided to keep one data type and one model so every result is clear.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 4</span><span class="tag">thermal</span></div>
+      </article>
+
+      <article class="qa" id="s08">
+        <div class="qa-head"><span class="qa-id">S08</span>
+          <h3 class="qa-q">Why do you scale the data with the z-score?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Because the RBF kernel uses distances, and without scaling the sensors with the biggest numbers would dominate the distance.</p>
+      <p>Each sensor is shifted to mean 0 and standard deviation 1 using the training set's mean and standard deviation only. Using test statistics would leak information. Scaling alone is a big part of the jump from 80.31% to 98.23%.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 5</span><span class="tag">preprocessing</span></div>
+      </article>
+
+      <article class="qa" id="s09">
+        <div class="qa-head"><span class="qa-id">S09</span>
+          <h3 class="qa-q">Why 70/15/15, and why stratified?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">70% gives enough data to train, the two 15% parts give 960 readings each to check the model honestly, and stratifying keeps exactly 25% of each class in every part.</p>
+      <p>Validation was used to check the tuned model; the test set was used only once, at the end. Hyperparameters were chosen by 5-fold cross-validation inside the training set.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 5</span><span class="tag">validation</span></div>
+      </article>
+
+      <h2 data-qa-sec>Slides 6–7 · The SVM and its tuning</h2>
+
+      <article class="qa" id="s10">
+        <div class="qa-head"><span class="qa-id">S10</span>
+          <h3 class="qa-q">Explain the margin in simple words.</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">The margin is the empty band between the two classes around the separating line; the SVM chooses the line that makes this band as wide as possible, because a wide gap tolerates small changes in new readings.</p>
+      <p>Its width is \(2/\lVert w\rVert\), so maximising it is the same as minimising \(\tfrac12\lVert w\rVert^2\) subject to \(y_i(w\cdot x_i+b)\ge 1\). This is a convex problem, so it has one best solution.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 6</span><span class="tag">maths</span></div>
+      </article>
+
+      <article class="qa" id="s11">
+        <div class="qa-head"><span class="qa-id">S11</span>
+          <h3 class="qa-q">What are support vectors, and why does your model have 1,304 of them?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Support vectors are the training points on or inside the margin; only they decide the boundary. 1,304 of 4,480 (about 29%) are support vectors, mostly from NoGas and Perfume, which overlap.</p>
+      <p>Per class: 331 NoGas, 312 Perfume, 241 Smoke, 420 Mixture. Many support vectors mean the classes are close together. A cleanly separable problem would need only a few.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 6</span><span class="tag">maths</span></div>
+      </article>
+
+      <article class="qa" id="s12">
+        <div class="qa-head"><span class="qa-id">S12</span>
+          <h3 class="qa-q">What do C and gamma do?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">C sets how much a training mistake costs (large C means fewer mistakes but a narrower margin), and gamma sets how far one training point's influence reaches in the RBF kernel (large gamma means a more wiggly boundary).</p>
+      <p>Too small: the boundary is too simple (underfitting). Too large: it follows noise (overfitting). The heatmap on slide 7 shows both ends.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 6</span><span class="tag">maths</span></div>
+      </article>
+
+      <article class="qa" id="s13">
+        <div class="qa-head"><span class="qa-id">S13</span>
+          <h3 class="qa-q">The SVM is a two-class method. How does it handle four gases?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">With one-versus-one: six SVMs are trained, one for each pair of classes, and each new reading gets the class with the most votes.</p>
+      <p>Four classes give \(4\times3/2 = 6\) pairs. This is scikit-learn's default for <code>SVC</code>.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 6</span><span class="tag">multiclass</span></div>
+      </article>
+
+      <article class="qa" id="s14">
+        <div class="qa-head"><span class="qa-id">S14</span>
+          <h3 class="qa-q">How did you choose C = 100 and gamma = 10?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">By grid search: 6 values of C times 7 values of gamma, 42 pairs, each scored by 5-fold cross-validation on the training data; C = 100 and gamma = 10 had the best average, 97.63%.</p>
+      <p>The best pair is inside the grid, not on its edge, so the range was wide enough. Several neighbours (for example C = 1000, gamma = 1) score almost the same, so the result is stable.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 7</span><span class="tag">tuning</span></div>
+      </article>
+
+      <article class="qa" id="s15">
+        <div class="qa-head"><span class="qa-id">S15</span>
+          <h3 class="qa-q">The animation shows only two dimensions. Is that your real model?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">No; the animation uses the first two principal components only so the boundary can be drawn, while the real model uses all seven scaled sensors.</p>
+      <p>The first two components keep 87.8% of the variance, which is why the picture looks similar to the real problem. On two components the accuracy is lower than the full model.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 7</span><span class="tag">animation</span></div>
+      </article>
+
+      <h2 data-qa-sec>Slides 8–10 · The results</h2>
+
+      <article class="qa" id="s16">
+        <div class="qa-head"><span class="qa-id">S16</span>
+          <h3 class="qa-q">Why did the baseline do so badly on NoGas and Perfume?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Because perfume (deodorant vapour) barely changes the sensor readings, so NoGas and Perfume overlap, and a straight line on unscaled data cannot separate them.</p>
+      <p>Their sensor means are almost identical, for example MQ3 about 529 versus 528. Scaling and the curved RBF boundary cut these errors from 189 to 17.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 8</span><span class="tag">results</span></div>
+      </article>
+
+      <article class="qa" id="s17">
+        <div class="qa-head"><span class="qa-id">S17</span>
+          <h3 class="qa-q">Training accuracy is almost 100%. Is the model overfitting?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">No, because validation (98.13%) and test (98.23%) accuracy are almost as high; overfitting would show a large gap between training and unseen data.</p>
+      <p>The learning curve on slide 9 shows the same: cross-validation accuracy rises steadily toward the training accuracy as data grows.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 8</span><span class="tag">overfitting</span></div>
+      </article>
+
+      <article class="qa" id="s18">
+        <div class="qa-head"><span class="qa-id">S18</span>
+          <h3 class="qa-q">Why is RBF better than the polynomial kernel?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Both were tuned the same way, and on the test set RBF reached 98.23% against 95.52% for polynomial and 84.79% for linear; the RBF boundary can wrap tightly around each gas cluster.</p>
+      <p>The RBF kernel also has only two parameters to tune and is numerically more stable than high-degree polynomials.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 9</span><span class="tag">kernels</span></div>
+      </article>
+
+      <article class="qa" id="s19">
+        <div class="qa-head"><span class="qa-id">S19</span>
+          <h3 class="qa-q">Why report macro F1 and ROC-AUC, not just accuracy?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Accuracy hides which class fails; macro F1 averages precision and recall over the four classes equally, and ROC-AUC shows how well the model ranks each class at every threshold.</p>
+      <p>Here the classes are balanced, so accuracy and macro F1 agree (98.23% and 0.982). Macro ROC-AUC is 0.9986.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 10</span><span class="tag">metrics</span></div>
+      </article>
+
+      <article class="qa" id="s20">
+        <div class="qa-head"><span class="qa-id">S20</span>
+          <h3 class="qa-q">For safety, which matters more: missed leaks or false alarms?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Missed leaks, because a missed leak can kill while a false alarm costs time; the model misses only 7 of 720 gas readings (99.0% caught) and gives 10 false alarms out of 240 clean-air readings (4.2%).</p>
+      <p>If needed, the decision threshold could be moved to catch even more leaks at the cost of a few more false alarms.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 10</span><span class="tag">safety</span></div>
+      </article>
+
+      <h2 data-qa-sec>Slides 11–13 · Real time and the pipeline</h2>
+
+      <article class="qa" id="s21">
+        <div class="qa-head"><span class="qa-id">S21</span>
+          <h3 class="qa-q">How did you measure real time, and on what hardware?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">I timed the trained model predicting one reading at a time, many times, on an ordinary 4-core laptop: mean 1.10 ms, 95% within 1.57 ms, slowest 2.88 ms.</p>
+      <p>A new reading arrives every 2,000 ms, so the model is about 2,000 times faster than needed. A microcontroller would be slower than a laptop but still far inside 2 seconds. The animation on slide 11 is a replay of recorded readings, not a live sensor.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 11</span><span class="tag">real-time</span></div>
+      </article>
+
+      <article class="qa" id="s22">
+        <div class="qa-head"><span class="qa-id">S22</span>
+          <h3 class="qa-q">Have you actually installed this on a pipeline?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">No; slide 12 is a deployment design showing where the nodes would go, and installing it at a real site is the first item of future work.</p>
+      <p>The design puts gas-sensor nodes where gas meets people (risers, factory gas lines) and acoustic nodes on the mains, each sending only its decision to a gateway.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 12</span><span class="tag">deployment</span></div>
+      </article>
+
+      <article class="qa" id="s23">
+        <div class="qa-head"><span class="qa-id">S23</span>
+          <h3 class="qa-q">What did the Fourier transform add in the pipeline case study?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Raw sound samples change randomly with time, but the energy in each frequency band is stable for a given leak, so the DFT turns each 5-second recording into 39 meaningful features.</p>
+      <p>With raw samples a linear SVM reached 52.9% on 12 classes; with the Fourier features it reached 89.3%, and the tuned RBF-SVM 88.8%. So for sound, the features matter more than the kernel.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 13</span><span class="tag">pipeline</span></div>
+      </article>
+
+      <article class="qa" id="s24">
+        <div class="qa-head"><span class="qa-id">S24</span>
+          <h3 class="qa-q">GPLA-12 has no "no leak" class and uses air. So what does it prove?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">It proves the same SVM method can read real leak sounds from a real pipe rig and tell how strong the leak is (pipe pressure, 88.35%), not that it can detect a leak from nothing.</p>
+      <p>A field dataset with true no-leak recordings, ideally on natural gas lines, is listed as future work.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 13</span><span class="tag">pipeline</span><span class="tag">limits</span></div>
+      </article>
+
+      <h2 data-qa-sec>Slides 14–16 · Drift, conclusions and the future</h2>
+
+      <article class="qa" id="s25">
+        <div class="qa-head"><span class="qa-id">S25</span>
+          <h3 class="qa-q">Accuracy falls to 54.4% on later data. Doesn't that make your 98.23% meaningless?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">No; 98.23% shows the gas patterns are learnable, and 54.4% shows the sensors drift over time, so a real system must be recalibrated or retrained regularly. Both are true, and I report both.</p>
+      <p>The drop is mainly Smoke: 430 of 480 later Smoke readings look like Mixture, because metal-oxide sensors change their baseline as they warm up and age. Testing on future data is the honest way to see this, which is why I ran it.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 14</span><span class="tag">drift</span></div>
+      </article>
+
+      <article class="qa" id="s26">
+        <div class="qa-head"><span class="qa-id">S26</span>
+          <h3 class="qa-q">How would you fix the drift problem?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">By recalibrating the sensors against clean air at regular intervals, retraining the SVM on recent readings, and checking every new model on the latest data in time order.</p>
+      <p>Online or incremental learning and drift-correction methods from the electronic-nose literature are options. Collecting data over weeks instead of one session would also help.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 14</span><span class="tag">drift</span><span class="tag">future</span></div>
+      </article>
+
+      <article class="qa" id="s27">
+        <div class="qa-head"><span class="qa-id">S27</span>
+          <h3 class="qa-q">If you had six more months, what would you do first?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">Put the model on an edge device such as an ESP32 or Raspberry Pi at a real site and collect field data over weeks, including clean air, so I can measure drift and fix it with periodic retraining.</p>
+      <p>Then combine gas and acoustic nodes in one alarm gateway, as in the slide 12 design.</p>
+        </div>
+        <div class="qa-tags"><span class="tag">slide 15</span><span class="tag">future</span></div>
+      </article>
+
+      <article class="qa" id="s28">
+        <div class="qa-head"><span class="qa-id">S28</span>
+          <h3 class="qa-q">What is the single most important thing you learned?</h3>
+          <input class="qa-done" type="checkbox" aria-label="Mark reviewed"></div>
+        <div class="qa-body">
+          <p class="qa-short">That a high accuracy on a random split is not enough: a model for safety must also be fast, explainable and tested on future data, because real sensors change over time.</p>
+
+        </div>
+        <div class="qa-tags"><span class="tag">slide 15</span><span class="tag">contribution</span></div>
+      </article>
+
+      <nav data-pagenav></nav>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
